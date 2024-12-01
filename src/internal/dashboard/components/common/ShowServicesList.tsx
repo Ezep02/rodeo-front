@@ -19,15 +19,21 @@ const ShowServicesList: React.FC<ShowServicesProps> = ({ srv }) => {
     setSelectedService(null);
   };
 
-
+  
   const handlePayment = async () => {
-    console.log(selectedService)
+    
     const createOrder = await CreateNewOrder(selectedService)      
+    
     window.location.href = createOrder.init_point
+    
+    
   };
 
   return (
-    <main className="flex flex-col items-center gap-6 p-4">
+    <main className="flex flex-col items-center gap-6 p-4 w-full h-full
+    
+      xl:col-start-1 xl:col-end-5 xl:row-start-1 xl:row-end-6
+    ">
       {srv?.map((service) => (
         <article
           key={service.id}

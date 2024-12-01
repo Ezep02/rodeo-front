@@ -4,9 +4,9 @@ import { GetAllServices } from "../internal/dashboard/services/DashboardService"
 
 // 1. Definir la interfaz del contexto (valores y funciones)
 interface DashboardContextProps {
-    AllServices: () => Promise<void>;
-    services: Services[] | null;
-    setServices: (services: Services[] | null) => void;
+  AllServices: () => Promise<void>;
+  services: Services[] | null;
+  setServices: (services: Services[] | null) => void;
 }
 
 // 2. Crear el contexto con un valor inicial indefinido
@@ -26,19 +26,19 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
     const [services, setServices] = useState<Services[] | null>(null);
 
     const AllServices = async () => {
-        try {
-          const fetchedServices: Services[] = await GetAllServices();
-          if (fetchedServices) {
-            setServices(fetchedServices);
-            console.log(fetchedServices);
-          }
-        } catch (error) {
-          console.error("Error fetching services:", error);
-        } 
+      // try {
+      //   const fetchedServices: Services[] = await GetAllServices();
+      //   if (fetchedServices) {
+      //     setServices(fetchedServices);
+      //   }
+      // } catch (error) {
+      //   console.error("Error fetching services:", error);
+      // } 
+      console.log("hola")
     };
     
     useEffect(() => {
-        AllServices();
+      AllServices();
     }, []);
   
   return (

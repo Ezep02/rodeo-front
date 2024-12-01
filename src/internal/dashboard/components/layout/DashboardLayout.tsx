@@ -6,7 +6,9 @@ interface DashboardProps {
 
 const DashboardLayout:React.FC<DashboardProps> = ({children}) => {
   return (
-    <main>
+    <main className='grid grid-cols-12 grid-rows-12 h-full w-full
+      
+    '>
         {children}
     </main>
   )

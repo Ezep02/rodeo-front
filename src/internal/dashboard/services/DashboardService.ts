@@ -1,5 +1,7 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
+
 import { Services } from "../models/DashboardModels";
+import { Order } from "../models/OrderModels";
 
 const BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/service`;
 const ORDER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
@@ -15,3 +17,8 @@ export const CreateNewOrder = async (service: Services | null) => {
     )
     return response.data
 } 
+
+export const GetOrderByID = async () => {
+    const response = await AuthenticationInstance.get<Order>(`${ORDER_URL}/success`)
+    return response.data
+}

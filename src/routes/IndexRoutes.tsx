@@ -11,14 +11,12 @@ import { PanelControlContextProvider } from "../context/PanelControlContext";
 import { DashboardContextProvider } from "../context/DashboardContext";
 
 const IndexRoute = () => {
-  const { isUserAuthenticated, user } = useContext(AuthContext)!;
+  const { user } = useContext(AuthContext)!;
 
   return (
     <Routes>
       {/* Si el usuario está autenticado, redirigir desde las rutas de autenticación */}
-      {isUserAuthenticated ? (
-        <Route path="/auth/*" element={<Navigate to="/" replace />} />
-      ) : (
+      {!user && (
         <Route
           path="/auth/*"
           element={
@@ -36,28 +34,26 @@ const IndexRoute = () => {
           <MainLayout>
             <DashboardContextProvider>
               <PublicRoutes />
-
             </DashboardContextProvider>
           </MainLayout>
         }
       />
 
-      {/* Rutas privadas solo si el usuario es un admin */}
-      
       {/* Rutas privadas para administradores */}
       {user?.is_admin === true && (
         <Route
           path="/panel-control/*"
           element={
-            <AdminLayout>
+            <DashboardContextProvider>
               <PanelControlContextProvider>
-                <PrivateRoutes />
+                <AdminLayout>
+                  <PrivateRoutes />
+                </AdminLayout>
               </PanelControlContextProvider>
-            </AdminLayout>
+            </DashboardContextProvider>
           }
         />
       )}
-
 
       {/* Redirección de rutas no encontradas */}
       <Route path="*" element={<Navigate to="/" replace />} />

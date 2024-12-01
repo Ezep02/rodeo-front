@@ -1,6 +1,11 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import {User } from "../internal/auth/models/AuthModels";
-import { LogoutUser, UserLogin, UserRegister, VerifyToken } from "../internal/auth/service/AuthService";
+import { User } from "../internal/auth/models/AuthModels";
+import {
+  LogoutUser,
+  UserLogin,
+  UserRegister,
+  VerifyToken,
+} from "../internal/auth/service/AuthService";
 import { LoginUserReq } from "../internal/auth/models/AuthModels";
 
 // 1. Definir la interfaz del contexto (valores y funciones)
@@ -37,7 +42,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
     try {
       const response: User = await UserLogin(logUser);
       setUser(response);
-      
       setUserErrors([]);
       setIsUserAuthenticated(true);
     } catch (error: any) {
@@ -48,44 +52,40 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   };
 
   const UserSignUp = async (user: User): Promise<void> => {
-
     try {
       const response: User = await UserRegister(user);
-      setUser(response)
-      setUserErrors([])
-      setIsUserAuthenticated(true)
-      
+      setUser(response);
+      setUserErrors([]);
+      setIsUserAuthenticated(true);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const LogoutSession = async () => {
     try {
-      await LogoutUser()
-      setIsUserAuthenticated(false)
+      await LogoutUser();
+      setIsUserAuthenticated(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
+  };
 
   const VerifySession = async () => {
     try {
       const session: User = await VerifyToken();
-      if(session){
-        setUser(session)
-        setIsUserAuthenticated(true)
+      if (session) {
+        setUser(session);
+        setIsUserAuthenticated(true);
       }
-      
     } catch (error) {
-      console.log(error)
-    } 
-  }
-  
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     VerifySession();
-  }, []); 
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -97,7 +97,7 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
         userErrors,
         isUserAuthenticated,
         setIsUserAuthenticated,
-        LogoutSession  
+        LogoutSession,
       }}
     >
       {children}

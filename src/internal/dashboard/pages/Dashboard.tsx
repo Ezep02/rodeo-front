@@ -8,10 +8,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      Dashboard
+     
       <ShowServicesList srv={services}/>
 
-      
+        
 
 
 

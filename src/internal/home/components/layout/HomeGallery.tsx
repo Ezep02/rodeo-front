@@ -15,20 +15,20 @@ const HomeGallery: React.FC = React.memo(() => {
   const [userIMG, setUserIMG] = useState<MediaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const GetUserData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const result = await GetProfileMedia();
-      setUserIMG((prev) => (JSON.stringify(prev) !== JSON.stringify(result.data) ? result.data : prev)); // Actualiza si los datos son diferentes
-    } catch (error) {
-      console.error("Error al obtener los datos:", error);
-    }
-    setIsLoading(false);
-  }, []);
+  // const GetUserData = useCallback(async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const result = await GetProfileMedia();
+  //     setUserIMG((prev) => (JSON.stringify(prev) !== JSON.stringify(result.data) ? result.data : prev)); // Actualiza si los datos son diferentes
+  //   } catch (error) {
+  //     console.error("Error al obtener los datos:", error);
+  //   }
+  //   setIsLoading(false);
+  // }, []);
 
-  useEffect(() => {
-    GetUserData();
-  }, [GetUserData]);
+  // useEffect(() => {
+  //   GetUserData();
+  // }, [GetUserData]);
 
   const filteredImages = useMemo(
     () => userIMG.filter((img) => img.media_type !== "VIDEO"),

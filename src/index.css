@@ -2,19 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 .loader {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 3px solid #2e2d2d;
-    border-top-color: transparent;
-    animation: spin 1.2s linear infinite; 
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid #2e2d2d;
+  border-top-color: transparent;
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+}
+
+.scroll-abrir-tarjeta {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c7c7 transparent;
+}
+
+.scroll-abrir-editar-tarjeta {
+  scrollbar-width: none;
+  scrollbar-color: #1f1f1f transparent;
+}
