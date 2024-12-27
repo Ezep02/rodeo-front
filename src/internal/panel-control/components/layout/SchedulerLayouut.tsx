@@ -12,46 +12,59 @@ const SchedulerLayouut: React.FC<SchedulerProps> = ({ children }) => {
   return (
     <div
       className="
-      w-full h-full xl:col-start-1 xl:col-end-4 xl:row-start-1 xl:row-end-13 
-      
-      col-start-1 col-end-13 row-start-1 row-end-4
-      bg-white rounded-xl shadow-lg  p-6 overflow-hidden overflow-y-auto scroll-abrir-editar-tarjeta
-    "
+        w-full h-full
+        xl:col-start-2 xl:col-end-5 xl:row-start-1 xl:row-end-13 
+        col-start-1 col-end-13 row-start-1 row-end-2
+        bg-white rounded-xl shadow-lg flex flex-col
+        overflow-hidden xl:p-8 p-2 gap-4 
+      "
     >
-      <div className="flex flex-col items-center mb-2">
-        {/* Encabezado */}
-        <div className="flex w-full justify-between items-center"> 
-          <h3 className="text-lg font-semibold text-gray-800 ">Turnos</h3>
+      {/* Encabezado */}
+      <div className="w-full h-full sm:h-auto">
+        <div className="flex w-full justify-between items-center h-full ">
+          <span>
+            <h3 className="sm:text-lg font-semibold text-gray-800">Turnos</h3>
 
-          <button
-            onClick={
-              scheduleList?.length > 0
-                ? HandleModifyScheduler
-                : HandleAddScheduler
-            }
-            className="text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 px-4 py-2 rounded-lg shadow transition"
-          >
-            {scheduleList?.length > 0
-              ? "Modificar Horarios"
-              : "Agregar Horarios"}
-          </button>
+            {scheduleList?.length > 0 && (
+              <div className="w-full text-center text-xs sm:text-sm text-gray-600">
+                {new Date().getTime() >
+                new Date(scheduleList[0]?.End_date).getTime() ? (
+                  <span>Se requiere actualizacion</span>
+                ) : (
+                  <span className="font-semibold text-gray-800">
+                    Renovar en{" "}
+                    {Math.ceil(
+                      (new Date(scheduleList[0]?.End_date).getTime() -
+                        new Date().getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    días
+                  </span>
+                )}
+              </div>
+            )}
+          </span>
+          <div className="flex justify-end">
+            <button
+              onClick={
+                scheduleList?.length > 0
+                  ? HandleModifyScheduler
+                  : HandleAddScheduler
+              }
+              className="px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-2xl shadow hover:bg-zinc-700 transition-all"
+            >
+              {scheduleList?.length > 0
+                ? "Modificar Horarios"
+                : "Agregar Horarios"}
+            </button>
+          </div>
         </div>
-
-        {/* Información de Finalización */}
-        {scheduleList?.length > 0 &&
-          scheduleList[0]?.Schedule_type === "Personalizado" && (
-            <div className="w-full py-2">
-              <span className="text-sm text-gray-600">
-                Turnos disponibles hasta el{" "}
-                <span className="font-semibold text-gray-800">
-                  {scheduleList[0]?.End_date}
-                </span>
-              </span>
-            </div>
-          )}
       </div>
 
-      {children}
+      {/* Contenido con scroll */}
+      <div className="overflow-y-scroll h-full py-2 w-full scroll-abrir-editar-tarjeta">
+        {children}
+      </div>
     </div>
   );
 };

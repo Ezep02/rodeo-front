@@ -5,19 +5,21 @@ import {
   UserLogin,
   UserRegister,
   VerifyToken,
+  GoogleOauth
 } from "../internal/auth/service/AuthService";
 import { LoginUserReq } from "../internal/auth/models/AuthModels";
 
 // 1. Definir la interfaz del contexto (valores y funciones)
 interface AuthContextProps {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   UserSignIn: (logUser: LoginUserReq) => Promise<void>;
   UserSignUp: (user: User) => Promise<void>;
   LogoutSession: () => void;
   userErrors: string[];
   isUserAuthenticated: boolean;
   setIsUserAuthenticated: (value: boolean) => void;
+  GoogleLogIn: ()=> void
 }
 
 // 2. Crear el contexto con un valor inicial indefinido
@@ -34,7 +36,7 @@ interface ChildrenProviderProp {
 export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>();
   const [userErrors, setUserErrors] = useState<string[]>([]);
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
@@ -51,6 +53,17 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
     }
   };
 
+  const GoogleLogIn = async () => {
+
+    try {
+      window.location.href = "http://localhost:8080/auth/google";
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   const UserSignUp = async (user: User): Promise<void> => {
     try {
       const response: User = await UserRegister(user);
@@ -66,6 +79,7 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
     try {
       await LogoutUser();
       setIsUserAuthenticated(false);
+      
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +112,7 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
         isUserAuthenticated,
         setIsUserAuthenticated,
         LogoutSession,
+        GoogleLogIn
       }}
     >
       {children}

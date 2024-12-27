@@ -4,21 +4,43 @@ import Dashboard from "../internal/dashboard/pages/Dashboard";
 import HomePage from "../internal/home/pages/HomePage";
 import { DashboardContextProvider } from "../context/DashboardContext";
 import PaymentRoutes from "./PaymentRoutes";
+import MainLayout from "../layouts/MainLayout";
 
 const PublicRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route
+        path="/"
+        element={
+          <DashboardContextProvider>
+            <MainLayout>
+              <HomePage />
+            </MainLayout>          
+          </DashboardContextProvider>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <DashboardContextProvider>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </DashboardContextProvider>
+        }
+      />
 
       <Route
         path="/payment/*"
         element={
           <DashboardContextProvider>
-            <PaymentRoutes />
+            <MainLayout>
+              <PaymentRoutes />
+            </MainLayout>
           </DashboardContextProvider>
         }
       />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -9,62 +9,43 @@ export const daysOfWeek = [
   "Domingo",
 ];
 
-// Define la interfaz ScheduleDay (la que tú proporcionaste)
+// Define la interfaz ScheduleDay (la que tu proporcionaste)
 export interface ScheduleDay {
   Day: string;
-  Shifts: {
-    Start: string; // Hora de inicio en formato "HH:mm"
-    End: string; // Hora de fin en formato "HH:mm"
-  }[];
-  Date: {
-    start: string; // Fecha de inicio en formato "YYYY-MM-DD"
-    end: string; // Fecha de fin en formato "YYYY-MM-DD", puede ser vacío o null
-  };
-  DistributionType: string;
-}
-
-export interface ScheduleDayResponse {
-  Day: string;
-  End_date: string;
-  ID: number;
-  Start_date: string;
-  Schedule_type: string;
-  CreatedAt?: string;
-  DeletedAt?: null;
-  UpdatedAt?: string;
-
-  Shifts: {
-    CreatedAt?: string;
-    Day: string;
-    DeletedAt?: null;
-    ID: number;
-    Schedule_id: number;
-    Start_time: string;
-    UpdatedAt?: string;
+  Start: Date;
+  End: Date;
+  Shift_add: {
+    Start: string;
   }[];
 }
 
-export interface ScheduleModifyDay {
+export interface ScheduleResponse {
   Day: string;
   Shift_add: {
     CreatedAt?: string;
     Day?: string;
     DeletedAt?: null;
     ID: number;
+    Available?: boolean;
+    Created_by_name?: string;
     Schedule_id: number;
     Start_time: string;
     UpdatedAt?: string;
     Shift_status: string;
   }[];
 
-  Shifts_delete: {
+  CreatedAt?: string;
+  DeletedAt?: null;
+  UpdatedAt?: string;
+  Barber_id?: number;
+
+  Shifts_delete?: {
     ID: number | null;
   }[];
-  Date: {
-    start: string; 
-    end: string; 
-  };
+
+  start?: Date;
+  end?: Date;
+
   ID: number;
-  DistributionType: string;
-  ScheduleStatus: string;
+  ScheduleStatus?: string;
 }

@@ -20,8 +20,6 @@ export const FormField: React.FC<LoginFormFieldProps> = ({
   </>
 );
 
-
-
 export const FormRegisterField: React.FC<RegisterFormFieldProps> = ({
   type,
   placeholder,
@@ -31,12 +29,12 @@ export const FormRegisterField: React.FC<RegisterFormFieldProps> = ({
   valueAsNumber,
 }) => (
   <>
-  <input
-    type={type}
-    placeholder={placeholder}
-    {...register(name, { valueAsNumber })}
-    className="p-2 rounded-md bg-zinc-50 border-2 text-zinc-800 w-full"
-  />
-  {error && <span className="error-message">{error.message}</span>}
-</>
-)
+    <input
+      type={type}
+      placeholder={placeholder}
+      {...register(name, { valueAsNumber })}
+      className="p-2 rounded-md bg-zinc-50 border-2 text-zinc-800 w-full"
+    />
+    {error && <span className="error-message">{error.message}</span>}
+  </>
+);

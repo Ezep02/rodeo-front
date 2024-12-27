@@ -5,9 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
 
 const UsersLogin = () => {
-  const { UserSignIn } = useContext(AuthContext)!;
+  const { UserSignIn, GoogleLogIn } = useContext(AuthContext)!;
 
   const {
     register,
@@ -21,51 +22,67 @@ const UsersLogin = () => {
     UserSignIn(data);
   };
 
+
   return (
     <main className="h-full w-full flex items-center justify-center bg-gradient-to-br from-slate-100 via-red-100 to-gray-50 ">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md border border-gray-200"
+        className="bg-white rounded-2xl flex flex-col gap-2 shadow-lg p-8 w-full max-w-md border border-gray-200"
       >
         <div className="flex justify-center mb-6">
           <img src="/logo.svg" alt="Logo" className="w-32" />
         </div>
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
-          Iniciar Sesión
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          Forma parte del <span className="text-red-400">Rodeo</span>
         </h1>
 
-        <div className="mb-4">
+        <div className="">
           <label htmlFor="email" className="text-gray-700">
             Email
           </label>
           <FormField
             type="email"
-            placeholder="Ingresar email"
+            placeholder="nombre@gmail.com"
             name="email"
             register={register}
             error={errors.email}
           />
         </div>
 
-        <div className="mb-6">
+        <div className="">
           <label htmlFor="password" className="text-gray-700">
             Contraseña
           </label>
           <FormField
             type="password"
-            placeholder="Contraseña"
+            placeholder="*******"
             name="password"
             register={register}
             error={errors.password}
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-2xl transition duration-300"
-        >
-          Iniciar Sesión
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="px-4 py-3 w-full uppercase bg-zinc-800 text-white text-sm font-medium rounded-md shadow hover:bg-zinc-700 transition-all"
+          >
+            Iniciar Sesión
+          </button>
+
+        </div>
+
+        <div className="flex justify-end py-1">
+          <Link to="/" className="text-sm text-gray-600 font-semibold">
+            Olvidaste tu contraseña
+          </Link>
+        </div>
+        
+        <div className="">
+          <button type="button" onClick={GoogleLogIn} className="w-full flex gap-2 justify-center uppercase items-center px-4 py-2 border text-zinc-700  text-sm font-medium rounded-md hover:text-zinc-500 transition-all hover:shadow">
+            <i><FaGoogle/></i>Iniciar Sesión con google
+          </button>
+        </div>
 
         <p className="mt-4 text-center text-gray-600">
           ¿No tienes una cuenta?{" "}
@@ -74,6 +91,8 @@ const UsersLogin = () => {
           </Link>
         </p>
       </form>
+      
+
     </main>
   );
 };

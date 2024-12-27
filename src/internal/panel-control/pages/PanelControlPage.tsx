@@ -9,6 +9,7 @@ import MofidySchedulerOrganizer from "../components/common/MofidySchedulerOrgani
 import ServicesLayout from "../components/layout/ServicesLayout";
 import ShowServicesLayout from "../components/layout/ShowServicesLayout";
 import EditServiceForm from "../components/common/EditServiceForm";
+import ShowAddServiceLayout from "../components/layout/ShowAddServiceLayout";
 
 const PanelControlPage: React.FC = () => {
   const {
@@ -17,16 +18,12 @@ const PanelControlPage: React.FC = () => {
     openServices,
     editarServicio,
     selectedServiceToEdit,
+    openAddService,
   } = useContext(PanelControlContext)!;
 
   return (
     <div
-      className="
-      
-
-      p-2 grid grid-cols-12 grid-rows-12 h-full w-full 
-      bg-gradient-to-br from-red-500 via-rose-300 to-orange-100 gap-2
-    "
+      className="p-2 grid grid-cols-12 grid-rows-12 h-full w-full gap-2 bg-zinc-200"
     >
       <OrderList />
 
@@ -49,6 +46,8 @@ const PanelControlPage: React.FC = () => {
       <ServicesLayout>
         {/* Mostrar ShowServicesLayout si openServices es true */}
         {openServices && <ShowServicesLayout />}
+
+        {openAddService && <ShowAddServiceLayout />}
 
         {/* Mostrar ServiceForm si openServices es false */}
         {editarServicio && <EditServiceForm service={selectedServiceToEdit} />}

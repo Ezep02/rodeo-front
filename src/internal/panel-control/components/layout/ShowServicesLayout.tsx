@@ -1,57 +1,79 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { PanelControlContext } from "../../../../context/PanelControlContext";
 import { FiEdit, FiX, FiSearch } from "react-icons/fi";
 import { Service } from "../../models/Services.models";
-import useWebSocket from "react-use-websocket";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import DeleteServicePopUp from "../common/DeleteServicePopUp";
+import { DeleteServiceByID } from "../../services/PanelServices";
 
 const ShowServicesLayout: React.FC = () => {
-  const {serviceList, setSelectedServiceToEdit, HandleEditarServicioView, HandleEditarServicio } = useContext(PanelControlContext)!;
-  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    serviceList,
+    setServiceList,
+    setSelectedServiceToEdit,
+    HandleEditarServicioView,
+    HandleEditarServicio,
+  } = useContext(PanelControlContext)!;
 
+  const [searchTerm, setSearchTerm] = useState("");
+  
   // Filtrar servicios según el término de búsqueda
-  const filteredServices = serviceList.filter((service) =>
+  const filteredServices =  serviceList.filter((service) =>
     service.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const HandleClickEditarServicio = (service: Service) => {
-    setSelectedServiceToEdit({
-      ID: service.ID,
-      created_by_id: service.created_by_id,
-      description: service.description,
-      price: service.price, 
-      service_duration: service.service_duration,
-      title: service.title
-    })
-    HandleEditarServicio()
+    setSelectedServiceToEdit(service);
+    HandleEditarServicio();
   };
 
-  const {lastJsonMessage} = useWebSocket("ws://localhost:8080/services/notification-update")
+  const [deleteNotification, setDeleteNofitification] = useState(false);
+  const [selectedServiceToDelete, setSelectedServiceToDelete] = useState<Service>();
 
-  useEffect(()=> {
-    console.log(lastJsonMessage)
-  }, [lastJsonMessage])
-
+  const HandleDeleteService = async (id: number) => {
+    try {
+      const res = await DeleteServiceByID(id);
+      if (res.status === 200) {
+        let filteredList = [...serviceList].filter((srv) => srv.ID !== id);
+        setServiceList(filteredList)
+    
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const HandleOpenDeletePopUp = () => {
+    setDeleteNofitification((prev) => !prev);
+  };
 
   return (
-    <section className="absolute inset-0 grid grid-cols-12 grid-rows-12 place-items-center bg-gray-100 bg-opacity-70 backdrop-blur-sm z-20">
+    <section className="absolute inset-0 grid grid-cols-12 grid-rows-12 place-items-center bg-zinc-800 bg-opacity-70 backdrop-blur-sm z-20">
       <main
-        className="w-full bg-white shadow-md rounded-lg p-6 flex flex-col gap-6
-            xl:col-start-4 xl:col-end-11 xl:row-start-3 xl:row-end-9 h-full
-            col-start-1 col-end-13 row-start-1 row-end-13
+        className="w-full bg-white shadow-xl rounded-lg  flex flex-col gap-6
+          xl:col-start-4 xl:col-end-11 xl:row-start-3 xl:row-end-11 xl:p-6 h-full
+          col-start-1 col-end-13 row-start-1 row-end-13 p-2 relative
         "
       >
+        {deleteNotification && (
+          <DeleteServicePopUp
+            HandleDelete={HandleDeleteService}
+            Srv={selectedServiceToDelete!}
+            HandleCancel={HandleOpenDeletePopUp}
+          />
+        )}
+
         <header className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Gestión de Servicios
-            </h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Servicios</h2>
             <button
               onClick={HandleEditarServicioView}
-              className="p-2 rounded-full hover:text-zinc-700 transition focus:outline-none "
+              className="p-2 rounded-full hover:text-zinc-700 transition focus:outline-none"
             >
               <FiX size={20} className="text-zinc-900" />
             </button>
           </div>
+
+          {/* Barra de búsqueda */}
           <div className="relative">
             <input
               type="text"
@@ -68,7 +90,7 @@ const ShowServicesLayout: React.FC = () => {
         </header>
 
         {/* Lista de servicios */}
-        <div className="flex flex-col gap-4">
+        <div className="overflow-hidden overflow-y-scroll scroll-abrir-editar-tarjeta">
           {filteredServices.length > 0 ? (
             <ul className="divide-y divide-gray-200">
               {filteredServices.map((service) => (
@@ -84,13 +106,25 @@ const ShowServicesLayout: React.FC = () => {
                       {service.description}
                     </p>
                   </div>
-                  <button
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium shadow-md bg-zinc-900 text-zinc-50 rounded-md hover:bg-zinc-800 focus:outline-none transition"
-                    onClick={() => HandleClickEditarServicio(service)}
-                  >
-                    <FiEdit size={16} />
-                    Editar
-                  </button>
+
+                  <div className="flex gap-2 ">
+                    <button
+                      className="flex items-center gap-1 px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-2xl shadow hover:bg-zinc-700 transition-all"
+                      onClick={() => HandleClickEditarServicio(service)}
+                    >
+                      <FiEdit size={16} />
+                      Editar
+                    </button>
+                    <button
+                      className="font-semibold text-gray-600 hover:text-red-500 transition-all"
+                      onClick={() => {
+                        HandleOpenDeletePopUp();
+                        setSelectedServiceToDelete(service);
+                      }}
+                    >
+                      <RiDeleteBin7Line />
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>

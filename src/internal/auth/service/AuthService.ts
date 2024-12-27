@@ -22,3 +22,8 @@ export const VerifyToken = async (): Promise<User> => {
     const response = await AuthenticationInstance.get<User>(`${BASE_URL}/verify-token`);
     return response.data
 } 
+
+export const GoogleOauth = async ():Promise<void> => {
+    const response = await AuthenticationInstance.get(`${BASE_URL}/google`)
+    return response.data
+}

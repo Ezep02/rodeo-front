@@ -12,7 +12,7 @@ const HomePage: React.FC = () => {
 
           <div className="absolute bg-zinc-900/75  inset-0 flex items-center justify-center">
             <div className="text-center text-primary-foreground space-y-4">
-              <h1 className="text-4xl font-bold text-zinc-50">Benvenido a el El Rodeo</h1>
+              <h1 className="text-4xl font-bold text-zinc-50">Bienvenido a El Rodeo</h1>
               <p className="text-lg">
                 No solo es un corte, sino una experiencia.
               </p>

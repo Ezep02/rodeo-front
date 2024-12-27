@@ -1,17 +1,19 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
+import { Barber, Service } from "../../panel-control/models/Services.models";
+import { ScheduleResponse, Shift } from "../models/DashboardModels";
 
-import { Services } from "../models/DashboardModels";
-import { Order } from "../models/OrderModels";
+import { Order, ServiceOrderRequest } from "../models/OrderModels";
 
-const BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/service`;
+const SERVICE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
 const ORDER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
+const SCHEDULES_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/schedules`;
 
 export const GetAllServices = async () => {
-    const response = await AuthenticationInstance.get<Services[]>(`${BASE_URL}/all`)
+    const response = await AuthenticationInstance.get<Service[]>(`${SERVICE_URL}/all`)
     return response.data
 }
 
-export const CreateNewOrder = async (service: Services | null) => {
+export const CreateNewOrder = async (service: ServiceOrderRequest | null) => {
     const response = await AuthenticationInstance.post(`${ORDER_URL}/new`, 
         service
     )
@@ -20,5 +22,32 @@ export const CreateNewOrder = async (service: Services | null) => {
 
 export const GetOrderByID = async () => {
     const response = await AuthenticationInstance.get<Order>(`${ORDER_URL}/success`)
+    return response.data
+}
+
+export const GetBarberList = async () => {
+    const response = await AuthenticationInstance.get<Barber[]>(`${SERVICE_URL}/barber`)
+    return response.data
+}
+
+export const GetBarberSchedules = async (barberID:number) => {
+    const response = await AuthenticationInstance.get<ScheduleResponse[]>(`${SCHEDULES_URL}/barber/${barberID}`)
+    return response.data
+}
+
+export const GetPendingOrder = async () => {
+    const response = await AuthenticationInstance.get<Order>(`${ORDER_URL}/pending`)
+    return response.data
+}
+
+export const GetOrderHistorial = async (limit:number, offset:number) => {
+    const response = await AuthenticationInstance.get<Order[]>(`${ORDER_URL}/historial/${limit}/${offset}`)
+    return response.data
+}
+
+
+ // Actualizar dispinibilidad de un horario
+export const UpdateShiftAvailability = async (shiftID: number) => {
+    const response = await AuthenticationInstance.put<Shift>(`${SCHEDULES_URL}/shift/${shiftID}`)
     return response.data
 }

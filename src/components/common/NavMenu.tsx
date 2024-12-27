@@ -40,11 +40,11 @@ const NavMenu: React.FC = () => {
   };
 
   return (
-    <nav className="relative">
+    <nav className="relative ">
       <div className="h-full flex justify-center items-center">
         <button
           onClick={HandleOpenNav}
-          className="p-2 text-white hover:text-gray-400 transition-colors duration-200"
+          className="p-2 text-white hover:text-gray-400 transition-colors duration-200 z-20"
         >
           <SlMenu size={24} />
         </button>
@@ -82,11 +82,7 @@ const NavMenu: React.FC = () => {
             <button onClick={EndSession}>
               cerrar sesion
             </button>
-            {/* <AuthLogoutButton
-              text="Cerrar sesión"
-              onClick={EndSession}
-              where=""
-            /> */}
+          
           </div>
         </div>
       )}

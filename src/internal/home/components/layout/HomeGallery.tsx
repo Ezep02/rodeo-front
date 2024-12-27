@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { AiFillHeart } from "react-icons/ai"; // Importa el icono de corazón
 import { GetProfileMedia } from "../../services/HomeService";
+import { DashboardContext } from "../../../../context/DashboardContext";
 
 interface MediaResponse {
   media_url: string;
@@ -15,10 +16,15 @@ const HomeGallery: React.FC = React.memo(() => {
   const [userIMG, setUserIMG] = useState<MediaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const {} = useContext(DashboardContext)!
+
+
   // const GetUserData = useCallback(async () => {
   //   setIsLoading(true);
   //   try {
   //     const result = await GetProfileMedia();
+  //     console.log(result)
+
   //     setUserIMG((prev) => (JSON.stringify(prev) !== JSON.stringify(result.data) ? result.data : prev)); // Actualiza si los datos son diferentes
   //   } catch (error) {
   //     console.error("Error al obtener los datos:", error);
@@ -28,16 +34,16 @@ const HomeGallery: React.FC = React.memo(() => {
 
   // useEffect(() => {
   //   GetUserData();
-  // }, [GetUserData]);
+  // }, []);
 
-  const filteredImages = useMemo(
-    () => userIMG.filter((img) => img.media_type !== "VIDEO"),
-    [userIMG]
-  ); // Memorizando el resultado del filtro
+  // const filteredImages = useMemo(
+  //   () => userIMG.filter((img) => img.media_type !== "VIDEO"),
+  //   [userIMG]
+  // ); // Memorizando el resultado del filtro
 
-  const handleImageClick = useCallback((img: MediaResponse) => {
-    window.open(img.permalink, "_blank"); // Abrir enlace en una nueva pestaña
-  }, []);
+  // const handleImageClick = useCallback((img: MediaResponse) => {
+  //   window.open(img.permalink, "_blank"); // Abrir enlace en una nueva pestaña
+  // }, []);
 
   return (
     <section className="py-16 px-6 bg-gradient-to-r from-gray-100 to-gray-200">
@@ -45,8 +51,9 @@ const HomeGallery: React.FC = React.memo(() => {
         <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">
           Galería
         </h2>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 w-full ">
-          {filteredImages.length > 0 &&
+          {/* {filteredImages.length > 0 &&
             !isLoading &&
             filteredImages.map((img, index) => (
               <div
@@ -79,7 +86,7 @@ const HomeGallery: React.FC = React.memo(() => {
                   </a>
                 </div>
               </div>
-            ))}
+            ))} */}
         </div>
         {isLoading && (
           <article className="h-full w-full flex justify-center">

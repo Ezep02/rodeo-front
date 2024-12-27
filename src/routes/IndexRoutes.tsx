@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout";
 import { AuthRoutes } from "./AuthRoutes";
 import AuthLayout from "../layouts/AuthLayout";
 import { useContext } from "react";
@@ -11,12 +10,12 @@ import { PanelControlContextProvider } from "../context/PanelControlContext";
 import { DashboardContextProvider } from "../context/DashboardContext";
 
 const IndexRoute = () => {
-  const { user } = useContext(AuthContext)!;
+  const { user, isUserAuthenticated } = useContext(AuthContext)!;
 
   return (
     <Routes>
       {/* Si el usuario está autenticado, redirigir desde las rutas de autenticación */}
-      {!user && (
+      {!isUserAuthenticated && (
         <Route
           path="/auth/*"
           element={
@@ -28,16 +27,7 @@ const IndexRoute = () => {
       )}
 
       {/* Rutas publicas */}
-      <Route
-        path="/*"
-        element={
-          <MainLayout>
-            <DashboardContextProvider>
-              <PublicRoutes />
-            </DashboardContextProvider>
-          </MainLayout>
-        }
-      />
+      <Route path="/*" element={<PublicRoutes />} />
 
       {/* Rutas privadas para administradores */}
       {user?.is_admin === true && (
