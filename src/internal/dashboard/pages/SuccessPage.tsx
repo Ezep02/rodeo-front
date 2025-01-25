@@ -1,32 +1,33 @@
 import React, {useEffect, useState } from "react";
-import { GetOrderByID, UpdateShiftAvailability } from "../services/DashboardService";
+import { GetLastOrder, UpdateShiftAvailability } from "../services/DashboardService";
 import { Order } from "../models/OrderModels";
 import { FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { MdDownloading } from "react-icons/md";
 
 const SuccessPage: React.FC = () => {
+
   const [order, setOrder] = useState<Order>();
-  
+
   useEffect(() => {
     const GetNewOrder = async () => {
-      const res: Order = await GetOrderByID();
+      const res: Order = await GetLastOrder();
       // setPendingOrder(res)
       setOrder(res);
 
       if (res){
         // si todo bien realiza actualizacion 
-        const updateShiftAvailability = await UpdateShiftAvailability(res.Shift_id)
-        console.log(updateShiftAvailability)
-        // TODO: configurar un websocket de actualizcion de horarios y disponibilidad
+        await UpdateShiftAvailability(res.Shift_id)
+        
 
+        // TODO: configurar un websocket de actualizcion de horarios y disponibilidad
       }
 
     };
     GetNewOrder();
   }, []);
 
-  const orderDate = order?.Date ? new Date(order.Date) : null;
+  const orderDate = order?.Schedule_day_date ? new Date(order.Schedule_day_date) : null;
   const orderYear = orderDate?.toLocaleDateString("es-ES", { year: "numeric" });
   const orderMonth = orderDate?.toLocaleDateString("es-ES", {
     month: "numeric",
@@ -56,7 +57,7 @@ const SuccessPage: React.FC = () => {
           <div className="flex p-6 justify-evenly items-center">
             <div className="flex flex-col">
               <h2 className="text-sm font-medium text-gray-600 tracking-wide uppercase">
-                Servicio Contratado
+                Servicio abonado
               </h2>
               <p className="text-lg text-gray-900 font-semibold">
                 {order?.Title || "-"}
@@ -99,20 +100,20 @@ const SuccessPage: React.FC = () => {
             <strong>
               {orderDay || "-"}/{orderMonth || "-"}/{orderYear || "-"}
             </strong>{" "}
-            a las <strong>{order?.Schedule || "-"}hs</strong>.
+            a las <strong>{order?.Schedule_start_time || "-"}hs</strong>.
           </p>
         </div>
 
         <div className="flex flex-col items-center p-6 gap-4 xl:flex-row justify-center">
-          <button className="px-4 py-2 border text-zinc-700  text-sm font-medium rounded-2xl hover:bg-zinc-800 hover:text-zinc-50 transition-all flex items-center gap-1 hover:shadow">
-            <MdDownloading /> comprobante
-          </button>
           <Link
             to="/dashboard"
             className="px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-2xl shadow hover:bg-zinc-700 transition-all"
           >
             Volver al inicio
           </Link>
+          <button className="px-4 py-2 border text-zinc-700  text-sm font-medium rounded-2xl hover:bg-zinc-800 hover:text-zinc-50 transition-all flex items-center gap-1 hover:shadow">
+            <MdDownloading /> comprobante
+          </button>
         </div>
       </div>
     </div>

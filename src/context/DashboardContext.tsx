@@ -1,47 +1,35 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import {
-  Barber,
   Service,
 } from "../internal/panel-control/models/Services.models";
 import {
-  GetAllServices,
+  GetServices,
+  GetAvailableSchedules,
   GetOrderHistorial,
 } from "../internal/dashboard/services/DashboardService";
-import { useLocation, useNavigate } from "react-router-dom";
 import {
-  ScheduleDay,
-  ScheduleResponse,
-  SelectedShiftByUser,
+  Shift
 } from "../internal/dashboard/models/DashboardModels";
 import { Order } from "../internal/dashboard/models/OrderModels";
 
 interface DashboardContextProps {
-  AllServices: () => Promise<void>;
+  AllServices: () => void;
   services: Service[];
   setServices: React.Dispatch<React.SetStateAction<Service[]>>;
   selectedService: Service | undefined;
   setSelectedService: React.Dispatch<React.SetStateAction<Service | undefined>>;
-  navigationIndex: number;
-  setNavigationIndex: React.Dispatch<React.SetStateAction<number>>;
-  NavigationLinks: Array<string>;
-  AddNewIndex: () => void;
-  nextStep: boolean;
-  setNextStep: React.Dispatch<React.SetStateAction<boolean>>;
-  navigateToPrevious: () => void;
-  barbersList: Barber[];
-  setBarberList: React.Dispatch<React.SetStateAction<Barber[]>>;
-  selectedBarber: Barber | undefined;
-  setSelectedBarber: React.Dispatch<React.SetStateAction<Barber | undefined>>;
-  barberSchedules: ScheduleResponse[];
-  setBarberSchedules: React.Dispatch<React.SetStateAction<ScheduleResponse[]>>;
-  ShowSchedulesDayList: (date: Date) => void;
-  filteredSchedulesByDay: ScheduleDay | undefined;
-  setFilteredSchedulesByDay: React.Dispatch<React.SetStateAction<ScheduleDay | undefined>>;
-  selectedShift: SelectedShiftByUser;
-  setSelectedShift: React.Dispatch<React.SetStateAction<SelectedShiftByUser>>;
-  SelectShiftHandler: (sh: SelectedShiftByUser) => void;
+
+  barberSchedules: Shift[];
+  setBarberSchedules: React.Dispatch<React.SetStateAction<Shift[]>>;
+ 
+  filteredSchedulesByDay: Shift[];
+  setFilteredSchedulesByDay: React.Dispatch<React.SetStateAction<Shift[]>>;
+  selectedShift: Shift | undefined;
+  setSelectedShift: React.Dispatch<React.SetStateAction<Shift | undefined>>;
+  SelectDateHandler: (day: Date) => void;
+  SelectScheduleTimeHandler: (selectedShift: Shift) => void
+
   handleReserveClick: (srv: Service) => void;
-  handleSelectBarber: (barber: Barber) => void;
   pendingOrder: Order | undefined;
   setPendingOrder: React.Dispatch<React.SetStateAction<Order | undefined>>;
   ordersHistorial: Order[];
@@ -49,6 +37,7 @@ interface DashboardContextProps {
   makeReservation: boolean;
   setMakeReservation: React.Dispatch<React.SetStateAction<boolean>>;
   HandleMakeReservation: ()=> void
+  LoadAvailableSchedules: () => void
 }
 
 export const DashboardContext = React.createContext<
@@ -63,152 +52,105 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   children,
 }) => {
   const [services, setServices] = useState<Service[]>([]);
+  const [serviceOffset, setServiceOffset] = useState<number>(0);
 
   const AllServices = async () => {
+
+    let limit: number = 5;
+
     try {
-      const fetchedServices: Service[] = await GetAllServices();
-      if (fetchedServices) {
-        setServices(fetchedServices);
+      const fetchedServices: Service[] = await GetServices(limit, serviceOffset);
+      if (fetchedServices.length > 0) {
+        
+        setServices((prev) => {
+ 
+          const filtered = fetchedServices.filter(
+            (newService) => !prev.some((existingService) => existingService.ID === newService.ID)
+          );
+          
+       
+          return [...prev, ...filtered];
+        });
+
+        setServiceOffset(serviceOffset + 5);
       }
+      
     } catch (error) {
       console.error("Error fetching services:", error);
     }
   };
 
-  useEffect(() => {
-    AllServices();
-  }, []);
+
+
 
   const [selectedService, setSelectedService] = useState<Service>();
 
-  // seleccion del barbero
-  const [selectedBarber, setSelectedBarber] = useState<Barber>();
-
-  const handleSelectBarber = (barber: Barber) => {
-    setSelectedBarber(barber);
-    setNextStep(true);
-  };
-
-  useEffect(() => {
-    setNextStep(true);
-  }, [selectedBarber]);
-
-  // lista de barberos
-  const [barbersList, setBarberList] = useState<Barber[]>([]);
-
-  const NavigationLinks: string[] = [
-    "/service",
-    "/service/select-staff",
-    "/service/select-staff/time",
-  ];
-
-  const [navigationIndex, setNavigationIndex] = useState(0);
-  const [nextStep, setNextStep] = useState<boolean>(false);
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const updateIndex = () => {
-      const index = NavigationLinks.findIndex(
-        (link) => link === location.pathname
-      );
-
-      setNavigationIndex(index);
-    };
-
-    updateIndex();
-  }, [location.pathname]);
-
-  // Avanzar al siguiente paso y navegar al enlace correspondiente
-  const AddNewIndex = () => {
-    if (navigationIndex < NavigationLinks.length - 1) {
-      const nextIndex = navigationIndex + 1;
-
-      setNavigationIndex(nextIndex);
-      setNextStep(false);
-      navigate(NavigationLinks[nextIndex]);
-    }
-  };
-
-  // Retrocede al índice anterior y navega
-  const navigateToPrevious = () => {
-    if (navigationIndex > 0) {
-      const newIndex = navigationIndex - 1;
-      navigate(NavigationLinks[newIndex]);
-    }
-  };
-
-  // Horarios del barbero, obtenido por su ID
-  const [barberSchedules, setBarberSchedules] = useState<ScheduleResponse[]>(
+  // Horarios de los barbero
+  const [barberSchedules, setBarberSchedules] = useState<Shift[]>(
     []
   );
 
-  // Filtro de horarios segun el dia seleccionado
-  const [filteredSchedulesByDay, setFilteredSchedulesByDay] = useState<ScheduleDay>();
+  // Reservation 
 
-  // Captura el dia seleccionado
-  const ShowSchedulesDayList = (date: Date) => {
-    // Extraer nombre del día
-    const dayName = date
-      .toLocaleDateString("es-ES", { weekday: "long" })
-      .toLowerCase();
+  // cada vez que el dia cambia, se realiza un filtro en busqueda de shifts cargados previamente
+  const [schedulerOffset, setSchedulerOffset] = useState<number>(0);
 
-    // Encontrar el horario del barbero para el día seleccionado
-    const scheduleByIndex = barberSchedules.find((sch) => sch.Day.toLowerCase() === dayName);
+  const [filteredSchedulesByDay, setFilteredSchedulesByDay] = useState<Shift[]>([]);
 
-    // TODO: Manejarlo en un pop up
-    if (!scheduleByIndex) {
-      console.warn("No se encontró un horario para el día seleccionado.");
-      setFilteredSchedulesByDay(undefined);
-      return;
+  const LoadAvailableSchedules = async () => {
+    let limit: number = 31;
+
+    try {
+      let schedulesResponse = await GetAvailableSchedules(limit,schedulerOffset);
+      
+      setBarberSchedules((prev) => {
+        schedulesResponse
+        
+        const filtered = schedulesResponse.filter(
+          (existing) => !prev.some((existingSchedule) => existingSchedule.ID === existing.ID)
+        );
+        
+        return [...prev, ...filtered];
+      });
+    
+      
+      setSchedulerOffset(schedulerOffset + 31);
+    } catch (error) {
+      console.log("schedules error", error);
     }
+  }
 
-    // Extraer y formatear datos de la fecha seleccionada
-    const dayDate = date.toLocaleDateString("es-ES", { day: "numeric" });
-    const monthDate = date.toLocaleDateString("es-ES", { month: "numeric" });
-    const yearDate = date.toLocaleDateString("es-ES", { year: "numeric" });
-
-    // Actualizar el estado con los horarios filtrados
-    setFilteredSchedulesByDay({
-      Day: scheduleByIndex.Day,
-      End_date: scheduleByIndex.end ? new Date(scheduleByIndex.end) : new Date(),
-      ID: scheduleByIndex.ID,
-      Shift_add:
-        scheduleByIndex.Shift_add?.map((sh_copy) => ({
-          ...sh_copy,
-          Day_date: dayDate,
-          Month_date: monthDate,
-          Year_date: yearDate,
-          Date: date,
-        })),
-      Start_date: scheduleByIndex.start ? new Date(scheduleByIndex.start) : new Date(),
-  });
-    return null;
+  const SelectDateHandler = (day: Date) => {
+    const fechaObjeto = new Date(day);
+   
+    // Filtrar los turnos acorde al dia seleccionado
+    let days = barberSchedules.filter((sch) => {
+      // Normalizar fechas a formato fecha
+      const fechaSchedule = new Date(sch.Schedule_day_date).toLocaleDateString("es-AR", {
+        weekday: "short", 
+        month: "short",
+        day: "numeric"
+      });
+      const fechaSeleccionada = fechaObjeto.toLocaleDateString("es-AR", {
+        weekday: "short", 
+        month: "short",
+        day: "numeric"
+      });
+  
+      // Comparar fechas
+      return fechaSchedule === fechaSeleccionada;
+    });
+   
+    setFilteredSchedulesByDay(days)
   };
 
   // Shift seleccionado por el usuario
-  const [selectedShift, setSelectedShift] = useState<SelectedShiftByUser>();
+  const [selectedShift, setSelectedShift] = useState<Shift>();
 
-  const SelectShiftHandler = (sh: SelectedShiftByUser) => {
-    if (sh) {
-      setSelectedShift({
-        Day: sh.Day,
-        ID: sh.ID,
-        Schedule_id: sh.Schedule_id,
-        Day_date: sh.Day_date,
-        Month_date: sh.Month_date,
-        Year_date: sh.Year_date,
-        Start_time: sh.Start_time,
-        Barber_id: selectedService?.created_by_id!,
-        Date: sh.Date,
-        Created_by_name: sh.Created_by_name,
-        Available: sh.Available,
-        CreatedAt: sh.CreatedAt
-      });
-      setNextStep(true);
-    }
-  };
+  const SelectScheduleTimeHandler = (selectedShift: Shift) => {
+    setSelectedShift(selectedShift)
+  }
+
 
   // Func para manejar la seleccion del servicio
   const [makeReservation, setMakeReservation] = useState(false)
@@ -229,8 +171,8 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
       preview_url: srv.preview_url
     });
     HandleMakeReservation()
-    setNextStep(true);
-  };
+   
+  };  
 
   // estado de ordenes pendientes
   const [pendingOrder, setPendingOrder] = useState<Order>();
@@ -247,26 +189,27 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   const [offsetHistorial, setOffsetHistorial] = useState(0);
   const [ordersHistorial, setOrdersOrdersHistorial] = useState<Order[]>([]);
 
-  useEffect(() => {
-    const loadInitialOrders = async () => {
-      let limit = 5;
+  // useEffect(() => {
+  //   const loadInitialOrders = async () => {
+  //     let limit = 5;
 
-      try {
-        const fetchedOrders: Order[] = await GetOrderHistorial(
-          limit,
-          offsetHistorial
-        );
-        if (fetchedOrders.length > 0) {
-          setOrdersOrdersHistorial(fetchedOrders);
-          setOffsetHistorial(offsetHistorial + 5);
-        }
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
+  //     try {
+  //       const fetchedOrders: Order[] = await GetOrderHistorial(
+  //         limit,
+  //         offsetHistorial
+  //       );
+  //       if (fetchedOrders.length > 0) {
+  //         setOrdersOrdersHistorial(fetchedOrders);
+  //         setOffsetHistorial(offsetHistorial + 5);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching orders:", error);
+  //     }
+  //   };
 
-    loadInitialOrders();
-  }, []);
+  //   loadInitialOrders();
+  // }, []);
+
 
   return (
     <DashboardContext.Provider
@@ -276,34 +219,23 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         setServices,
         selectedService,
         setSelectedService,
-        navigationIndex,
-        NavigationLinks,
-        setNavigationIndex,
-        AddNewIndex,
-        nextStep,
-        setNextStep,
-        navigateToPrevious,
-        barbersList,
-        setBarberList,
-        selectedBarber,
-        setSelectedBarber,
         barberSchedules,
         setBarberSchedules,
         filteredSchedulesByDay,
-        ShowSchedulesDayList,
         setFilteredSchedulesByDay,
         selectedShift,
         setSelectedShift,
-        SelectShiftHandler,
         handleReserveClick,
-        handleSelectBarber,
         pendingOrder,
         setPendingOrder,
         ordersHistorial,
         setOrdersOrdersHistorial,
         makeReservation,
         setMakeReservation,
-        HandleMakeReservation
+        HandleMakeReservation,
+        SelectDateHandler,
+        LoadAvailableSchedules,
+        SelectScheduleTimeHandler
       }}
     >
       {children}

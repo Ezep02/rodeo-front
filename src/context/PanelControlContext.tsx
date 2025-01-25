@@ -1,15 +1,22 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Order } from "../internal/panel-control/types/OrderTypes";
 import {
+  CreateLongInstagramToken,
   CreateService,
   GetInstagramFeedMedias,
   GetOrderList,
-  GetSchedulesList,
-  GetServicesList,
-  UpdateSchedulesList,
+  GetBarberSchedulesList,
+  GetBarberServicesList,
+  GetShortInstagramToken,
+  UpdateBarberSchedules,
   UpdateServiceByID,
+  GetBarberCutsByMonth,
 } from "../internal/panel-control/services/PanelServices";
-import { ScheduleResponse } from "../internal/panel-control/models/Shadules.models";
+import {
+  CutsQuantity,
+  Schedule,
+  ScheduleResponse,
+} from "../internal/panel-control/models/Shadules.models";
 import {
   MediaResponse,
   Service,
@@ -26,24 +33,19 @@ interface AuthContextProps {
   setServiceList: React.Dispatch<React.SetStateAction<Service[]>>;
   modifyScheduler: boolean;
   setModifyScheduler: React.Dispatch<React.SetStateAction<boolean>>;
-  addScheduler: boolean;
-  setAddScheduler: React.Dispatch<React.SetStateAction<boolean>>;
   HandleModifyScheduler: () => void;
-  HandleAddScheduler: () => void;
   scheduleList: ScheduleResponse[];
   setScheduleList: React.Dispatch<React.SetStateAction<ScheduleResponse[]>>;
+  schedule: Schedule | undefined;
+  setSchedule: React.Dispatch<React.SetStateAction<Schedule | undefined>>;
+  HandleSaveSchedulesChanges: () => Promise<void>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   serviceLoading: boolean;
   setServiceIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  schedule: ScheduleResponse[];
-  setSchedule: React.Dispatch<React.SetStateAction<ScheduleResponse[]>>;
-  HandleSaveChanges: () => Promise<void>;
-  openServices: boolean;
-  setOpenServices: React.Dispatch<React.SetStateAction<boolean>>;
+
   editarServicio: boolean;
   setEditarServicio: React.Dispatch<React.SetStateAction<boolean>>;
-  HandleEditarServicioView: () => void;
   selectedServiceToEdit: Service;
   setSelectedServiceToEdit: React.Dispatch<React.SetStateAction<Service>>;
   HandleEditarServicio: () => void;
@@ -58,6 +60,13 @@ interface AuthContextProps {
   setMediaList: React.Dispatch<React.SetStateAction<MediaResponse[]>>;
   selectedMediaUrl: string;
   setSelectedMediaUrl: React.Dispatch<React.SetStateAction<string>>;
+  InstagramLogin: () => void;
+  HandleLoadSchedulesList: () => Promise<void>;
+  cutsChartData: CutsQuantity[];
+  setCutsChartData: React.Dispatch<React.SetStateAction<CutsQuantity[]>>;
+  LoadServices: () => void;
+  HandleLoadTotalCuts: () => void;
+  loadInitialOrders: () => void
 }
 
 export const PanelControlContext = React.createContext<
@@ -74,32 +83,29 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
   const [offset, setOffset] = useState(0);
   const [orderList, setOrderList] = useState<Order[]>([]);
 
-  useEffect(() => {
-    const loadInitialOrders = async () => {
-      let limit = "5";
+  const loadInitialOrders = async () => {
+    let limit = "5";
 
-      try {
-        const fetchedOrders: Order[] = await GetOrderList(
-          limit,
-          String(offset)
-        );
-        if (fetchedOrders.length > 0) {
-          setOrderList(fetchedOrders);
-          setOffset(offset + 5);
-        }
-      } catch (error) {
-        console.error("Error fetching orders:", error);
+    try {
+      const fetchedOrders: Order[] = await GetOrderList(
+        limit,
+        String(offset)
+      );
+      if (fetchedOrders.length > 0) {
+        setOrderList(fetchedOrders);
+        setOffset(offset + 5);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
-    loadInitialOrders();
-  }, []);
 
   //loader
   const [isLoading, setIsLoading] = useState(false);
 
   const GetOrdersList = async () => {
-    let limit = "5";
+    let limit = "10";
 
     setIsLoading(true);
     try {
@@ -109,8 +115,8 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
           return prev ? [...prev, ...fetchedOrders] : fetchedOrders;
         });
         setOffset(offset + 5);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -118,58 +124,109 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
 
   // Scheduler
   const [modifyScheduler, setModifyScheduler] = useState(false);
-  const [addScheduler, setAddScheduler] = useState(false);
-
   // View Scheduler Buttons Handlers
   const HandleModifyScheduler = () => setModifyScheduler((prev) => !prev);
-  const HandleAddScheduler = () => setAddScheduler((prev) => !prev);
-
   const [scheduleList, setScheduleList] = useState<ScheduleResponse[]>([]);
 
-  useEffect(() => {
-    const loadScheduleList = async () => {
-      const response = await GetSchedulesList();
+  // scheduler offset
+  const [schedulerOffset, setSchedulerOffset] = useState<number>(0);
 
-      if (response) {
-        setScheduleList(response);
-      }
-    };
+  const HandleLoadSchedulesList = async () => {
+    // TODO: utilizar offset y limit solo si cambia el mes
+    let limit: number = 31;
 
-    loadScheduleList();
-  }, []);
-
-  const [schedule, setSchedule] = useState<ScheduleResponse[]>([]);
-  // Guardar los cambios
-  const HandleSaveChanges = async () => {
     try {
-      // console.log("NEW",schedule)
-
-      await UpdateSchedulesList(schedule);
+      let schedulesResponse = await GetBarberSchedulesList(
+        limit,
+        schedulerOffset
+      );
+      setSchedulerOffset((prev) => prev + 31);
+      setScheduleList(schedulesResponse);
     } catch (error) {
-      console.log(error);
+      console.log("schedules error", error);
     }
-
-    // extraer los datos actualizados, y actualizar el hook
-    // cerrar el viewer updated
-    HandleModifyScheduler();
   };
 
-  //Servicios
-  const [serviceList, setServiceList] = useState<Service[]>([]);
-  const [serviceLoading, setServiceIsLoading] = useState(false);
-  const [openServices, setOpenServices] = useState(false);
-  const [openAddService, setOpenAddService] = useState(false);
+ 
 
-  useEffect(() => {
-    const loadInitialServices = async () => {
-      const response: Service[] = await GetServicesList();
+  // Guardar los cambios del scheduler
+  const [schedule, setSchedule] = useState<Schedule | undefined>(undefined);
+  const HandleSaveSchedulesChanges = async () => {
+    if (schedule) {
+      try {
+        // filtrar los schedules con status "NOT CHANGE", y luego realizar la peticion
+        schedule.schedule_add = schedule.schedule_add.filter(
+          (sch) => sch.Schedule_status !== "NOT CHANGE"
+        );
 
-      if (response) {
-        setServiceList(response);
+        await UpdateBarberSchedules(schedule);
+
+        // Actualizar el estado si hay schedules para eliminar
+        if (schedule.schedule_delete && schedule.schedule_delete?.length > 0) {
+          setScheduleList((prev) => {
+            const updatedData = prev.filter(
+              (sch) =>
+                !schedule.schedule_delete?.some((delID) => delID.ID === sch.ID)
+            );
+            return updatedData;
+          });
+        }
+
+        HandleModifyScheduler();
+      } catch (error) {
+        console.log("error al guardar los datos", error);
       }
-    };
-    loadInitialServices();
-  }, []);
+    } else {
+      console.log("Schedules es undefined");
+    }
+  };
+
+  //cortes totales por mes
+
+  const [cutsChartData, setCutsChartData] = useState<CutsQuantity[]>([]);
+
+  const HandleLoadTotalCuts = async () => {
+    
+    try {
+      const res = await GetBarberCutsByMonth();
+
+      if (res) {
+        setCutsChartData(res);
+      }
+    } catch (error) {
+      console.log("load cuts", error);
+    }
+  };
+
+
+  //Servicios
+  const [serviceLoading, setServiceIsLoading] = useState(false);
+  const [openAddService, setOpenAddService] = useState(false);
+  
+  const [serviceList, setServiceList] = useState<Service[]>([]);
+  const [servicesOffset, setServicesOffset] = useState<number>(0);
+
+  const LoadServices = async () => {
+    
+    const limit = 5;
+    // Obtener nuevos datos desde la API
+    const response = await GetBarberServicesList(limit, servicesOffset); 
+   
+    if (response.length > 0) {
+  
+      setServiceList((prev) => {
+ 
+        const filtered = response.filter(
+          (newService) => !prev.some((existingService) => existingService.ID === newService.ID)
+        );
+        
+     
+        return [...prev, ...filtered];
+      });
+ 
+      setServicesOffset(servicesOffset+5);
+    }
+  };
 
   // EDICION, CREACION, ELIMINACION DE SERVICIOS
   const [editarServicio, setEditarServicio] = useState<boolean>(false);
@@ -181,11 +238,6 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
     title: "",
     service_duration: 0,
   });
-
-  // muestra los servicos
-  const HandleEditarServicioView = () => {
-    setOpenServices((prev) => !prev);
-  };
 
   //abre la ventana de edicion de servicios
   const HandleEditarServicio = () => {
@@ -219,14 +271,14 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
 
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string>("");
   const [mediaList, setMediaList] = useState<MediaResponse[]>([]);
-  const [instagramPhotosloading, setInstagramPhotosLoading] = useState<boolean>(false);
-
-
+  const [instagramPhotosloading, setInstagramPhotosLoading] =
+    useState<boolean>(false);
 
   const SearchImages = async () => {
     setInstagramPhotosLoading(true);
+
     try {
-      const res = await GetInstagramFeedMedias()
+      const res = await GetInstagramFeedMedias();
       setMediaList(res.data);
       setInstagramPhotosLoading(false);
     } catch (error) {
@@ -237,6 +289,17 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
   useEffect(() => {
     SearchImages();
   }, []);
+
+  const InstagramLogin = async () => {
+    // const rodeo_id = "910663307106552";
+    // const redirect_uri = "https://dbcd-181-16-122-41.ngrok-free.app/panel-control/config";
+    // // Construir la URL para redirigir al usuario
+    // const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${rodeo_id}&redirect_uri=${redirect_uri}&scope=instagram_business_basic&response_type=code`;
+    // // Abrir la URL de autenticación en una nueva ventana o pestaña
+    // window.location.href = authUrl
+  };
+
+  // Verificar si hay un código en la URL
 
   return (
     <PanelControlContext.Provider
@@ -251,23 +314,17 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
         HandleModifyScheduler,
         scheduleList,
         setScheduleList,
-        addScheduler,
-        setAddScheduler,
-        HandleAddScheduler,
         isLoading,
         setIsLoading,
-        schedule,
-        setSchedule,
-        HandleSaveChanges,
+        HandleSaveSchedulesChanges,
         serviceList,
         setServiceList,
         serviceLoading,
         setServiceIsLoading,
-        openServices,
-        setOpenServices,
+
         editarServicio,
         setEditarServicio,
-        HandleEditarServicioView,
+
         selectedServiceToEdit,
         setSelectedServiceToEdit,
         HandleEditarServicio,
@@ -282,6 +339,15 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
         setMediaList,
         instagramPhotosloading,
         setInstagramPhotosLoading,
+        InstagramLogin,
+        schedule,
+        setSchedule,
+        HandleLoadSchedulesList,
+        cutsChartData,
+        setCutsChartData,
+        LoadServices,
+        HandleLoadTotalCuts,
+        loadInitialOrders
       }}
     >
       {children}

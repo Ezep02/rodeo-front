@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PanelControlContext } from "../../../../context/PanelControlContext";
-import { formatDate } from "../../../../utils/TimeFormater";
 import useWebSocket from "react-use-websocket";
 import { Order } from "../../types/OrderTypes";
-import { IoCartOutline, IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { CreateOrderRefound } from "../../services/PanelServices";
+import { Button } from "@/components/common/CustomButtons";
 
 const OrderList: React.FC = () => {
   const {
@@ -13,12 +13,12 @@ const OrderList: React.FC = () => {
     setOrderList,
     setOffset,
     isLoading,
-    offset,
+    loadInitialOrders,
   } = useContext(PanelControlContext)!;
 
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
 
-  const CNN_URL = "ws://localhost:8080/order/notification";
+  const CNN_URL = `${import.meta.env.VITE_BACKEND_WS_URL}/order/notification`;
   const { lastJsonMessage } = useWebSocket<Order>(CNN_URL);
 
   // Toggle expanded rows
@@ -47,7 +47,8 @@ const OrderList: React.FC = () => {
       // let response = await CreateOrderRefound(id, amount)
       // console.log("Refound",response)
       const url = `https://api.mercadopago.com/v1/payments/${id}/refunds`;
-      const mp_access_token = "APP_USR-196506190136225-122418-9c6e8e77138259dafabfc5c0f443d21a-1432087693"
+      const mp_access_token =
+        "APP_USR-196506190136225-122418-9c6e8e77138259dafabfc5c0f443d21a-1432087693";
       const data = await fetch(url, {
         method: "POST",
         headers: {
@@ -61,31 +62,32 @@ const OrderList: React.FC = () => {
         .then((data) => console.log("Refund Response:", data))
         .catch((error) => console.error("Error:", error));
 
-      console.log(data)
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    if(orderList.length === 0){
+      loadInitialOrders();
+    }
+  }, []);
+
   return (
     <div
       className="
-      xl:col-start-5 xl:col-end-12 xl:row-start-4 xl:row-end-13 col-start-1 col-end-13 row-start-5 row-end-13 xl:p-8 overflow-y-auto rounded-xl shadow-sm bg-white p-5 space-y-4"
-    >
-      <h2 className="text-2xl font-semibold text-gray-800">Ordenes</h2>
+      xl:col-start-2 xl:col-end-9 xl:row-start-5 xl:row-end-13  xl:p-8 
+      md:col-start-1 md:col-end-9 md:row-start-4 md:row-end-13
+      col-start-1 col-end-13 row-start-5 row-end-13
 
+      rounded-xl shadow-sm bg-white p-2 space-y-4 overflow-hidden overflow-y-scroll scroll-abrir-tarjeta"
+    >
       {orderList.length > 0 ? (
-        <table className="min-w-full border-collapse rounded-lg shadow">
-          <thead className="bg-gray-200 text-gray-700">
+        <table className="min-w-full rounded-lg ">
+          <thead className="text-gray-700">
             <tr>
-              {[
-                "Fecha",
-                "Servicio",
-                "Horario",
-                "Precio",
-                "Estado",
-                "Detalles",
-              ].map((header) => (
+              {["Fecha", "Servicio", "Horario", "Detalles"].map((header) => (
                 <th
                   key={header}
                   className="px-6 py-3 text-left font-medium text-sm"
@@ -95,32 +97,28 @@ const OrderList: React.FC = () => {
               ))}
             </tr>
           </thead>
-          <tbody className="text-gray-700">
+          <tbody className="text-gray-700 ">
             {orderList.map((order) => (
               <React.Fragment key={order.ID}>
                 <tr
-                  className="hover:bg-gray-100 cursor-pointer transition-colors"
+                  className="hover:bg-gray-100 cursor-pointer transition-colors border-y"
                   onClick={() => toggleExpandOrder(order.Payment_id)}
                 >
-                  <td className="px-6 py-3 text-sm">
-                    {new Date(order.Date).toLocaleDateString("es-ES", {
-                      day: "numeric",
-                      month: "numeric",
-                      year: "numeric",
-                    })}
-                  </td>
-                  <td className="px-6 py-3 text-sm">{order.Title}</td>
-                  <td className="px-6 py-3 text-sm">{order.Schedule}</td>
-                  <td className="px-6 py-3 text-sm">${order.Price}</td>
-                  <td className="px-6 py-3 text-sm">
-                    {order.Mp_status === "approved" ? (
-                      <span className="text-white bg-green-400 py-1 px-3 rounded-full text-xs">
-                        {order.Mp_status}
-                      </span>
-                    ) : (
-                      <span className="text-gray-600">{order.Mp_status}</span>
+                  <td className="px-6 py-3 text-sm ">
+                    {new Date(order.Schedule_day_date).toLocaleDateString(
+                      "es-ES",
+                      {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                      }
                     )}
                   </td>
+                  <td className="px-6 py-3 text-sm">{order.Title}</td>
+                  <td className="px-6 py-3 text-sm">
+                    {order.Schedule_start_time}
+                  </td>
+
                   <td className="px-6 py-3 text-center">
                     {expandedOrder === order.Payment_id ? (
                       <IoChevronUp className="text-lg text-gray-600" />
@@ -130,8 +128,8 @@ const OrderList: React.FC = () => {
                   </td>
                 </tr>
                 {expandedOrder === order.Payment_id && (
-                  <tr className="bg-gray-50">
-                    <td colSpan={5} className="p-6">
+                  <tr className="">
+                    <td colSpan={5} className="p-2">
                       <OrderDetails order={order} onCancel={onCancel} />
                     </td>
                   </tr>
@@ -142,25 +140,19 @@ const OrderList: React.FC = () => {
         </table>
       ) : (
         <div className="flex flex-col items-center justify-center text-center py-10">
-          <p className="text-gray-700 bg-gray-100 flex items-center gap-2 px-6 py-4 rounded-md shadow-md">
-            <IoCartOutline className="text-gray-500 text-2xl" />
-            Aún no hay órdenes registradas.
+          <p className="text-gray-800 flex items-center">
+            Sin ordenes registradas
           </p>
         </div>
       )}
 
       {/* Load More Button */}
-      {orderList.length > 1 && offset < orderList.length && (
+      {orderList.length > 1 && (
         <div className="flex justify-center mt-4">
           {isLoading ? (
             <div className="loader"></div>
           ) : (
-            <button
-              onClick={GetOrdersList}
-              className="px-6 py-2 text-sm font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600 shadow transition"
-            >
-              Ver más
-            </button>
+            <Button text="Ver mas" onClickAction={GetOrdersList} />
           )}
         </div>
       )}
@@ -168,41 +160,62 @@ const OrderList: React.FC = () => {
   );
 };
 
-// Order Details Component
 const OrderDetails: React.FC<{
   order: Order;
   onCancel: (id: number, amount: string) => void;
 }> = ({ order, onCancel }) => (
-  <div className="space-y-3 text-sm text-gray-700 bg-white p-4 rounded-lg shadow">
-    <h3 className="font-semibold text-gray-800">Detalles del pago</h3>
-    <ul className="space-y-2">
-      <li>
-        <strong>Nombre:</strong> {order.Payer_name} {order.Payer_surname}
+  <div className="p-2 bg-white space-y-4">
+    <h3 className="font-semibold text-gray-700 border-b pb-2">
+      Detalles del pago
+    </h3>
+    <ul className="space-y-3">
+      <li className="flex justify-between items-center">
+        <span className="font-semibold text-gray-700">Nombre:</span>
+        <span className="text-gray-600">
+          {order.Payer_name} {order.Payer_surname}
+        </span>
       </li>
-      <li>
-        <strong>Email:</strong> {order.Email}
+      <li className="flex justify-between items-center">
+        <span className="font-semibold text-gray-700">Email:</span>
+        <span className="text-gray-600">{order.Email}</span>
       </li>
-      <li>
-        <strong>Teléfono:</strong> {order.Payer_phone || "No proporcionado"}
+      <li className="flex justify-between items-center">
+        <span className="font-semibold text-gray-700">Teléfono:</span>
+        <span className="text-gray-600">
+          {order.Payer_phone || "No proporcionado"}
+        </span>
       </li>
-      <li>
-        <strong>Hora:</strong> {order.Schedule} hs
+      <li className="flex justify-between items-center">
+        <span className="font-semibold text-gray-700">Hora:</span>
+        <span className="text-gray-600">{order.Schedule_start_time} hs</span>
       </li>
-      <li>
-        <strong>Fecha del turno:</strong>{" "}
-        {new Date(order.Date).toLocaleDateString("es-ES", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        }) || "Sin detalles"}
+      <li className="flex justify-between items-center">
+        <span className="font-semibold text-gray-700">Fecha del turno:</span>
+        <span className="text-gray-600">
+          {new Date(order.Schedule_day_date).toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }) || "Sin detalles"}
+        </span>
       </li>
-      <li>
-        <strong>Fecha de aprobación:</strong> {formatDate(order.Date_approved)}
+      <li className="flex justify-between items-center">
+        <span className="font-medium text-gray-700">Fecha de aprobación:</span>
+        <span className="text-gray-600">
+          {new Date(order.Date_approved).toLocaleDateString("es-AR", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
       </li>
-      <button onClick={() => onCancel(order.Payment_id, order.Price)}>
-        cancelar
-      </button>
     </ul>
+    <div className="pt-4 border-t flex justify-end">
+      <Button
+        text="Reembolsar"
+        onClickAction={() => onCancel(order.Payment_id, order.Price)}
+      />
+    </div>
   </div>
 );
 

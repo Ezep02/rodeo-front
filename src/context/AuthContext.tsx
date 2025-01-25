@@ -5,81 +5,101 @@ import {
   UserLogin,
   UserRegister,
   VerifyToken,
-  GoogleOauth
 } from "../internal/auth/service/AuthService";
 import { LoginUserReq } from "../internal/auth/models/AuthModels";
 
-// 1. Definir la interfaz del contexto (valores y funciones)
 interface AuthContextProps {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   UserSignIn: (logUser: LoginUserReq) => Promise<void>;
   UserSignUp: (user: User) => Promise<void>;
   LogoutSession: () => void;
-  userErrors: string[];
   isUserAuthenticated: boolean;
   setIsUserAuthenticated: (value: boolean) => void;
-  GoogleLogIn: ()=> void
+  GoogleLogIn: () => void;
+  authLoader: boolean;
+  setAuthLoader: React.Dispatch<React.SetStateAction<boolean>>;
+  authFormChange: boolean;
+  setAuthFormChange: React.Dispatch<React.SetStateAction<boolean>>;
+  AuthFormChangeHandler: () => void;
+  authSignUpErrors: string[];
+  setAuthSignUpErrors: React.Dispatch<React.SetStateAction<string[] | []>>;
+  signInErrors: string[];
+  setSignInErrors: React.Dispatch<React.SetStateAction<string[] | []>>;
+  authIsLoading: boolean;
+  setAuthIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  AuthLoaderHandler: () => void;
+  openNav: boolean;
+  setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
+  OpenNavHandler: () => void;
 }
 
-// 2. Crear el contexto con un valor inicial indefinido
 export const AuthContext = React.createContext<AuthContextProps | undefined>(
   undefined
 );
 
-// 3. Definir el tipo para las props del proveedor (children)
 interface ChildrenProviderProp {
   children: ReactNode;
 }
 
-// 4. Implementación del proveedor de contexto
 export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   children,
 }) => {
   const [user, setUser] = useState<User>();
-  const [userErrors, setUserErrors] = useState<string[]>([]);
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+  const [authLoader, setAuthLoader] = useState<boolean>(true);
 
+  //cambia entre el login y el register
+  const [authFormChange, setAuthFormChange] = useState<boolean>(false);
+
+  const [authIsLoading, setAuthIsLoading] = useState<boolean>(false);
+  const AuthLoaderHandler = () => {
+    setAuthIsLoading((prev) => !prev);
+  };
+
+  const AuthFormChangeHandler = () => {
+    setAuthFormChange((prev) => !prev);
+  };
+
+  const [signInErrors, setSignInErrors] = useState<string[]>([]);
   const UserSignIn = async (logUser: LoginUserReq): Promise<void> => {
     try {
+      AuthLoaderHandler();
       const response: User = await UserLogin(logUser);
       setUser(response);
-      setUserErrors([]);
       setIsUserAuthenticated(true);
     } catch (error: any) {
-      setUserErrors([
-        error?.response?.data?.message || "Error de autenticacion",
-      ]);
+      setSignInErrors([error?.response?.data || "Error de autenticacion"]);
     }
+    AuthLoaderHandler();
   };
 
   const GoogleLogIn = async () => {
-
     try {
       window.location.href = "http://localhost:8080/auth/google";
-      
-    } catch (error) {
-      console.log(error)
-    }
-
-  }
-
-  const UserSignUp = async (user: User): Promise<void> => {
-    try {
-      const response: User = await UserRegister(user);
-      setUser(response);
-      setUserErrors([]);
-      setIsUserAuthenticated(true);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const [authSignUpErrors, setAuthSignUpErrors] = useState<string[]>([]);
+
+  const UserSignUp = async (user: User): Promise<void> => {
+    try {
+      AuthLoaderHandler();
+      const response: User = await UserRegister(user);
+      setUser(response);
+      setIsUserAuthenticated(true);
+    } catch (error: any) {
+      setAuthSignUpErrors([error?.response?.data || "Error de autenticacion"]);
+    }
+    AuthLoaderHandler();
   };
 
   const LogoutSession = async () => {
     try {
       await LogoutUser();
       setIsUserAuthenticated(false);
-      
     } catch (error) {
       console.log(error);
     }
@@ -87,19 +107,27 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
 
   const VerifySession = async () => {
     try {
+      setAuthLoader(true);
       const session: User = await VerifyToken();
       if (session) {
         setUser(session);
         setIsUserAuthenticated(true);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setSignInErrors(["Error de autenticacion"]);
     }
+    setAuthLoader(false);
   };
 
   useEffect(() => {
     VerifySession();
   }, []);
+
+  const [openNav, setOpenNav] = useState<boolean>(false);
+
+  const OpenNavHandler = () => {
+    setOpenNav((prev) => !prev);
+  };
 
   return (
     <AuthContext.Provider
@@ -108,11 +136,25 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
         setUser,
         UserSignIn,
         UserSignUp,
-        userErrors,
         isUserAuthenticated,
         setIsUserAuthenticated,
         LogoutSession,
-        GoogleLogIn
+        GoogleLogIn,
+        authLoader,
+        setAuthLoader,
+        authFormChange,
+        setAuthFormChange,
+        AuthFormChangeHandler,
+        signInErrors,
+        setSignInErrors,
+        authSignUpErrors,
+        setAuthSignUpErrors,
+        authIsLoading,
+        setAuthIsLoading,
+        AuthLoaderHandler,
+        openNav,
+        setOpenNav,
+        OpenNavHandler,
       }}
     >
       {children}

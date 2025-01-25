@@ -50,7 +50,7 @@ const OrdersHistorial: React.FC = () => {
               </h3>
               <p className="text-sm text-gray-600">Precio: ${order.Price}</p>
               <p className="text-sm text-gray-600">
-                Fecha: {new Date(order.Date).toLocaleDateString()}
+                Fecha: {new Date(order.Schedule_day_date).toLocaleDateString()}
               </p>
             </div>
           </li>
@@ -94,7 +94,7 @@ const OrdersHistorial: React.FC = () => {
                   </h4>
                   <p className="text-sm text-gray-600">Precio: ${order.Price}</p>
                   <p className="text-sm text-gray-600">
-                    Fecha: {new Date(order.Date).toLocaleDateString()}
+                    Fecha: {new Date(order.Schedule_day_date).toLocaleDateString()}
                   </p>
                 </li>
               ))}

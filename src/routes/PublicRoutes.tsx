@@ -1,43 +1,46 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-
-import Dashboard from "../internal/dashboard/pages/Dashboard";
-import HomePage from "../internal/home/pages/HomePage";
-import { DashboardContextProvider } from "../context/DashboardContext";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import Dashboard from "@/internal/dashboard/pages/Dashboard";
+import MainLayout from "@/layouts/MainLayout";
+import HomePage from "@/internal/home/pages/HomePage";
 import PaymentRoutes from "./PaymentRoutes";
-import MainLayout from "../layouts/MainLayout";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import PrivateRoutes from "./PrivateRoutes";
 
 const PublicRoutes = () => {
+  const { user } = useContext(AuthContext)!;
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <DashboardContextProvider>
-            <MainLayout>
-              <HomePage />
-            </MainLayout>          
-          </DashboardContextProvider>
-        }
-      />
+      <Route path="/" element={<HomePage />} />
+
       <Route
         path="/dashboard"
         element={
-          <DashboardContextProvider>
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          </DashboardContextProvider>
+          <MainLayout>
+            <Dashboard />
+          </MainLayout>
         }
       />
 
       <Route
         path="/payment/*"
         element={
-          <DashboardContextProvider>
+          <MainLayout>
+            <PaymentRoutes />
+          </MainLayout>
+        }
+      />
+      <Route
+        path={`/dashboard/panel-control/*`}
+        element={
+          user?.is_barber ? (
             <MainLayout>
-              <PaymentRoutes />
+              <PrivateRoutes />
             </MainLayout>
-          </DashboardContextProvider>
+          ) : (
+            <Outlet />
+          )
         }
       />
 

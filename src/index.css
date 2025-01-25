@@ -26,3 +26,26 @@
   scrollbar-width: none;
   scrollbar-color: #1f1f1f transparent;
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
+
+.embla {
+  
+  width: 100%;
+}
+
+.embla__container {
+  display: flex; /* Alinea los slides horizontalmente */
+  gap: 1rem; /* Espaciado entre los slides */
+}
+
+.embla__slide {
+  flex: 0 0 auto; /* Asegura que cada slide mantenga su tamaño */
+   /* Puedes ajustar el ancho según tus necesidades */
+
+}

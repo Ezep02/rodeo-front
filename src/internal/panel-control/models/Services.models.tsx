@@ -16,14 +16,6 @@ export type ServiceRequest = {
   preview_url: string;
 };
 
-export type Barber = {
-  ID: number;
-  name: string;
-  surname: string;
-  email: string;
-  phone_number: string;
-};
-
 export type MediaResponse = {
   media_url: string;
   caption: string;

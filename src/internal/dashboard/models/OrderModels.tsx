@@ -15,33 +15,23 @@ export interface Order {
     Date_approved: string; 
     Mp_status: string;
     Mp_status_detail: string;
-    Weak_day: string;
-    Schedule: string;
-    Date: Date
+    Schedule_start_time: string
+    Schedule_day_date: Date;
     Shift_id: number
 };
 
-export interface ServiceOrderRequest {
 
-    Title: string;
+export interface ServiceOrderRequest {
+    
+    Barber_id: number;
+    Created_by_id: number;
     Description: string;
     Price: number;
-    Created_by_id: number;
     Service_duration: number;
     Service_id:number;
-    Weak_day: string;
-    Date: Date;
-    Barber_id: number;
-    Schedule: string
+    Title: string;
+    Schedule_start_time: string
+    Schedule_day_date: Date;
     Shift_id: number
+    
 }
-
-
-// type ServiceOrder struct {
-// 	ID               int     `json:"ID"`
-// 	Title            string  `json:"title"`
-// 	Description      string  `json:"description"`
-// 	Price            float64 `json:"price"`
-// 	Created_by_id    int
-// 	Service_Duration int `json:"service_duration"`
-// }

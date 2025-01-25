@@ -1,91 +1,77 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-// import { AuthContext } from "../../context/AuthContext";
+import React, { useContext } from "react";
 
-// React icons
-import { SlMenu } from "react-icons/sl";
 import { NavigateButton } from "./CustomButtons";
-import { FaUser, FaUserShield } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
+import { RiHome2Line, RiShoppingCartLine } from "react-icons/ri";
+import {
+  MdOutlineAdminPanelSettings,
+  MdOutlineAnalytics,
+} from "react-icons/md";
+import {GiBullHorns } from "react-icons/gi";
 
 const NavMenu: React.FC = () => {
-  const {user, LogoutSession } = useContext(AuthContext)!;
-
-  const EndSession = async () => {
-    LogoutSession();
-  };
-
-  const navRef = useRef<HTMLDivElement | null>(null);
-  const [openNav, setOpenNav] = useState(false);
-
-  const handleClickOutside = (event: any) => {
-    if (navRef.current && !navRef.current.contains(event.target as Node)) {
-      setOpenNav(false);
-    }
-  };
-
-  useEffect(() => {
-    if (openNav) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openNav]);
-
-  const HandleOpenNav = () => {
-    setOpenNav(!openNav);
-  };
+  const { user, openNav } = useContext(AuthContext)!;
 
   return (
-    <nav className="relative ">
-      <div className="h-full flex justify-center items-center">
-        <button
-          onClick={HandleOpenNav}
-          className="p-2 text-white hover:text-gray-400 transition-colors duration-200 z-20"
-        >
-          <SlMenu size={24} />
-        </button>
-      </div>
+    <nav
+      className="flex md:flex-col p-6 gap-5 justify-between  w-full text-zinc-50 text-pretty
+      
+    "
+    >
+      <div
+        className={`${
+          openNav
+            ? "flex flex-col w-full items-center gap-4"
+            : "flex-col md:flex md:flex-col gap-6 hidden"
+        }`}
+      >
+        <div className="flex justify-center md:justify-start gap-2 items-center group-hover:justify-start  text-rose-500">
 
-      {openNav && (
-        <div
-          className="absolute right-0 top-12 w-72 bg-white/70 backdrop-blur-md rounded-2xl shadow-lg z-50 transition-all duration-300 transform scale-95 origin-top-right"
-          ref={navRef}
-        >
-          {/* Cabecera con rol y nombre */}
-          <div className="flex items-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white px-4 py-3 rounded-t-2xl shadow-sm sm:hidden">
-            {user?.is_admin === true ? (
-              <>
-                <FaUserShield className="text-xl" />
-                <span className="text-sm font-medium">Admin</span>
-              </>
-            ) : (
-              <>
-                <FaUser className="text-xl" />
-                <span className="text-sm font-medium">Usuario</span>
-              </>
-            )}
+          <div className="flex text-2xl uppercase py-2  rounded-full shadow-xl ">
+            <GiBullHorns size={30} />
           </div>
 
-          {/* Opciones del menú */}
-          <div className="flex flex-col p-4 gap-4">
-            <NavigateButton text="Inicio" reference_url="/dashboard" />
-
-            {user?.is_admin === true && (
-              <NavigateButton text="Panel de control" reference_url="/panel-control/admin" />
-            )}
-
-          
-            <button onClick={EndSession}>
-              cerrar sesion
-            </button>
-          
-          </div>
+          <h1 className="font-semibold hidden text-nowrap text-2xl group-hover:block">
+            El Rodeo
+          </h1>
         </div>
-      )}
+
+        <div className="flex flex-col gap-4  justify-center items-center p-2 md:p-0">
+          <NavigateButton
+            text="Inicio"
+            reference_url={`/dashboard`}
+            icon={<RiHome2Line size={24} />}
+          />
+
+          {user?.is_barber === true && (
+            <NavigateButton
+              text="Panel de control"
+              reference_url={`/dashboard/panel-control/barber`}
+              icon={<MdOutlineAnalytics size={24} />}
+            />
+          )}
+
+          {user?.is_admin === true && (
+            <>
+              <NavigateButton
+                text="Administradores"
+                reference_url={`/dashboard/panel-control/admin`}
+                icon={<MdOutlineAdminPanelSettings size={24} />}
+              />
+              {/* <NavigateButton
+              text="Configuraciones"
+              reference_url={`/dashboard/panel-control/config/${user.ID}`}
+            />         */}
+            </>
+          )}
+
+          <NavigateButton
+            text="Ordenes"
+            reference_url={`/dashboard`}
+            icon={<RiShoppingCartLine size={24} />}
+          />
+        </div>
+      </div>
     </nav>
   );
 };

@@ -1,9 +1,10 @@
 export interface User {
-  id?: string,
+  ID?: string,
   name: string;
   email: string;
   password: string;
   is_admin?: boolean;
+  is_barber?:boolean;
   surname: string;
   phone_number?: string;
 }

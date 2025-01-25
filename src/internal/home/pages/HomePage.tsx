@@ -2,6 +2,7 @@ import React from "react";
 import { BookAnAppointmentButton } from "../../../components/common/CustomButtons";
 import HomeGallery from "../components/layout/HomeGallery";
 
+
 const HomePage: React.FC = () => {
  
   return (
@@ -16,7 +17,8 @@ const HomePage: React.FC = () => {
               <p className="text-lg">
                 No solo es un corte, sino una experiencia.
               </p>
-              <BookAnAppointmentButton text="Reservar turno" reference_url="/book"/>
+             
+              <BookAnAppointmentButton text="Reservar turno" reference_url="/dashboard"/>
             </div>
           </div>
         </section>

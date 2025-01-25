@@ -15,11 +15,10 @@ export interface Order {
   Date_approved: string;
   Mp_status: string;
   Mp_status_detail: string;
-
   Barber_id: number;
   Created_by_id: number;
-  Date: Date;
+  
+  Schedule_day_date: Date;
   Service_duration: number;
-  Weak_day: string;
-  Schedule: string;
+  Schedule_start_time: string;
 }
