@@ -90,18 +90,16 @@ export const DeleteServiceByID = async (id: number) => {
   return response;
 };
 
-const rodeo_id = "910663307106552";
-const redirect_uri = "https://dbcd-181-16-122-41.ngrok-free.app/panel-control/config";
-const client_secret = "8160c5c7f4dfdcc3e5ee55652151f9cc"
+
 
 // Instagram
 export const GetShortInstagramToken = async (code: string) => {
     // Solicitar token de acceso corto (short-lived access token)
     const shortLivedResponse = await InstagramInstance.post('/oauth/access_token', {
       grant_type: 'authorization_code',
-      client_id: rodeo_id,
-      client_secret: client_secret,
-      redirect_uri: redirect_uri,
+      client_id:  import.meta.env.rodeo_id,
+      client_secret: import.meta.env.client_secret,
+      redirect_uri: import.meta.env.redirect_uri,
       code: code
     });
     
@@ -109,7 +107,7 @@ export const GetShortInstagramToken = async (code: string) => {
 }
 
 export const CreateLongInstagramToken = async (shortLivedAccessToken: string) => {
-  const longToken = await InstagramInstance.get(`/oauth/access_token?grant_type=ig_exchange_token&client_secret=${client_secret}&access_token=${shortLivedAccessToken}`)
+  const longToken = await InstagramInstance.get(`/oauth/access_token?grant_type=ig_exchange_token&client_secret=${import.meta.env.client_secret}&access_token=${shortLivedAccessToken}`)
   return longToken
 }
 

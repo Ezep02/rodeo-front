@@ -291,10 +291,10 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
   }, []);
 
   const InstagramLogin = async () => {
-    // const rodeo_id = "910663307106552";
-    // const redirect_uri = "https://dbcd-181-16-122-41.ngrok-free.app/panel-control/config";
+    // const rodeo_id = cargar desde .env;
+    // const redirect_uri = cargar desde .env
     // // Construir la URL para redirigir al usuario
-    // const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${rodeo_id}&redirect_uri=${redirect_uri}&scope=instagram_business_basic&response_type=code`;
+    // const authUrl = cargar desde .env
     // // Abrir la URL de autenticación en una nueva ventana o pestaña
     // window.location.href = authUrl
   };
