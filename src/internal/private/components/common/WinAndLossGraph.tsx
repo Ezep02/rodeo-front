@@ -9,45 +9,46 @@ import {
 } from "@/components/ui/chart";
 import { AdminContext } from "@/context/AdminContext";
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#a3e635",
-  },
-};
-
 type ChartData = {
   name: string;
   value: number;
+  fill: string;
 };
 
 const WinAndLossGraph = () => {
   const { totalRevenue, totalExpenses } = React.useContext(AdminContext)!;
 
   const chartData: ChartData[] = React.useMemo(() => {
-    if (!totalRevenue || !totalExpenses) return [];
+    
     return [
       {
         name: "Ganancia",
-        value: totalRevenue.reduce((acc, curr) => acc + curr.total_revenue, 0),
+        value: totalRevenue ? totalRevenue.reduce((acc, curr) => acc + curr.total_revenue, 0) : 0,
+        fill: "#f5cb49", // Verde
       },
       {
         name: "Gasto",
-        value: totalExpenses.reduce((acc, curr) => acc + curr.total_expense, 0),
+        value: totalExpenses ? totalExpenses.reduce((acc, curr) => acc + curr.total_expense, 0) : 0,
+        fill: "#27b5fc", // Rojo
       },
     ];
   }, [totalRevenue, totalExpenses]);
 
-  const total = chartData.reduce((acc, item) => acc + item.value, 0);
+  
+  const totalDifference = (chartData.find(item => item.name === "Ganancia")?.value || 0) - (chartData.find(item => item.name === "Gasto")?.value || 0);
+
+ 
 
   return (
-    <Card className="flex flex-col h-full bg-transparent w-full">
+    <Card className="flex flex-col h-full bg-transparent w-full overflow-hidden">
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          config={{}}
+          className="h-full"
         >
-          <PieChart>
+          <PieChart
+            className="h-full"
+          >
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
@@ -57,8 +58,9 @@ const WinAndLossGraph = () => {
               dataKey="value"
               nameKey="name"
               innerRadius={60}
-              outerRadius={100}
+              outerRadius={80}
               strokeWidth={5}
+          
             >
               <Label
                 content={({ viewBox }) => {
@@ -73,9 +75,9 @@ const WinAndLossGraph = () => {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          className={`${totalDifference > 0 ? "text-xl text-green-400 font-bold" : "text-xl text-red-400 font-bold"}`}
                         >
-                          ${total}
+                          {totalDifference.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

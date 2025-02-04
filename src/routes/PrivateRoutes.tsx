@@ -15,7 +15,7 @@ const PrivateRoutes: React.FC = () => {
       <Route path="config/:barberID" element={<ConfigControlPage />} />
       {user?.is_admin && (
         <>
-          <Route path="config/:barberID" element={<ConfigControlPage />} />
+          <Route path="config" element={<ConfigControlPage />} />
           <Route path="admin" element={<PrivatePage />} />
         </>
       )}

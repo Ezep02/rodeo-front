@@ -7,7 +7,7 @@ import {
   MdOutlineAdminPanelSettings,
   MdOutlineAnalytics,
 } from "react-icons/md";
-import {GiBullHorns } from "react-icons/gi";
+import { GiBullHorns } from "react-icons/gi";
 
 const NavMenu: React.FC = () => {
   const { user, openNav } = useContext(AuthContext)!;
@@ -26,7 +26,6 @@ const NavMenu: React.FC = () => {
         }`}
       >
         <div className="flex justify-center md:justify-start gap-2 items-center group-hover:justify-start  text-rose-500">
-
           <div className="flex text-2xl uppercase py-2  rounded-full shadow-xl ">
             <GiBullHorns size={30} />
           </div>
@@ -59,9 +58,9 @@ const NavMenu: React.FC = () => {
                 icon={<MdOutlineAdminPanelSettings size={24} />}
               />
               {/* <NavigateButton
-              text="Configuraciones"
-              reference_url={`/dashboard/panel-control/config/${user.ID}`}
-            />         */}
+                text="Configuraciones"
+                reference_url={`/dashboard/panel-control/config`}
+              /> */}
             </>
           )}
 

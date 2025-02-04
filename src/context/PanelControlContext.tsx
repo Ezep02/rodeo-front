@@ -291,12 +291,10 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
   }, []);
 
   const InstagramLogin = async () => {
-    // const rodeo_id = cargar desde .env;
-    // const redirect_uri = cargar desde .env
-    // // Construir la URL para redirigir al usuario
-    // const authUrl = cargar desde .env
-    // // Abrir la URL de autenticación en una nueva ventana o pestaña
-    // window.location.href = authUrl
+    // Construir la URL para redirigir al usuario
+    const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${import.meta.env.VITE_RODEO_ID}&redirect_uri=${import.meta.env.VITE_REDIRECT_URI}&scope=instagram_business_basic&response_type=code`
+    // Abrir la URL de autenticación en una nueva ventana o pestaña
+    window.location.href = authUrl
   };
 
   // Verificar si hay un código en la URL

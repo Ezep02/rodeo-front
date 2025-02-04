@@ -14,6 +14,7 @@ export type ExpenseFormFieldProps = {
   register: UseFormRegister<ExpenseFormData>;
   error: FieldError | undefined;
   valueAsNumber?: boolean;
+  defaultValue?: any
 };
 
 export type ValidFieldNames = "title" | "description" | "amount";
@@ -24,5 +25,5 @@ export const ExpenseSchema: ZodType<ExpenseFormData> = z.object({
   description: z.string(),
   amount: z
     .number({ message: "Debes ingresar valores numericos" })
-    .min(0, { message: "Debes ingresar un valor mayor a 0" }),
+    .min(1, { message: "Debes ingresar un valor mayor a 0" }),
 });

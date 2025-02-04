@@ -33,6 +33,16 @@ export const GetExpensesHistorial = async (limit: number, offset:number) => {
     return response.data
 }
 
+export const UpdateRegisteredExpense = async (data: Expense) => {
+    let response = await AuthenticationInstance.put<Expense>(`${ANALYTICS_BASE_URL}/expense/`, data)
+    return response.data
+}
+
+export const DeleteRegisteredExpense = async (id:number) => {
+    let response = await AuthenticationInstance.delete(`${ANALYTICS_BASE_URL}/expense/${id}`)
+    return response
+}
+
 export const GetTotalExpenseCount = async () => {
     let response = await AuthenticationInstance.get<ExpenseChart[]>(`${ANALYTICS_BASE_URL}/expense/total`)
     return response.data

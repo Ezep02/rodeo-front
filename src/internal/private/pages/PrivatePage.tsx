@@ -44,9 +44,7 @@ const PrivatePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-  
-      GetTotalExpenses();
- 
+    GetTotalExpenses();
   }, []);
 
   // agregar conexion en tiempo real
@@ -153,10 +151,12 @@ const PrivatePage: React.FC = () => {
               <h3 className="text-gray-600 font-medium">Ganancias</h3>
               <h4 className="font-semibold text-lg">
                 $
-                {totalRevenue.reduce(
-                  (sum, item) => sum + item.total_revenue,
-                  0
-                )}
+                {totalRevenue
+                  ? totalRevenue?.reduce(
+                      (sum, item) => sum + item.total_revenue,
+                      0
+                    )
+                  : 0}
               </h4>
             </article>
 
@@ -164,10 +164,12 @@ const PrivatePage: React.FC = () => {
               <h3 className="text-gray-600 font-medium">Gastos</h3>
               <h4 className="font-semibold text-lg">
                 ${" "}
-                {totalExpenses.reduce(
-                  (sum, item) => sum + item.total_expense,
-                  0
-                )}
+                {totalExpenses
+                  ? totalExpenses?.reduce(
+                      (sum, item) => sum + item.total_expense,
+                      0
+                    )
+                  : 0}
               </h4>
             </article>
           </section>

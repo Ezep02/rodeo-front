@@ -9,6 +9,7 @@ export const ExpenseFormField: React.FC<ExpenseFormFieldProps> = ({
   register,
   error,
   valueAsNumber,
+  defaultValue
 }) => (
   <div className="flex flex-col gap-1">
     <input
@@ -16,7 +17,7 @@ export const ExpenseFormField: React.FC<ExpenseFormFieldProps> = ({
       placeholder={placeholder}
       {...register(name, { valueAsNumber })}
       autoFocus
-      
+      defaultValue={defaultValue}
       className="p-2 rounded-md bg-zinc-200 border-1 text-zinc-800 placeholder-gray-500  outline-zinc-300"
     />
     {error && <span className="text-rose-500 text-pretty">{error.message}</span>}

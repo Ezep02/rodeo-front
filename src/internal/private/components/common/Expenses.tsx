@@ -1,38 +1,51 @@
-import { Button } from "@/components/common/CustomButtons";
 import { AdminContext } from "@/context/AdminContext";
 import React, { Suspense, useContext } from "react";
 import AddExpenseForm from "./AddExpenseForm";
+import { IoClose } from "react-icons/io5";
+import UpdateExpenseForm from "./UpdateExpenseForm";
 
 const ExpensesList = React.lazy(() => import("./ExpensesList"));
 
 const Expenses: React.FC = () => {
-  const { OpenExpensesPopUp, openAddExpense, OpenAddExpense } =
+  const { OpenExpensesPopUp, openAddExpense, OpenAddExpense, openUpdateForm } =
     useContext(AdminContext)!;
 
   return (
     <div
       className="
-        xl:col-start-5 xl:col-end-10 xl:row-start-3 xl:row-end-11
+        xl:col-start-4 xl:col-end-10 xl:row-start-3 xl:row-end-11
         col-start-1 col-end-13 row-start-1 row-end-13
       bg-zinc-100 flex flex-col w-full h-full gap-3
     "
     >
       {openAddExpense ? (
-        <>
-          <AddExpenseForm />
-        </>
+        <AddExpenseForm />
+      ) : openUpdateForm ? (
+        <UpdateExpenseForm />
       ) : (
         <>
           <header className="flex justify-end">
-            <button onClick={OpenExpensesPopUp}>cerrar</button>
+            <button
+              className="hover:text-zinc-800 hover:shadow-sm rounded-full active:text-zinc-800 p-2 active:scale-90 text-gray-600"
+              type="button"
+              onClick={OpenExpensesPopUp}
+            >
+              <IoClose size={24} />
+            </button>
           </header>
 
-          <div className="flex flex-col w-full h-full">
+          <div className="flex flex-col w-full h-full p-2 gap-2 overflow-hidden">
             <div className="flex w-full justify-between items-center">
-              <h4 className="text-blue-500 font-semibold">historial</h4>
+              <h4 className="text-rose-500 font-semibold">historial</h4>
 
               <div>
-                <Button text="Agregar" onClickAction={OpenAddExpense} />
+                <button
+                  className=" hover:text-zinc-800 hover:shadow-sm rounded-full active:text-zinc-800  active:scale-90 text-gray-600"
+                  type="button"
+                  onClick={OpenAddExpense}
+                >
+                  Agregar
+                </button>
               </div>
             </div>
 
