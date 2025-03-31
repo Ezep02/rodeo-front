@@ -1,14 +1,13 @@
-import React, { Suspense, useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext } from "react";
 import { DashboardContext } from "../../../../context/DashboardContext";
 import { CreateNewOrder } from "../../services/DashboardService";
 import { ServiceOrderRequest } from "../../models/OrderModels";
 
 import { CancelButton } from "@/components/common/CustomButtons";
+import { useSchedules } from "../../hooks/useSchedules";
 
 const Carousel = React.lazy(() => import("@/components/ui/carousel"));
-const ShowSchedulerListByDay = React.lazy(
-  () => import("../common/ShowSchedulerListByDay")
-);
+const ShowSchedulerListByDay = React.lazy(() => import("../common/ShowSchedulerListByDay"));
 
 const MakeReservationLayout: React.FC = () => {
   const {
@@ -16,8 +15,6 @@ const MakeReservationLayout: React.FC = () => {
     selectedShift,
     SelectDateHandler,
     HandleMakeReservation,
-    LoadAvailableSchedules,
-    barberSchedules,
   } = useContext(DashboardContext)!;
 
   const HandlePayment = async () => {
@@ -36,7 +33,6 @@ const MakeReservationLayout: React.FC = () => {
       };
       try {
         const response = await CreateNewOrder(newOrder);
-        console.log(response)
         window.location.href = response.init_point;
         
       } catch (error) {
@@ -44,29 +40,18 @@ const MakeReservationLayout: React.FC = () => {
       }
     }
   };
+  
+  // custom hook
+  const {LoadMoreDays, visibleCount} = useSchedules()
 
-  const [visibleCount, setVisibleCount] = useState(31);
-
+  // Agrega mas dias al Carrousel
   const days = Array.from({ length: visibleCount }, (_, index) => {
     const today = new Date();
     today.setDate(today.getDate() + index); // Suma dias al dia actual
-
     return today;
   });
 
   const visibleDays = days.slice(0, visibleCount);
-
-  const loadMoreDays = () => {
-    setVisibleCount(visibleCount + 31);
-    LoadAvailableSchedules();
-  };
-
-  //manejar actualizacion en tiempo real
-  useEffect(() => {
-    if (barberSchedules.length === 0) {
-      LoadAvailableSchedules();
-    }
-  }, []);
 
   return (
     <main className="fixed inset-0 bg-black bg-opacity-50 z-50 grid grid-cols-12 grid-rows-12">
@@ -77,7 +62,7 @@ const MakeReservationLayout: React.FC = () => {
 
           col-start-1 col-end-13 row-start-1 row-end-13  
           flex-col flex gap-3 shadow-xl 
-      "
+        "
       >
         {/* Información del servicio */}
         <aside className="flex flex-col items-center gap-6 rounded-xl bg-white shadow-sm border p-6 xl:w-2/6">
@@ -149,7 +134,7 @@ const MakeReservationLayout: React.FC = () => {
             }
           >
             <Carousel
-              loadMoreDays={loadMoreDays}
+              loadMoreDays={LoadMoreDays}
               SelectDateHandler={SelectDateHandler}
               visibleDays={visibleDays}
             />

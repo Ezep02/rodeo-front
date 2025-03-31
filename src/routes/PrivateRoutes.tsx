@@ -1,22 +1,41 @@
-import React, { useContext } from "react";
+import React, { Suspense, useContext } from "react";
 
 import { Navigate, Route, Routes } from "react-router-dom";
-import PanelControlPage from "../internal/panel-control/pages/PanelControlPage";
-import ConfigControlPage from "../internal/panel-control/pages/ConfigControlPage";
 import { AuthContext } from "@/context/AuthContext";
-import PrivatePage from "@/internal/private/pages/PrivatePage";
+
+
+const PanelControlPage = React.lazy(() => import("@/internal/panel-control/pages/PanelControlPage"));
+const PrivatePage = React.lazy(() => import("@/internal/private/pages/PrivatePage"));
+
 
 const PrivateRoutes: React.FC = () => {
   const { user } = useContext(AuthContext)!;
 
   return (
     <Routes>
-      <Route path="barber" element={<PanelControlPage />} />
-      <Route path="config/:barberID" element={<ConfigControlPage />} />
+      <Route path="/barber" element={
+        <Suspense fallback={
+          <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+            <p className="loader"></p>
+            <span>sincronizando datos</span>
+          </div>
+        }>
+          <PanelControlPage />
+        </Suspense>
+      } />
+
       {user?.is_admin && (
         <>
-          <Route path="config" element={<ConfigControlPage />} />
-          <Route path="admin" element={<PrivatePage />} />
+          <Route path="/admin" element={
+            <Suspense fallback={
+              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+                <p className="loader"></p>
+                <span>sincronizando datos</span>
+              </div>
+            }>
+              <PrivatePage />
+            </Suspense>
+          } />
         </>
       )}
 

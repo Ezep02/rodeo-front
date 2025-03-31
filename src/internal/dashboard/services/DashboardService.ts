@@ -1,5 +1,5 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
-import { Service } from "../../panel-control/models/Services.models";
+import { Service } from "../../panel-control/models/ServicesModels";
 import { Shift } from "../models/DashboardModels";
 
 import { Order, ServiceOrderRequest } from "../models/OrderModels";

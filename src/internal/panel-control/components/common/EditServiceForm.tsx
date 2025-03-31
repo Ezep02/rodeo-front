@@ -1,28 +1,30 @@
 import { useContext } from "react";
-import { Service } from "../../models/Services.models";
+import { Service } from "../../models/ServicesModels";
 import { PanelControlContext } from "../../../../context/PanelControlContext";
 import { useForm } from "react-hook-form";
+import { useServices } from "../../hooks/useServices";
 
 interface ServiceFormProps {
   service: Service;
 }
 
 const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
-  const { HandleEditarServicio, UpdateServiceData, selectedServiceToEdit } = useContext(PanelControlContext)!;
+  const { selectedServiceToEdit } = useContext(PanelControlContext)!;
 
   const { register, handleSubmit } = useForm<Service>();
 
+  const { UpdateServiceData, HandleOpenEditPopUp } = useServices()
 
-  const UpdateData = handleSubmit(async (data:Service) => {
+  const UpdateData = handleSubmit(async (data: Service) => {
     let updateObjet: Service = {
-      ID: selectedServiceToEdit.ID,
+      ID: selectedServiceToEdit!.ID,
       description: data.description,
       price: data.price,
       service_duration: data.service_duration,
       title: data.title,
-      created_by_id: selectedServiceToEdit.created_by_id
+      created_by_id: selectedServiceToEdit!.created_by_id
     }
-    
+
     UpdateServiceData(updateObjet)
   });
 
@@ -47,12 +49,12 @@ const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
             placeholder="Título del servicio"
             className="w-full p-3 border border-gray-300 rounded-md"
             defaultValue={service?.title}
-            {...register("title",{
+            {...register("title", {
               required: true,
-              maxLength:150,
+              maxLength: 150,
               minLength: 1
             })}
-            
+
           />
           <label htmlFor="" className="text-gray-600 text-sm font-medium">Descripcion</label>
           <textarea
@@ -63,13 +65,13 @@ const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
           />
 
           <label htmlFor="" className="text-gray-600 text-sm font-medium">Precio</label>
-          <input  
+          <input
             placeholder="Precio"
             className="w-full p-3 border border-gray-300 rounded-md"
             defaultValue={service?.price}
             {...register("price", {
               valueAsNumber: true,
-              required: true,              
+              required: true,
             })}
           />
 
@@ -78,17 +80,17 @@ const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
             placeholder="Duración en minutos"
             defaultValue={service?.service_duration}
             className="w-full p-3 border border-gray-300 rounded-md"
-            {...register("service_duration",{
+            {...register("service_duration", {
               valueAsNumber: true,
-              
-            } )}
+
+            })}
           />
         </div>
 
         <footer className="flex justify-end gap-4">
           <button
             type="button"
-            onClick={HandleEditarServicio}
+            onClick={HandleOpenEditPopUp}
             className="px-4 py-2 border text-zinc-700 text-sm font-medium rounded-2xl  hover:text-zinc-600 transition-all hover:shadow"
           >
             Cancelar

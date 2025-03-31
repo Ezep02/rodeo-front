@@ -14,11 +14,11 @@ const SuccessPage: React.FC = () => {
       const res: Order = await GetLastOrder();
       // setPendingOrder(res)
       setOrder(res);
+      console.log(res)
 
       if (res){
         // si todo bien realiza actualizacion 
         await UpdateShiftAvailability(res.Shift_id)
-        
 
         // TODO: configurar un websocket de actualizcion de horarios y disponibilidad
       }

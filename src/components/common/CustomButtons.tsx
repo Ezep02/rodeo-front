@@ -37,7 +37,7 @@ export const NavigateButton: React.FC<ButtonProps> = ({
   reference_url,
   icon
 }) => (
-  <Link to={reference_url!} className="flex  gap-2 hover:text-zinc-200 text-zinc-50 w-full">
+  <Link to={reference_url!} className="flex gap-2 hover:text-zinc-200 text-zinc-50 w-full hover:bg-zinc-950 p-2 rounded-md shadow-sm">
     {icon && (
       <span className="items-center justify-center">
         {icon}

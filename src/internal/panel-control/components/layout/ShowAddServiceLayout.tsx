@@ -1,12 +1,11 @@
 import React, { useContext, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { PanelControlContext } from "../../../../context/PanelControlContext";
-import { ServiceRequest } from "../../models/Services.models";
+import { ServiceRequest } from "../../models/ServicesModels";
+import { useServices } from "../../hooks/useServices";
 
 const ShowAddServiceLayout: React.FC = () => {
   const {
-    CreateNewService,
-    HandleAddNewService,
     setSelectedMediaUrl,
     selectedMediaUrl,
     mediaList,
@@ -19,9 +18,14 @@ const ShowAddServiceLayout: React.FC = () => {
     formState: { errors },
   } = useForm<ServiceRequest>();
 
+  const { 
+    AddNewService, 
+    HandleAddNewService
+  } = useServices()
+
   const onSubmit = (data: ServiceRequest) => {
     data.preview_url = selectedMediaUrl;
-    CreateNewService(data);
+    AddNewService(data);
     HandleAddNewService();
   };
 
@@ -29,10 +33,7 @@ const ShowAddServiceLayout: React.FC = () => {
     setSelectedMediaUrl(url);
   };
 
-  const filteredImages = useMemo(
-    () => mediaList.filter((img) => img.media_type !== "VIDEO"),
-    [mediaList]
-  );
+  const filteredImages = useMemo(() => mediaList.filter((img) => img.media_type !== "VIDEO"),[mediaList]);
 
   return (
     <section className="absolute grid grid-cols-12 grid-rows-12 inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 md:p-4">
@@ -43,7 +44,6 @@ const ShowAddServiceLayout: React.FC = () => {
           col-start-1 col-end-13 row-start-1 row-end-13
         bg-white shadow-2xl rounded-lg p-6 flex flex-col lg:flex-row gap-6"
       >
-        {/* Formulario */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex-1 flex flex-col gap-6"

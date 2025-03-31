@@ -1,49 +1,37 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs";
-import { ExpenseChart, Revenue } from "../models/ChartModel";
-import { Expense, ExpenseRequest } from "../models/ExpenseModel";
+import { CurrentYearMonthlyRevenue, FrequentCustomer, MonthlyAppointmens, MonthlyNewCustomers, MonthlyPopularServices, MonthlyRevenue } from "../models/analyticsModels";
 
 
 const ANALYTICS_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/analytics`;
 
 
-export const GetRevenue = async () => {
-    let response = await AuthenticationInstance.get<Revenue[]>(`${ANALYTICS_BASE_URL}/`)
-    return response.data
+// Estadisticas de promedios 
+export const GetMonthlyRevenueAndAvg = async () => {
+    let monthlyRevenueData = await AuthenticationInstance.get<MonthlyRevenue>(`${ANALYTICS_BASE_URL}/revenue`)
+    return monthlyRevenueData.data
 }
 
-export const GetRegisteredUsersCount = async () => {
-    let response = await AuthenticationInstance.get<number>(`${ANALYTICS_BASE_URL}/users`)
-    return response.data
+export const GetMonthlyAppointmentsAndAvg = async () => {
+    let monthlyAppointmensData = await AuthenticationInstance.get<MonthlyAppointmens>(`${ANALYTICS_BASE_URL}/appointments`)
+    return monthlyAppointmensData.data
 }
 
-
-export const GetRecivedClients = async () => {
-    let response = await AuthenticationInstance.get<number>(`${ANALYTICS_BASE_URL}/recived-clients`)
-    return response.data
+export const GetMonthlyNewCustomersAndAvg = async () => {
+    let monthlyNewCustomersData = await AuthenticationInstance.get<MonthlyNewCustomers>(`${ANALYTICS_BASE_URL}/customers`)
+    return monthlyNewCustomersData.data
 }
 
-// expenses
-export const RegisterNewExpense = async (data: ExpenseRequest) => {
-    let response = await AuthenticationInstance.post<Expense>(`${ANALYTICS_BASE_URL}/expense/new`, data)
-    return response.data
+export const GetCurrentYearMonthlyRevenue = async () => {
+    let currentYearRevenue = await AuthenticationInstance.get<CurrentYearMonthlyRevenue[]>(`${ANALYTICS_BASE_URL}/revenue/current-year`)   
+    return currentYearRevenue.data
 }
 
-export const GetExpensesHistorial = async (limit: number, offset:number) => {
-    let response = await AuthenticationInstance.get<Expense[]>(`${ANALYTICS_BASE_URL}/expense/historial/${limit}/${offset}`)
-    return response.data
+export const GetMonthlyPopularServices = async () => {
+    let popularServices = await AuthenticationInstance.get<MonthlyPopularServices[]>(`${ANALYTICS_BASE_URL}/popular-services`)   
+    return popularServices.data
 }
 
-export const UpdateRegisteredExpense = async (data: Expense) => {
-    let response = await AuthenticationInstance.put<Expense>(`${ANALYTICS_BASE_URL}/expense/`, data)
-    return response.data
-}
-
-export const DeleteRegisteredExpense = async (id:number) => {
-    let response = await AuthenticationInstance.delete(`${ANALYTICS_BASE_URL}/expense/${id}`)
-    return response
-}
-
-export const GetTotalExpenseCount = async () => {
-    let response = await AuthenticationInstance.get<ExpenseChart[]>(`${ANALYTICS_BASE_URL}/expense/total`)
-    return response.data
+export const GetFrequentCustomers = async () => {
+    let frequentCustomer = await AuthenticationInstance.get<FrequentCustomer[]>(`${ANALYTICS_BASE_URL}/frequent-customers`)
+    return frequentCustomer.data
 }

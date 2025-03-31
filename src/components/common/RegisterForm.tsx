@@ -1,22 +1,20 @@
-import React, { useContext, useEffect } from "react";
+import React, { startTransition, useActionState, useContext} from "react";
 import { FormRegisterField } from "./CustomInputForm";
 import { AuthContext } from "@/context/AuthContext";
 import { useForm } from "react-hook-form";
 import {
   RegisterFormData,
   RegisterUserSchema,
-} from "@/internal/auth/types/RegisterAuthTypes";
+} from "@/types/RegisterAuthTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@/internal/auth/models/AuthModels";
-import ShowErrorPopUp from "./ShowErrorPopUp";
+import { User } from "@/models/AuthModels";
+import { UserRegister } from "@/service/AuthService";
 
 const RegisterForm: React.FC = () => {
   const {
-    UserSignUp,
-    AuthFormChangeHandler,
-    authSignUpErrors,
-    setAuthSignUpErrors,
-    authIsLoading,
+    
+    setUser,
+    setIsUserAuthenticated
   } = useContext(AuthContext)!;
 
   const {
@@ -27,34 +25,45 @@ const RegisterForm: React.FC = () => {
     resolver: zodResolver(RegisterUserSchema),
   });
 
-  const onSubmit = (data: User) => {
-    UserSignUp(data);
+
+  const [registerErr, registerAction, isRegisterPending] = useActionState(
+    async (prevState: string | null, data: User) => {
+
+      try {
+        const user = await UserRegister(data);
+        setUser(user);
+        setIsUserAuthenticated(true);
+
+        return null;
+      } catch (error: any) {
+
+        return error?.response?.data || "Error de autenticación";
+      }
+    },
+
+    null // Estado inicial (null)
+  );
+
+  // Manejar el registro
+  const handleRegister = (data: User) => {
+    startTransition(() => {
+      registerAction(data);
+    });
   };
 
-  useEffect(() => {
-    if (authSignUpErrors.length > 0) {
-      const timer = setTimeout(() => {
-        setAuthSignUpErrors([]);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [authSignUpErrors]);
 
   return (
     <>
-      {authIsLoading ? (
+      {isRegisterPending ? (
         <div className="flex h-full w-full  justify-center items-center bg-zinc-100 rounded-xl">
           <p className="loader"></p>
         </div>
       ) : (
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleRegister)}
           className="bg-gradient-to-r from-zinc-900 to-stone-900 rounded-xl shadow-lg p-8 w-full h-full flex flex-col gap-3 flex-1"
         >
-          {authSignUpErrors.length > 0 && (
-            <ShowErrorPopUp errorMessage={authSignUpErrors[0]} />
-          )}
-
+         
           <div>
             <h1 className="text-2xl font-bold text-center text-zinc-50 mb-4">
               Registrate en{" "}
@@ -156,7 +165,7 @@ const RegisterForm: React.FC = () => {
           <p className="mt-4 text-center text-gray-100">
             ¿Ya tienes una cuenta?{" "}
             <button
-              onClick={AuthFormChangeHandler}
+            
               className="text-rose-500 font-semibold"
             >
               Iniciar sesion

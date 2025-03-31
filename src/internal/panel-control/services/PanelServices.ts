@@ -2,24 +2,27 @@ import {
   AuthenticationInstance,
   InstagramInstance,
 } from "../../../configs/AxiosConfigs";
+import { MonthlyHaircuts } from "../models/ChartModel";
+import { PendingOrder } from "../models/OrderModel";
 import {
   MediaResponse,
   Service,
   ServiceRequest,
-} from "../models/Services.models";
-import {CutsQuantity, Schedule, ScheduleResponse } from "../models/Shadules.models";
-import { Order } from "../types/OrderTypes";
+} from "../models/ServicesModels";
+import { Schedule, ScheduleResponse } from "../models/ShadulesModels";
+
 
 const ORDER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
 const SCHEDULE_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/schedules`;
 const SERVICE_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
+const ANALYTICS_BARBER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/barber`;
+
 
 // ORDERS
 
 // Get All Orders
-export const GetOrderList = async (limit: string, offset: string) => {
-  const response = await AuthenticationInstance.get<Order[]>(
-    `${ORDER_BASE_URL}/list/${limit}/${offset}`
+export const GetOrderList = async (limit: number, offset: number) => {
+  const response = await AuthenticationInstance.get<PendingOrder[]>(`${ORDER_BASE_URL}/list/${limit}/${offset}`
   );
   return response.data;
 };
@@ -49,17 +52,21 @@ export const UpdateBarberSchedules = async (updatedList: Schedule) => {
   return response.data;
 };
 
-// Get barber total haircouts by month
-export const GetBarberCutsByMonth = async () => {
-  const response = await AuthenticationInstance.get<CutsQuantity[]>(`${SCHEDULE_BASE_URL}/total-cuts`)
-  return response.data
+// Get barber yearly haircouts
+
+export const GetCurrentYearBarberHairCuts = async () => {
+  let currentYearHairCuts = await AuthenticationInstance.get<MonthlyHaircuts[]>(`${ANALYTICS_BARBER_BASE_URL}/yearly-haircut`)
+  return currentYearHairCuts.data
 }
+
+
+
 
 
 // SERVICES
 
 // Get all services
-export const GetBarberServicesList = async (limit:number, offset: number) => {
+export const GetBarberServicesList = async (limit: number, offset: number) => {
   const response = await AuthenticationInstance.get<Service[]>(
     `${SERVICE_BASE_URL}/barber/${limit}/${offset}`
   );
@@ -94,16 +101,16 @@ export const DeleteServiceByID = async (id: number) => {
 
 // Instagram
 export const GetShortInstagramToken = async (code: string) => {
-    // Solicitar token de acceso corto (short-lived access token)
-    const shortLivedResponse = await InstagramInstance.post('/oauth/access_token', {
-      grant_type: 'authorization_code',
-      client_id:  import.meta.env.rodeo_id,
-      client_secret: import.meta.env.client_secret,
-      redirect_uri: import.meta.env.redirect_uri,
-      code: code
-    });
-    
-    return shortLivedResponse.data
+  // Solicitar token de acceso corto (short-lived access token)
+  const shortLivedResponse = await InstagramInstance.post('/oauth/access_token', {
+    grant_type: 'authorization_code',
+    client_id: import.meta.env.rodeo_id,
+    client_secret: import.meta.env.client_secret,
+    redirect_uri: import.meta.env.redirect_uri,
+    code: code
+  });
+
+  return shortLivedResponse.data
 }
 
 export const CreateLongInstagramToken = async (shortLivedAccessToken: string) => {
@@ -120,8 +127,7 @@ interface ApiResponse {
 
 export const GetInstagramFeedMedias = async () => {
   const response = await InstagramInstance.get<ApiResponse>(
-    `/me/media?fields=id,caption,media_type,media_count,permalink,media_url,timestamp,is_shared_to_feed,like_count&access_token=${
-      import.meta.env.VITE_ACCESS_TOKEN
+    `/me/media?fields=id,caption,media_type,media_count,permalink,media_url,timestamp,is_shared_to_feed,like_count&access_token=${import.meta.env.VITE_ACCESS_TOKEN
     }`
   );
   return response.data;

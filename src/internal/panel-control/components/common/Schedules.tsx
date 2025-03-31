@@ -1,304 +1,177 @@
-import React, { Suspense, useContext, useEffect, useState } from "react";
-import { PanelControlContext } from "../../../../context/PanelControlContext";
-import { RiDeleteBinLine } from "react-icons/ri";
+import React from "react";
+import { useSchedules } from "../../hooks/useSchedules";
+import { useShift } from "../../hooks/useShift";
+import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { ScheduleResponse } from "../../models/ShadulesModels";
 
-import { ScheduleResponse } from "../../models/Shadules.models";
-import { Button } from "@/components/common/CustomButtons";
-import { generateUniqueId } from "@/utils/RandomIDGenerator";
-import { CiLock } from "react-icons/ci";
-
-const CalendarAsideSection = React.lazy(() => import("./CalendarAsideSection"));
 
 const Schedules: React.FC = () => {
+
   const {
-    scheduleList,
-    HandleModifyScheduler,
     HandleSaveSchedulesChanges,
-    schedule,
-    setSchedule,
-    HandleLoadSchedulesList,
-  } = useContext(PanelControlContext)!;
+    HandleOpenScheduler,
+    schedulesLoader,
+    date,
+    setDate
+  } = useSchedules()
 
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const {
+    AddShift,
+    HandleDeleteShift,
+    HandleShiftChange,
+    filteredSchedules,
+  } = useShift()
 
-  const [schedulesLoader, setSchedulesLoader] = useState<boolean>(false);
-
-  const month = date ? new Date(date).getMonth() : undefined;
-
-  useEffect(() => {
-    // Si date es undefined, no realizar ninguna búsqueda
-    if (date === undefined) {
-      return;
+  const getStatusClass = (schedule: ScheduleResponse): string => {
+    if (!schedule.Available) {
+      return "bg-red-500";
     }
 
-    // Verificar si ya hay datos en cache para el mes actual
-    const existingSchedules = scheduleList.find(
-      (sch) => new Date(sch.Schedule_day_date).getMonth() === month
-    );
-
-    // Evitar hacer solicitudes si ya hay datos en cache o si el mes es el mismo
-    if (existingSchedules || month === new Date(date).getMonth()) {
-      return;
-    }
-
-    setSchedulesLoader(true);
-
-    const loadMoreSchedules = async () => {
-      await HandleLoadSchedulesList();
-      setSchedulesLoader(false);
-    };
-
-    loadMoreSchedules();
-  }, [month, date]);
-
-  useEffect(() => {
-    if (scheduleList.length > 0) {
-      const updatedScheduleAdd = scheduleList.map((shift) => ({
-        ID: shift.ID,
-        Schedule_day_date: shift.Schedule_day_date,
-        Schedule_status: "NOT CHANGE",
-        Start_time: shift.Start_time,
-        Available: shift.Available,
-        Barber_id: shift.Barber_id,
-        Created_by_name: shift.Created_by_name,
-        CreatedAt: shift.CreatedAt,
-        DeletedAt: shift.DeletedAt,
-        UpdatedAt: shift.UpdatedAt,
-      }));
-
-      setSchedule((prevSchedule) => ({
-        ...prevSchedule,
-        schedule_add: updatedScheduleAdd,
-        schedule_delete: prevSchedule?.schedule_delete || [],
-      }));
-    }
-  }, [scheduleList]);
-
-  // cada vez que el dia cambia, se realiza un filtro en busqueda de shifts cargados previamente
-  const [filteredSchedules, setFilteredSchedules] = useState<
-    ScheduleResponse[]
-  >([]);
-
-  useEffect(() => {
-    const HandleSelectDate = () => {
-      if (schedule?.schedule_add) {
-        const wrappedSchedules = schedule.schedule_add.filter((sch) => {
-          return (
-            new Date(sch.Schedule_day_date).toDateString() ===
-            date?.toDateString()
-          );
-        });
-
-        setFilteredSchedules([...(wrappedSchedules as ScheduleResponse[])]);
-      }
-    };
-
-    HandleSelectDate();
-  }, [date, schedule]);
-
-  // Función para crear shifts
-  const AddShift = () => {
-    const newShift: ScheduleResponse = {
-      Schedule_day_date: date ? new Date(date) : new Date(), // Asegura que date siempre sea una fecha válida
-      Available: true,
-      Schedule_status: "NEW",
-      ID: generateUniqueId(),
-      Start_time: "",
-    };
-
-    setSchedule((prev) => {
-      if (!prev) {
-        // Inicializar si no existe previamente
-        return { schedule_add: [newShift], schedule_delete: [] };
-      }
-
-      return {
-        ...prev,
-        schedule_add: [...prev.schedule_add, newShift],
-      };
-    });
+    return "bg-zinc-900 "; // Completado   
   };
-
-  // funcion para manejar la eliminacion de un shift
-  const HandleDeleteShift = (dayIndex: number, ID: number) => {
-    if (!schedule) return;
-
-    const shiftToDelete = filteredSchedules[dayIndex];
-
-    if (shiftToDelete.Schedule_status === "NEW") {
-      // Eliminar directamente si es un shift nuevo
-      const updatedFilteredSchedules = filteredSchedules.filter(
-        (_, index) => index !== dayIndex
-      );
-
-      const updatedScheduleAdd = schedule.schedule_add.filter(
-        (shift) => shift.ID !== ID
-      );
-
-      setFilteredSchedules(updatedFilteredSchedules);
-      setSchedule((prev) =>
-        prev ? { ...prev, schedule_add: updatedScheduleAdd } : undefined
-      );
-    } else {
-      // Mover a schedule_delete si ya existia
-      const updatedFilteredSchedules = filteredSchedules.filter(
-        (sch) => sch.ID !== shiftToDelete.ID
-      );
-
-      setFilteredSchedules(updatedFilteredSchedules);
-
-      setSchedule((prev) =>
-        prev
-          ? {
-              schedule_add: [
-                ...(prev.schedule_add.filter(
-                  (sch) => sch.ID !== shiftToDelete.ID
-                ) || prev),
-              ],
-              schedule_delete: [...(prev.schedule_delete || []), { ID }],
-            }
-          : undefined
-      );
-    }
-  };
-
-  // Función para manejar los cambios en los horarios
-  const HandleShiftChange = (dayIndex: number, value: string) => {
-    const updatedFilteredSchedules = [...filteredSchedules];
-
-    if (filteredSchedules[dayIndex].Schedule_status !== "NEW") {
-      filteredSchedules[dayIndex].Schedule_status = "UPDATE";
-    }
-
-    updatedFilteredSchedules[dayIndex].Start_time = value;
-
-    setFilteredSchedules(updatedFilteredSchedules);
-
-    const scheduleInSchedulesIndex = schedule?.schedule_add.findIndex(
-      (sch) => sch.ID === updatedFilteredSchedules[dayIndex].ID
-    );
-
-    if (scheduleInSchedulesIndex && schedule !== undefined) {
-      schedule.schedule_add[scheduleInSchedulesIndex] =
-        updatedFilteredSchedules[dayIndex];
-    }
-  };
-
-  // cargar schedules iniciales
-  useEffect(() => {
-    if(scheduleList.length === 0){
-      HandleLoadSchedulesList();
-    }
-  }, []);
 
   return (
-    <main
+    <div
       className="
-      absolute inset-0
-      w-full h-full overflow-hidden 
-      overflow-y-scroll scroll-abrir-tarjeta
-      grid grid-cols-12 grid-rows-12 bg-zinc-100 gap-2
-      z-20
+        absolute inset-0
+        h-screen w-full overflow-hidden 
+        overflow-y-scroll scroll-abrir-tarjeta
+        gap-2 z-20 bg-zinc-50 
+        lg:grid lg:grid-cols-12 lg:grid-rows-12 
     "
     >
-      <Suspense
-        fallback={
-          <div
-            className=" 
-              xl:col-start-2 xl:col-end-5 xl:row-start-2 xl:row-end-12
-              lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-12
-            bg-white rounded-lg shadow-lg
-              flex justify-center items-center"
-          >
-            <p className="loader"></p>
-          </div>
-        }
-      >
-        <CalendarAsideSection
-          date={date}
-          setDate={setDate}
-          schedulesLoader={schedulesLoader}
-          HandleSaveSchedulesChanges={HandleSaveSchedulesChanges}
-          HandleModifyScheduler={HandleModifyScheduler}
-        />
-      </Suspense>
 
-      <section
+      <div
         className="
-        flex flex-col gap-4 h-full p-4 bg-gray-50 rounded-lg shadow-lg
+          xl:row-start-3 xl:row-end-11 xl:col-start-3 xl:col-end-11 
+          lg:row-start-3 lg:row-end-11 lg:col-start-2 lg:col-end-12 
         
-        xl:col-start-5 xl:col-end-11 xl:row-start-2 xl:row-end-12 overflow-hidden
-        lg:col-start-5 lg:col-end-12 lg:row-start-2 lg:row-end-12
-
-        col-start-1 col-end-13 row-start-6 row-end-13 
-        "
+          container mx-auto py-6"
       >
-        {date && <h1>{new Date(date).toDateString()}</h1>}
 
-        <div className="h-full w-full ">
-          <header>
-            {date ? (
-              <div className="flex justify-between">
-                <span>Total {filteredSchedules.length}</span>
-                <Button text="Agregar" onClickAction={AddShift} />
+        <h1 className="text-2xl font-bold mb-6">Horarios</h1>
+
+        <div className="flex flex-col lg:flex-row gap-6 p-4 w-full">
+
+          <div className="rounded-lg border shadow-sm w-full xl:w-1/2">
+            <div className="flex flex-col space-y-1.5 p-6">
+              <h3 className="text-xl font-bold">Calendario</h3>
+            </div>
+
+            <div className="p-6 pt-0 flex items-center flex-col gap-4">
+
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                showOutsideDays={false}
+                disabled={(date) => {
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return date < today;
+                }}
+              />
+
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={HandleOpenScheduler}>
+                  Cancelar
+                </Button>
+                <Button onClick={HandleSaveSchedulesChanges}>
+                  Guardar
+                </Button>
               </div>
-            ) : (
-              <p>Ningun dia seleccionado</p>
-            )}
-          </header>
+            </div>
+          </div>
 
-          {schedulesLoader ? (
-            <div className="flex h-full w-full justify-center items-center">
-              <p className="text-gray-600">Cargando...</p>
+
+          <div
+            className="rounded-lg border shadow-sm w-full "
+          >
+            <div className="space-y-1.5 p-6 flex flex-row items-center justify-between">
+              <div>
+                {date && (
+                  <>
+                    <h3 className="text-xl font-bold">{new Date(date).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "2-digit" })}</h3>
+                    <p>
+                      Total {filteredSchedules.length}
+                    </p>
+                  </>
+                )}
+              </div>
+              <Button className="flex items-center gap-2"
+                onClick={AddShift}
+              >
+                <Plus size={16} />
+                <span>Agregar Horario</span>
+              </Button>
             </div>
-          ) : (
-            <div className="h-full w-full py-4">
-              {filteredSchedules.length > 0 && (
-                <ul className="flex flex-wrap gap-2">
-                  {filteredSchedules.map((filteredSchedule, indx) => (
-                    <li
-                      key={filteredSchedule.ID}
-                      className="
-                        flex gap-2 p-4 justify-between flex-col shadow-md border rounded-lg w-full transition duration-200
-                        sm:w-1/2 lg:w-60 sm:h-1/2 lg:h-60
-                      "
-                    >
-                      <p className="text-gray-600">
-                        {filteredSchedule.Available
-                          ? "Turno sin solicitar"
-                          : "Turno solicitado"}
-                      </p>
-                      <div className="flex items-center gap-2 justify-between w-full">
-                        <input
-                          type="time"
-                          className="p-2 w-full bg-transparent text-gray-700 focus:outline-none border rounded-md"
-                          value={filteredSchedule.Start_time}
-                          onChange={(e) =>
-                            HandleShiftChange(indx, e.target.value)
-                          }
-                        />
-                        {filteredSchedule.Available ? (
-                          <button
-                            onClick={() =>
-                              HandleDeleteShift(indx, filteredSchedule.ID)
-                            }
-                            className="p-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition duration-200 focus:outline-none"
+
+            <div
+              className="p-6 pt-0"
+            >
+              <div className="relative overflow-hidden h-[400px] pr-4 overflow-y-scroll scroll-abrir-tarjeta">
+                {schedulesLoader ? (
+                  <div className="flex h-full w-full justify-center items-center">
+                    <p className="text-gray-600 loader"></p>
+                  </div>
+                ) : (
+                  <div className="h-full w-full rounded-[inherit]">
+                    {filteredSchedules.length > 0 ? (
+                      <ul className="space-y-2">
+                        {filteredSchedules.map((filteredSchedule, indx) => (
+                          <li
+                            key={filteredSchedule.ID}
+                            className="flex items-center justify-between p-3 rounded-lg border"
                           >
-                            <RiDeleteBinLine size={24} />
-                          </button>
-                        ) : (
-                          <CiLock size={24} />
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+                            <div className="flex items-center gap-2 justify-between w-full">
+
+                              <div className="flex items-center gap-3">
+                                <input
+                                  type="time"
+                                  className="p-2 w-full bg-transparent text-gray-700 focus:outline-none rounded-md"
+                                  value={filteredSchedule.Start_time}
+                                  onChange={(e) =>
+                                    HandleShiftChange(indx, e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className={`inline-flex items-center text-sm px-2 py-1 rounded-full text-zinc-50 font-medium ${getStatusClass(filteredSchedule)}`}
+                                >
+                                  {!filteredSchedule.Available ? "Reservado" : "Disponible"}
+                                </span>
+
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-100"
+                                  onClick={() =>
+                                    HandleDeleteShift(indx, filteredSchedule.ID)
+                                  }
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="py-8 text-center text-zinc-600">No hay horarios registrados para esta fecha</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
-import { LoginFormFieldProps } from "../../internal/auth/types/LoginAuthTypes";
-import { RegisterFormFieldProps } from "../../internal/auth/types/RegisterAuthTypes";
+import { LoginFormFieldProps } from "../../types/LoginAuthTypes";
+import { RegisterFormFieldProps } from "../../types/RegisterAuthTypes";
 
 export const FormField: React.FC<LoginFormFieldProps> = ({
   type,
@@ -15,9 +15,9 @@ export const FormField: React.FC<LoginFormFieldProps> = ({
       placeholder={placeholder}
       {...register(name, { valueAsNumber })}
       autoFocus
-      className="p-2 rounded-md bg-zinc-800 border-1 text-zinc-50 placeholder-gray-400 shadow-md"
+      className="p-2 rounded-md  border  placeholder-gray-400 text-sm"
     />
-    {error && <span className="text-zinc-100 text-pretty">{error.message}</span>}
+    {error && <span className="text-rose-600 text-pretty text-sm">{error.message}</span>}
   </div>
 );
 

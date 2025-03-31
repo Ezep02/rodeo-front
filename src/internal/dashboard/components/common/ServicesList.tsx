@@ -1,67 +1,63 @@
-import { Button } from "@/components/common/CustomButtons";
 import { DashboardContext } from "@/context/DashboardContext";
 import { generateUniqueId } from "@/utils/RandomIDGenerator";
-import React, { useContext, useEffect } from "react";
-import { FiArrowRight } from "react-icons/fi";
-import { LuDollarSign } from "react-icons/lu";
+import React, { useContext } from "react";
+import { useServices } from "../../hooks/useServices";
+import { ArrowRight, Scissors } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ServicesList: React.FC = () => {
-  const { services,  handleReserveClick, AllServices } = useContext(DashboardContext)!;
-
-  useEffect(() => {
-    if(services.length === 0){
-      AllServices();
-    }
-  }, []);
+  const { handleReserveClick } = useContext(DashboardContext)!;
+  const { services, SearchMoreServices } = useServices();
 
   return (
-    <section className="xl:block h-full overflow-hidden overflow-y-scroll scroll-abrir-editar-tarjeta">
-      <div className="w-full flex flex-col gap-1 ">
-        <span className="text-zinc-400 text-sm flex items-center h-full">
-          {services.length} {services.length === 1 ? "servicio" : "servicios"}
-        </span>
-      </div>
-
+    <>
       {services.length > 0 ? (
-        <ul className="mt-6 flex flex-col gap-2">
+        <>
           {services.map((srv) => (
-            <li
+            <section
               key={generateUniqueId()}
-              className="flex items-center gap-6 p-6 rounded-xl shadow-sm border hover:shadow-xl transition-shadow"
+              className="flex items-center justify-between rounded-lg border p-4"
             >
-              {/* Imagen */}
-              <div className="overflow-hidden rounded-lg">
-                <img
-                  src={srv.preview_url !== "" ? srv.preview_url : "./logo.svg"}
-                  alt={`Vista previa de ${srv.title}`}
-                  className="object-cover h-44 w-48 rounded-lg"
-                />
-              </div>
-              {/* Información del Servicio */}
-              <div className="flex-1 text-zinc-800">
-                <h3 className="text-xl font-semibold">{srv.title}</h3>
-                <span className="flex items-center text-sm text-zinc-400 gap-2 mt-2">
-                  <LuDollarSign className="text-green-500" />
-                  {srv.price}
-                </span>
-                {/* Botón Reservar */}
-                <button
-                  onClick={() => handleReserveClick(srv)}
-                  className="mt-4 px-6 py-3 bg-red-600 text-white text-sm font-medium rounded-lg shadow-lg hover:bg-red-700 transition-all flex items-center justify-center"
+              <div className="flex flex-col md:flex-row w-full">
+                <div
+                  className="flex h-32 w-full items-center justify-center bg-zinc-100 md:h-auto md:w-1/4"
+                  aria-label="Icono de servicio"
                 >
-                  Reservar <FiArrowRight className="ml-2" />
-                </button>
+                  <Scissors size={48} aria-hidden="true" />
+                </div>
+
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <h3 className="text-xl font-medium">{srv.title}</h3>
+                    <div className="text-xl font-bold text-green-500">${srv.price}</div>
+                  </div>
+
+                  <p className="mt-4 flex-1 text-zinc-600">{srv.description}</p>
+
+                  <div className="mt-6 flex justify-end">
+                    <Button
+                      onClick={() => handleReserveClick(srv)}
+                      aria-label={`Reservar servicio: ${srv.title}`}
+                    >
+                      Reservar
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </li>
+            </section>
           ))}
-          <Button onClickAction={AllServices} text="Ver mas" />
-        </ul>
+
+          <div className="w-full flex justify-center">
+            <Button onClick={SearchMoreServices} aria-label="Ver más servicios">
+              Ver más
+            </Button>
+          </div>
+        </>
       ) : (
-        <p className="text-center text-zinc-400 mt-6">
-          No se encontraron servicios
-        </p>
+        <p className="text-center text-zinc-400 mt-6">No se encontraron servicios</p>
       )}
-    </section>
+    </>
   );
 };
 

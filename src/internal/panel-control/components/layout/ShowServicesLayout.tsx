@@ -1,29 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
-import { PanelControlContext } from "../../../../context/PanelControlContext";
+import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import { Service } from "../../models/Services.models";
 import DeleteServicePopUp from "../common/DeleteServicePopUp";
-import { DeleteServiceByID } from "../../services/PanelServices";
 import { Button } from "@/components/common/CustomButtons";
+import { useServices } from "../../hooks/useServices";
+import { RiDeleteBin7Line } from "react-icons/ri";
 
 const ShowServicesLayout: React.FC = () => {
-  const {
-    serviceList,
-    setServiceList,
-    setSelectedServiceToEdit,
-    HandleEditarServicio,
-    HandleAddNewService,
-    LoadServices,
-  } = useContext(PanelControlContext)!;
 
-  useEffect(() => {
-    let searchServices = () => {
-      if (serviceList.length === 0) {
-        LoadServices();
-      }
-    };
-    searchServices();
-  }, []);
+  const {
+    SearchMoreBarberServices,
+    deleteNotification,
+    DeleteService,
+    DeleteServiceHandler,
+    HandleOpenDeletePopUp,
+    serviceList,
+    HandleClickEditarServicio,
+    selectedServiceToDelete,
+    HandleAddNewService
+  } = useServices()
 
   // Filtrar servicios según el término de búsqueda
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,31 +25,6 @@ const ShowServicesLayout: React.FC = () => {
   const filteredServices = serviceList.filter((service) =>
     service.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const HandleClickEditarServicio = (service: Service) => {
-    setSelectedServiceToEdit(service);
-    HandleEditarServicio();
-  };
-
-  const [deleteNotification, setDeleteNofitification] = useState(false);
-  const [selectedServiceToDelete, setSelectedServiceToDelete] =
-    useState<Service>();
-
-  const HandleDeleteService = async (id: number) => {
-    try {
-      const res = await DeleteServiceByID(id);
-      if (res.status === 200) {
-        let filteredList = [...serviceList].filter((srv) => srv.ID !== id);
-        setServiceList(filteredList);
-        HandleOpenDeletePopUp();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const HandleOpenDeletePopUp = () => {
-    setDeleteNofitification((prev) => !prev);
-  };
 
   return (
     <section
@@ -65,7 +34,7 @@ const ShowServicesLayout: React.FC = () => {
     >
       {deleteNotification && (
         <DeleteServicePopUp
-          HandleDelete={HandleDeleteService}
+          HandleDelete={DeleteService}
           Srv={selectedServiceToDelete!}
           HandleCancel={HandleOpenDeletePopUp}
         />
@@ -130,16 +99,15 @@ const ShowServicesLayout: React.FC = () => {
                     className="font-semibold text-gray-600 hover:text-red-500 transition-all"
                     onClick={() => {
                       HandleOpenDeletePopUp();
-                      setSelectedServiceToDelete(service);
+                      DeleteServiceHandler(service)
                     }}
                   >
-                    Eliminar
-                    {/* <RiDeleteBin7Line /> */}
+                    <RiDeleteBin7Line />
                   </button>
                 </div>
               </li>
             ))}
-            <Button onClickAction={LoadServices} text="Mas" />
+            <Button onClickAction={SearchMoreBarberServices} text="Mas" />
           </ul>
         ) : (
           <p className="text-center text-gray-500">
