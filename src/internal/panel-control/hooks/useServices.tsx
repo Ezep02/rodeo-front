@@ -5,7 +5,6 @@ import { PanelControlContext } from "@/context/PanelControlContext";
 import { CreateService, DeleteServiceByID, GetBarberServicesList, UpdateServiceByID } from "../services/PanelServices";
 
 
-
 export const useServices = () => {
     const {
         setServiceList,

@@ -2,13 +2,13 @@ import { DashboardContext } from "@/context/DashboardContext";
 import { useContext, useEffect, useState } from "react"
 import { GetAvailableSchedules } from "../services/DashboardService";
 import useWebSocket from "react-use-websocket";
-import { Shift } from "../models/DashboardModels";
+import { PendingOrder } from "@/internal/panel-control/models/OrderModel";
 
 
 
 export const useSchedules = () => {
     
-    const { lastJsonMessage } = useWebSocket<Shift | Shift[]>(`${import.meta.env.VITE_BACKEND_WS_URL}/schedules/updates`);
+    const { lastJsonMessage } = useWebSocket<PendingOrder | PendingOrder[]>(`${import.meta.env.VITE_BACKEND_WS_URL}/order/notification`);
     
     const {
         schedulerOffset,
@@ -25,18 +25,17 @@ export const useSchedules = () => {
 
     useEffect(() => {
         if (lastJsonMessage) {
+            
             if (Array.isArray(lastJsonMessage)) {
                 // Procesar multiples turnos disponibles
                 setBarberSchedules((prevSchedules) => {
                     const updatedSchedules = [...prevSchedules];
                     lastJsonMessage.forEach((shift) => {
                         const shiftIndex = updatedSchedules.findIndex(
-                            (sch) => sch.ID === shift.ID
+                            (sch) => sch.ID === shift.shift_id
                         );
                         if (shiftIndex !== -1) {
-                            updatedSchedules[shiftIndex] = shift;
-                        } else {
-                            updatedSchedules.push(shift);
+                            updatedSchedules[shiftIndex].Available = false 
                         }
                     });
                     return updatedSchedules;
@@ -46,13 +45,11 @@ export const useSchedules = () => {
                 setBarberSchedules((prevSchedules) => {
                     const updatedSchedules = [...prevSchedules];
                     const shiftIndex = updatedSchedules.findIndex(
-                        (sch) => sch.ID === lastJsonMessage.ID
+                        (sch) => sch.ID === lastJsonMessage.shift_id
                     );
                     if (shiftIndex !== -1) {
-                        updatedSchedules[shiftIndex] = lastJsonMessage;
-                    } else {
-                        updatedSchedules.push(lastJsonMessage);
-                    }
+                        updatedSchedules[shiftIndex].Available = false;
+                    } 
                     return updatedSchedules;
                 });
             }

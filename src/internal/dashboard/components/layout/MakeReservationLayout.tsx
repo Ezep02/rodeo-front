@@ -31,6 +31,7 @@ const MakeReservationLayout: React.FC = () => {
         Schedule_day_date: selectedShift.Schedule_day_date,
         Shift_id: selectedShift.ID,
       };
+      
       try {
         const response = await CreateNewOrder(newOrder);
         window.location.href = response.init_point;

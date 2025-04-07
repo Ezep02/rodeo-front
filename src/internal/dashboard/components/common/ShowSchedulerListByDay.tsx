@@ -5,6 +5,8 @@ import { Button } from "@/components/common/CustomButtons";
 const ShowSchedulerListByDay: React.FC = () => {
   const { filteredSchedulesByDay, SelectScheduleTimeHandler } = useContext(DashboardContext)!;
 
+  console.log(filteredSchedulesByDay)
+
   return (
     <section className="w-full h-full p-4 bg-gray-50 overflow-hidden overflow-y-scroll">
       {filteredSchedulesByDay && filteredSchedulesByDay.length > 0 ? (

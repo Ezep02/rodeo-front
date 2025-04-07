@@ -17,6 +17,7 @@ const PrivatePage: React.FC = () => {
     frequentCustomersList
   } = useAnalytics()
 
+
   return (
     <div
       className=""
@@ -64,7 +65,7 @@ const PrivatePage: React.FC = () => {
             />
 
             <PopularServicesTable
-              PopularServicesList={monthlyPopularServices}
+              PopularServicesList={monthlyPopularServices ? monthlyPopularServices : []}
             />
 
           </section>

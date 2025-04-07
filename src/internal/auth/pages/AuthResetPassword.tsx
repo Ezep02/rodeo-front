@@ -1,6 +1,6 @@
 import CustomToast from '@/components/common/ToastCustom';
 import { Button } from '@/components/ui/button';
-import { ResetUserPassowrd, UserLogin } from '@/service/AuthService';
+import { ResetUserPassowrd } from '@/service/AuthService';
 import { ResetPasswordFormData, ResetUserPasswordSchema } from '@/types/ResetPasswordTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { startTransition, useActionState } from 'react';
@@ -22,13 +22,11 @@ const AuthResetPassword = () => {
 
 
     const [resetPasswordErr, resetPasswordAction, isresetPasswordPending] = useActionState(
-        async (prevState: string | null, data: ResetPasswordFormData) => {
+        async (_: string | null, data: ResetPasswordFormData) => {
             try {
 
-                console.log(data)
-        
                 let res = await ResetUserPassowrd(data.password, token?.slice(6)!);
-                console.log("response", res)
+                console.log(res)
                 
                 return null;
             } catch (error: any) {
@@ -43,9 +41,7 @@ const AuthResetPassword = () => {
         startTransition(() => {
             resetPasswordAction(data)
         })
-
     };
-
 
     return (
         <div className='min-h-svh grid'>

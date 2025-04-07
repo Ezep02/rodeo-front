@@ -13,16 +13,16 @@ import { Link } from "react-router-dom";
 
 
 const AuthLoginPage = () => {
-    const { setUser, setIsUserAuthenticated, user } = useContext(AuthContext)!;
+    const { setUser, setIsUserAuthenticated} = useContext(AuthContext)!;
 
     const [loginErr, loginAction, isLoginPending] = useActionState(
-        async (prevState: string | null, data: LoginFormData) => {
+        async (_: string | null, data: LoginFormData) => {
             try {
                 let user = await UserLogin(data);
                 setUser(user);
                 setIsUserAuthenticated(true);
                 if (user) {
-                    window.location.replace('/');
+                    window.location.href = '/';
                 }
                 return null;
             } catch (error: any) {
@@ -65,14 +65,14 @@ const AuthLoginPage = () => {
                             ) : (
                                 <form
                                     onSubmit={handleSubmit(handleLogin)}
-                                    className="flex flex-col gap-6"
+                                    className="flex flex-col gap-4"
                                 >
                                     <div>
-                                        <h1 className="text-2xl font-bold mb-4 text-center">
-                                            El Rodeo
+                                        <h1 className="text-2xl font-bold text-rose-500">
+                                            Bienvenido otra vez!
                                         </h1>
-                                        <p className="text-balance font-medium text-sm text-zinc-600 text-center">
-                                            Iniciar sesión en El Rodeo
+                                        <p className="text-balance font-medium text-sm text-zinc-500">
+                                            Completa con tus datos a continuacion
                                         </p>
                                     </div>
 

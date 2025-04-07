@@ -32,3 +32,13 @@ export interface ServiceOrderRequest {
     Schedule_day_date: Date;
     Shift_id: number
 }
+
+export interface CustomerPendingOrder {
+    ID: number;
+    title: string;
+    schedule_start_time: string
+    schedule_day_date: Date;
+    UpdatedAt?: string;
+    CreatedAt?: string;
+    DeletedAt?: null;
+}

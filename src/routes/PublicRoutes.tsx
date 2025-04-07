@@ -4,10 +4,12 @@ import Dashboard from "@/internal/dashboard/pages/Dashboard";
 import MainLayout from "@/layouts/MainLayout";
 
 
-const PaymentRoutes = React.lazy(() => import("./PaymentRoutes"));
 import PrivateRoutes from "./PrivateRoutes";
 import { useUser } from "@/hooks/useUser";
 import AuthRoutes from "./AuthRoutes";
+import { DashboardContextProvider } from "@/context/DashboardContext";
+import PaymentLayout from "@/layouts/PaymentLayout";
+const PaymentRoutes = React.lazy(() => import("./PaymentRoutes"));
 
 const PublicRoutes = () => {
 
@@ -18,9 +20,11 @@ const PublicRoutes = () => {
       <Route
         path="/"
         element={
-          <MainLayout>
-            <Dashboard />
-          </MainLayout>
+          <DashboardContextProvider>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </DashboardContextProvider>
         }
       />
 
@@ -34,7 +38,7 @@ const PublicRoutes = () => {
       <Route
         path="/payment/*"
         element={
-          <MainLayout>
+          <PaymentLayout>
             <Suspense fallback={
               <div className="h-full w-full flex justify-center items-center">
                 <p className="loader"></p>
@@ -42,16 +46,24 @@ const PublicRoutes = () => {
             }>
               <PaymentRoutes />
             </Suspense>
-          </MainLayout>
+          </PaymentLayout>
         }
       />
+      
       <Route
         path={`/dashboard/panel-control/*`}
         element={
           user?.is_barber ? (
-            <MainLayout>
-              <PrivateRoutes />
-            </MainLayout>
+            <Suspense fallback={
+              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+                <p className="loader"></p>
+                <span>sincronizando datos</span>
+              </div>
+            }>
+              <MainLayout>
+                <PrivateRoutes />
+              </MainLayout>
+            </Suspense>
           ) : (
             <Outlet />
           )

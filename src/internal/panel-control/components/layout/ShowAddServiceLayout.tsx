@@ -1,16 +1,9 @@
-import React, { useContext, useMemo } from "react";
+import React, {} from "react";
 import { useForm } from "react-hook-form";
-import { PanelControlContext } from "../../../../context/PanelControlContext";
 import { ServiceRequest } from "../../models/ServicesModels";
 import { useServices } from "../../hooks/useServices";
 
 const ShowAddServiceLayout: React.FC = () => {
-  const {
-    setSelectedMediaUrl,
-    selectedMediaUrl,
-    mediaList,
-    instagramPhotosloading
-  } = useContext(PanelControlContext)!;
 
   const {
     register,
@@ -24,16 +17,10 @@ const ShowAddServiceLayout: React.FC = () => {
   } = useServices()
 
   const onSubmit = (data: ServiceRequest) => {
-    data.preview_url = selectedMediaUrl;
+   
     AddNewService(data);
     HandleAddNewService();
   };
-
-  const handleImageSelect = (url: string) => {
-    setSelectedMediaUrl(url);
-  };
-
-  const filteredImages = useMemo(() => mediaList.filter((img) => img.media_type !== "VIDEO"),[mediaList]);
 
   return (
     <section className="absolute grid grid-cols-12 grid-rows-12 inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-20 md:p-4">
@@ -157,51 +144,6 @@ const ShowAddServiceLayout: React.FC = () => {
             </div>
           </div>
         </form>
-
-        {/* Selector de imágenes */}
-        <div className="flex-1 px-3 overflow-hidden overflow-y-scroll scroll-abrir-editar-tarjeta">
-          <label
-            htmlFor="preview_url"
-            className="block text-sm font-semibold text-gray-700 mb-4"
-          >
-            Selecciona una imagen
-          </label>
-          {instagramPhotosloading ? (
-            <p className="text-center text-gray-500">Cargando imágenes...</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 ">
-              {filteredImages.map((media) => (
-                <div
-                  key={media.timestamp}
-                  onClick={() => handleImageSelect(media.media_url)}
-                  className={`relative cursor-pointer rounded-lg hover:shadow-lg transition-transform transform hover:scale-105`}
-                >
-                  {/* Imagen */}
-                  <img
-                    src={media.media_url}
-                    alt={media.caption}
-                    className="w-full h-40 object-cover rounded-lg"
-                  />
-
-                  {/* Efecto Blur y Texto */}
-                  {selectedMediaUrl === media.media_url && (
-                    <div className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                      <span className="text-white font-semibold text-lg">
-                        Seleccionado
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-          <input
-            type="hidden"
-            id="preview_url"
-            {...register("preview_url")}
-            value={selectedMediaUrl || ""}
-          />
-        </div>
       </main>
     </section>
   );

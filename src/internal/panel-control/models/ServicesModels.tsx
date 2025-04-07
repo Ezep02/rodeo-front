@@ -15,12 +15,3 @@ export type ServiceRequest = {
   service_duration: number;
   preview_url: string;
 };
-
-export type MediaResponse = {
-  media_url: string;
-  caption: string;
-  permalink: string;
-  like_count: number;
-  media_type: string;
-  timestamp: string;
-}

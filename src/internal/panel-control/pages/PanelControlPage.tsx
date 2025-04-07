@@ -13,7 +13,6 @@ import Schedules from "../components/common/Schedules";
 import { useSchedules } from "../hooks/useSchedules";
 
 
-
 const PanelControlPage: React.FC = () => {
 
   const {
@@ -31,6 +30,8 @@ const PanelControlPage: React.FC = () => {
   const {
     serviceList
   } = useServices()
+
+  
 
   return (
     <div className="flex flex-1 flex-col">
@@ -90,7 +91,7 @@ const PanelControlPage: React.FC = () => {
               </p>
             </div>
             {
-              orderList.length > 0 ? (
+              orderList?.length > 0 ? (
                 <PendingOrdersTable Data={orderList} />
               ) : (
                 <div

@@ -1,15 +1,11 @@
 import React, { ReactNode, useState } from "react";
 
 import {
-  GetInstagramFeedMedias,
-} from "../internal/panel-control/services/PanelServices";
-import {
 
   Schedule,
   ScheduleResponse,
 } from "../internal/panel-control/models/ShadulesModels";
 import {
-  MediaResponse,
   Service,
 } from "../internal/panel-control/models/ServicesModels";
 import { MonthlyHaircuts } from "@/internal/panel-control/models/ChartModel";
@@ -43,13 +39,6 @@ interface AuthContextProps {
   setSelectedServiceToEdit: React.Dispatch<React.SetStateAction<Service | undefined>>;
   openAddService: boolean;
   setOpenAddService: React.Dispatch<React.SetStateAction<boolean>>;
-  instagramPhotosloading: boolean;
-  setInstagramPhotosLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  mediaList: MediaResponse[];
-  setMediaList: React.Dispatch<React.SetStateAction<MediaResponse[]>>;
-  selectedMediaUrl: string;
-  setSelectedMediaUrl: React.Dispatch<React.SetStateAction<string>>;
-  InstagramLogin: () => void;
 
 
   yearlyCutsChartData: MonthlyHaircuts[] | [];
@@ -120,34 +109,6 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
   const [editarServicio, setEditarServicio] = useState<boolean>(false);
   const [selectedServiceToEdit, setSelectedServiceToEdit] = useState<Service>();
 
-  // instagram photos
-  const [selectedMediaUrl, setSelectedMediaUrl] = useState<string>("");
-  const [mediaList, setMediaList] = useState<MediaResponse[]>([]);
-  const [instagramPhotosloading, setInstagramPhotosLoading] = useState<boolean>(false);
-
-  const SearchImages = async () => {
-    setInstagramPhotosLoading(true);
-
-    try {
-      const res = await GetInstagramFeedMedias();
-      setMediaList(res.data);
-      setInstagramPhotosLoading(false);
-    } catch (error) {
-      console.error("Error fetching media:", error);
-    }
-  };
-
-  // useEffect(() => {
-  //   SearchImages();
-  // }, []);
-
-  const InstagramLogin = async () => {
-    // Construir la URL para redirigir al usuario
-    const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${import.meta.env.VITE_RODEO_ID}&redirect_uri=${import.meta.env.VITE_REDIRECT_URI}&scope=instagram_business_basic&response_type=code`
-    // Abrir la URL de autenticación en una nueva ventana o pestaña
-    window.location.href = authUrl
-  };
-
   return (
     <PanelControlContext.Provider
       value={{
@@ -171,13 +132,6 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
         setSelectedServiceToEdit,
         openAddService,
         setOpenAddService,
-        selectedMediaUrl,
-        setSelectedMediaUrl,
-        mediaList,
-        setMediaList,
-        instagramPhotosloading,
-        setInstagramPhotosLoading,
-        InstagramLogin,
         schedule,
         setSchedule,
         yearlyCutsChartData,

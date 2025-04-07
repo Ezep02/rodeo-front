@@ -6,7 +6,6 @@ import { GetOrderList } from "../services/PanelServices";
 import { PendingOrder } from "../models/OrderModel";
 
 
-
 export const useOrder = () => {
     const {
         orderList,
@@ -20,7 +19,7 @@ export const useOrder = () => {
     const CNN_URL = `${import.meta.env.VITE_BACKEND_WS_URL}/order/notification`;
 
     const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
-
+  
     // Update order list on WebSocket message
     useEffect(() => {
         if (lastJsonMessage) {
@@ -35,6 +34,7 @@ export const useOrder = () => {
                     )
                     .sort((a, b) => b.ID - a.ID);
             });
+            console.log("new order", lastJsonMessage)
         }
     }, [lastJsonMessage]);
 
@@ -46,25 +46,25 @@ export const useOrder = () => {
 
     // Carga las ordenes iniciales si es que se necesita, en caso de no esta cacheado
     useEffect(() => {
-        if (orderList.length === 0) {
-            const LoadOrders = async () => {
-                let limit = 5;
 
-                try {
-                    const fetchedOrders: PendingOrder[] = await GetOrderList(
-                        limit,
-                        orderOffset
-                    );
-                    if (fetchedOrders.length > 0) {
-                        setOrderList(fetchedOrders);
-                        sumOrderOffset()
-                    }
-                } catch (error) {
-                    console.error("Error fetching orders:", error);
+        const LoadOrders = async () => {
+            let limit = 5;
+
+            try {
+                const fetchedOrders: PendingOrder[] = await GetOrderList(
+                    limit,
+                    orderOffset
+                );
+                if (fetchedOrders.length > 0) {
+                    setOrderList(fetchedOrders);
+                    sumOrderOffset()
                 }
-            };
-            LoadOrders()
-        }
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+            }
+        };
+        LoadOrders()
+
     }, []);
 
     // Carga mas ordenes cuando se clickea en ver mas

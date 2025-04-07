@@ -5,7 +5,6 @@ import {
 import { MonthlyHaircuts } from "../models/ChartModel";
 import { PendingOrder } from "../models/OrderModel";
 import {
-  MediaResponse,
   Service,
   ServiceRequest,
 } from "../models/ServicesModels";
@@ -22,7 +21,7 @@ const ANALYTICS_BARBER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/barb
 
 // Get All Orders
 export const GetOrderList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<PendingOrder[]>(`${ORDER_BASE_URL}/list/${limit}/${offset}`
+  const response = await AuthenticationInstance.get<PendingOrder[]>(`${ORDER_BASE_URL}/pending/${limit}/${offset}`
   );
   return response.data;
 };
@@ -58,8 +57,6 @@ export const GetCurrentYearBarberHairCuts = async () => {
   let currentYearHairCuts = await AuthenticationInstance.get<MonthlyHaircuts[]>(`${ANALYTICS_BARBER_BASE_URL}/yearly-haircut`)
   return currentYearHairCuts.data
 }
-
-
 
 
 
@@ -117,35 +114,3 @@ export const CreateLongInstagramToken = async (shortLivedAccessToken: string) =>
   const longToken = await InstagramInstance.get(`/oauth/access_token?grant_type=ig_exchange_token&client_secret=${import.meta.env.client_secret}&access_token=${shortLivedAccessToken}`)
   return longToken
 }
-
-
-
-// Get media
-interface ApiResponse {
-  data: MediaResponse[];
-}
-
-export const GetInstagramFeedMedias = async () => {
-  const response = await InstagramInstance.get<ApiResponse>(
-    `/me/media?fields=id,caption,media_type,media_count,permalink,media_url,timestamp,is_shared_to_feed,like_count&access_token=${import.meta.env.VITE_ACCESS_TOKEN
-    }`
-  );
-  return response.data;
-};
-
-export const RefreshAccessTokenInstagram = async () => {
-  try {
-    const refreshResponse = await InstagramInstance.get(
-      "refresh_access_token",
-      {
-        params: {
-          access_token: import.meta.env.VITE_ACCESS_TOKEN,
-          grant_type: "ig_refresh_token",
-        },
-      }
-    );
-    console.log("refresh", refreshResponse);
-  } catch (error) {
-    console.error("Error al renovar el token:", error);
-  }
-};
