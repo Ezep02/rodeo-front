@@ -9,7 +9,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="h-screen bg-zinc-100 overflow-hidden overflow-y-scroll"
+      className="h-screen  overflow-hidden overflow-y-scroll bg-white"
     >
 
       <header className="sticky top-0 border-b bg-zinc-900 z-30">

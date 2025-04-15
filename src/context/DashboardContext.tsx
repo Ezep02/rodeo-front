@@ -19,17 +19,10 @@ interface DashboardContextProps {
  
   filteredSchedulesByDay: Shift[];
   setFilteredSchedulesByDay: React.Dispatch<React.SetStateAction<Shift[]>>;
-  selectedShift: Shift | undefined;
-  setSelectedShift: React.Dispatch<React.SetStateAction<Shift | undefined>>;
   SelectDateHandler: (day: Date) => void;
-  SelectScheduleTimeHandler: (selectedShift: Shift) => void
 
-  handleReserveClick: (srv: Service) => void;
- 
-  isMakeReservationOpen: boolean;
-  setMakeReservation: React.Dispatch<React.SetStateAction<boolean>>;
-  HandleMakeReservation: ()=> void
   
+  handleReserveClick: (srv: Service) => void;
   schedulerOffset: number;
   setSchedulerOffset:React.Dispatch<React.SetStateAction<number>>;
 
@@ -91,20 +84,8 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
     setFilteredSchedulesByDay(days)
   };
 
-  // Shift seleccionado por el usuario
-  const [selectedShift, setSelectedShift] = useState<Shift>();
+ 
 
-  const SelectScheduleTimeHandler = (selectedShift: Shift) => {
-    setSelectedShift(selectedShift)
-  }
-
-
-  // Func para manejar la seleccion del servicio
-  const [isMakeReservationOpen, setMakeReservation] = useState(false)
-
-  const HandleMakeReservation = () => {
-    setMakeReservation((prev)=> !prev )
-  }
 
   const handleReserveClick = (srv: Service) => {
    
@@ -116,9 +97,7 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
       price: srv.price,
       title: srv.title,
       preview_url: srv.preview_url
-    });
-    HandleMakeReservation()
-   
+    });   
   };  
 
   // ORDENES PENDIENTES
@@ -135,14 +114,8 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         setBarberSchedules,
         filteredSchedulesByDay,
         setFilteredSchedulesByDay,
-        selectedShift,
-        setSelectedShift,
         handleReserveClick,
-        isMakeReservationOpen,
-        setMakeReservation,
-        HandleMakeReservation,
         SelectDateHandler,
-        SelectScheduleTimeHandler,
         serviceOffset,
         setServiceOffset,
         schedulerOffset,

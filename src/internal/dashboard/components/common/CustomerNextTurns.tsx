@@ -1,85 +1,116 @@
 import React from 'react'
 import { useTurns } from '../../hooks/useTurns'
-
-
+import { Calendar, MapPin, MoreHorizontal } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 const CustomerNextTurns: React.FC = () => {
-
-    const {
-        cutomerPendingOrders
-    } = useTurns()
-    console.log(cutomerPendingOrders)
-
+    const { cutomerPendingOrders } = useTurns()
+    
     return (
-        <div className='flex flex-col gap-2'>
-            {
-                cutomerPendingOrders?.length > 0 ? (
-                    <>
-                        {
-                            cutomerPendingOrders.map((pending_order, i) => (
+        <div className="space-y-6">
+            <div className="rounded-xl border bg-card text-card-foreground shadow">
+                <div className="px-6 pt-6">
+                    <h3 className="font-semibold tracking-tight text-lg">Próximas citas</h3>
+                    <p className="text-sm text-muted-foreground">Tus citas programadas para los próximos días</p>
+                </div>
 
-                                <article
-                                    key={i}
-                                    className="flex justify-between rounded-lg border bg-zinc-100 p-4 flex-col"
-                                >
-                                    <div className='w-full'>
-                                        <h2 className='text-green-500 font-medium'>
-                                            Tu cita fue confirmada
-                                        </h2>
-                                    </div>
+                {cutomerPendingOrders?.length > 0 ? (
+                    <div className="p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-2">
+                                <div className="h-3 w-3 rounded-full bg-black"></div>
+                                <span className="text-sm font-medium">Citas programadas</span>
+                            </div>
+                        </div>
 
-                                    <div className="flex flex-col py-5">
-                                        <div className="">
-                                            <h2 className="text-xl font-medium">Cita programada</h2>
-                                        </div>
+                        <div className="relative">
+                            {/* Timeline line */}
+                            <div className="absolute top-0 bottom-0 left-[39px] border-l border-dashed border-muted-foreground/30" />
 
-                                        <div className='p-2 bg-zinc-200'>
-
-                                            <div className='flex gap-3'>
-                                                <div className='p-2 rounded-full bg-blue-200'>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 text-blue-600">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
-                                                    </svg>
-                                                </div>
-                                                
-                                                <div className='flex flex-col'>
-                                                    <div>
-                                                        <h3 
-                                                            className='text-zinc-500 text-sm font-medium'
-                                                        >
-                                                            FECHA & HORA
-                                                        </h3>
-                                                    </div>
-                                                    <div className='flex gap-4'>
-                                                        {
-                                                            new Date(pending_order.schedule_day_date).toLocaleDateString("es-AR", {
-                                                                weekday: "long", 
-                                                                month: "long",
-                                                                day: "numeric",
-                                                                year:"numeric"
-                                                            })
-                                                        }
-                                                        <span>{pending_order.schedule_start_time}{" "}hs</span>
-                                                    </div>
+                            {cutomerPendingOrders.map((appointment) => (
+                                <div key={appointment.ID} className="relative mb-8 last:mb-0">
+                                    <div className="flex items-start gap-6">
+                                        <div className="flex flex-1 flex-col space-y-3 rounded-xl border bg-card p-4 shadow-sm">
+                                            <div className="flex flex-col space-y-1.5">
+                                                <div className="flex items-center gap-1">
+                                                    <MapPin className="h-3.5 w-3.5" />
+                                                    <span>El Rodeo</span>
                                                 </div>
 
+                                                <div className="flex justify-between">
+                                                    <div className="flex gap-2 justify-between w-full flex-col sm:flex-row">
+                                                        <span className="font-semibold">{appointment.title}</span>
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                                    <MoreHorizontal className="h-4 w-4" />
+                                                                    <span className="sr-only">Abrir menú</span>
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end" className="w-[160px]">
+                                                                <DropdownMenuItem>Reprogramar</DropdownMenuItem>
+                                                                <DropdownMenuItem className="text-red-600">Cancelar cita</DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div className="text-sm">
+                                                    <span className="rounded-md bg-rose-500 px-2 py-1 text-xs font-medium text-white">
+                                                        {new Date(appointment.schedule_day_date).toLocaleDateString("es-AR", {
+                                                            weekday: "long",
+                                                            month: "long",
+                                                            day: "2-digit",
+                                                            year: "numeric"
+                                                        })} , {appointment.schedule_start_time}{" "}HS
+                                                    </span>
+                                                </div>
                                             </div>
 
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
 
+                                                    {/* <div className="text-sm font-medium">{appointment.barber.name}</div> */}
+                                                </div>
+
+                                                <div className="flex gap-2">
+                                                    <Button variant="outline" size="sm">
+                                                        <Calendar className="mr-1.5 h-3.5 w-3.5" />
+                                                        Recordatorio
+                                                    </Button>
+                                                    <Button variant="default" size="sm">
+                                                        Ver detalles
+                                                    </Button>
+                                                </div>
+                                            </div>
                                         </div>
-
                                     </div>
-
-                                </article>
-                            ))
-                        }
-                    </>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : (
-                    <p>No hay ordenes</p>
-                )
-            }
+                    <div className="flex flex-col items-center justify-center p-10 text-center">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                            <Calendar className="h-10 w-10 text-muted-foreground text-rose-500" />
+                        </div>
+                        <h3 className="mt-6 text-xl font-semibold">No tienes citas programadas</h3>
+                        <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                            Actualmente no tienes ninguna cita programada. Puedes reservar un dirigiendote a la pestaña de servicios
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
+
     )
+
 }
 
+
 export default CustomerNextTurns
+
+

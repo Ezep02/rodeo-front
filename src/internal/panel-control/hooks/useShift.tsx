@@ -76,7 +76,6 @@ export const useShift = () => {
             Schedule_day_date: date ? new Date(date) : new Date(), // Asegura que date siempre sea una fecha válida
             Available: true,
             Schedule_status: "NEW",
-            ID: generateUniqueId(),
             Start_time: "",
         };
 

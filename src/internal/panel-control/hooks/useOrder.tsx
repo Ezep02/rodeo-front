@@ -34,7 +34,6 @@ export const useOrder = () => {
                     )
                     .sort((a, b) => b.ID - a.ID);
             });
-            console.log("new order", lastJsonMessage)
         }
     }, [lastJsonMessage]);
 
@@ -55,7 +54,8 @@ export const useOrder = () => {
                     limit,
                     orderOffset
                 );
-                if (fetchedOrders.length > 0) {
+                if (fetchedOrders?.length > 0) {
+                    // si hay ordenes agregarlas a el arreglo, e incrementar el offset
                     setOrderList(fetchedOrders);
                     sumOrderOffset()
                 }

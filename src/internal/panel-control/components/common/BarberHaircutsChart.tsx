@@ -20,23 +20,26 @@ type ChartData = {
     cortes: Float64Array | number
 }
 
+const monthNames: Array<string> = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
 
 const BarberHaircutsChart: React.FC<HaircutsChartProps> = ({ Data }) => {
     // Encontramos el mes con más cortes
     let chartData: ChartData[] = Data.map((d) => ({
-        mes: new Date(d.Month).toLocaleDateString("es-AR", { month: "long" }),
+        mes: monthNames[d.Month],
         cortes: d.Total_haircuts
     }));
 
+    
     const maxMonth = chartData.reduce(
-        (max, d) => (d.cortes > max.cortes ? d : max),
+        (max, d) => (d.cortes >= max.cortes ? d : max),
         chartData[0]
     );
 
-
-
     // Encontramos el índice del mes con más cortes
-    const bestMonthIndx = chartData.findIndex(
+    const bestMonthIndx = chartData?.findIndex(
         (month) => month.mes === maxMonth.mes
     );
 

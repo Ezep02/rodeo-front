@@ -16,7 +16,7 @@ const ServicesList: React.FC<ServiceListProps> = ({ services, SearchMoreServices
       {services.map((srv, i) => (
         <article
           key={i}
-          className="flex items-center justify-between rounded-lg border bg-zinc-100"
+          className="flex items-center justify-between rounded-lg border"
         >
           <div className="flex flex-col md:flex-row w-full ">
             <div
@@ -41,6 +41,7 @@ const ServicesList: React.FC<ServiceListProps> = ({ services, SearchMoreServices
                 <Button
                   onClick={() => handleReserveClick(srv)}
                   aria-label={`Reservar servicio: ${srv.title}`}
+                  className=""
                 >
                   Reservar
 
@@ -55,7 +56,7 @@ const ServicesList: React.FC<ServiceListProps> = ({ services, SearchMoreServices
       ))}
 
       <div className="w-full flex justify-center">
-        <Button onClick={SearchMoreServices} aria-label="Ver más servicios">
+        <Button onClick={SearchMoreServices} aria-label="Ver más servicios" className="">
           Ver más
         </Button>
       </div>

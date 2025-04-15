@@ -35,17 +35,14 @@
 
 
 .embla {
-  
   width: 100%;
 }
 
 .embla__container {
-  display: flex; /* Alinea los slides horizontalmente */
-  gap: 1rem; /* Espaciado entre los slides */
+  display: flex; 
+  gap: 1rem; 
 }
 
 .embla__slide {
-  flex: 0 0 auto; /* Asegura que cada slide mantenga su tamaño */
-   /* Puedes ajustar el ancho según tus necesidades */
-
+  flex: 0 0 auto; 
 }

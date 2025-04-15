@@ -6,7 +6,7 @@ import { Service } from "@/internal/panel-control/models/ServicesModels";
 
 export const useServices = () => {
 
-    const { services, setServices, serviceOffset, setServiceOffset, isMakeReservationOpen } = useContext(DashboardContext)!;
+    const { services, setServices, serviceOffset, setServiceOffset } = useContext(DashboardContext)!;
 
     // sum offset 
     const sumServiceOffset = () => {
@@ -75,6 +75,5 @@ export const useServices = () => {
         services,
         sumServiceOffset,
         SearchMoreServices,
-        isMakeReservationOpen
     }
 }

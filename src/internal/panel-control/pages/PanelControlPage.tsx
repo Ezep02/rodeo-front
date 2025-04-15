@@ -31,7 +31,7 @@ const PanelControlPage: React.FC = () => {
     serviceList
   } = useServices()
 
-  
+  console.log(yearlyCutsChartData)
 
   return (
     <div className="flex flex-1 flex-col">
@@ -59,7 +59,7 @@ const PanelControlPage: React.FC = () => {
 
             <div className="p-6 pt-0 ">
               {
-                yearlyCutsChartData.length > 0 ? (
+                yearlyCutsChartData?.length > 0 ? (
                   <BarberHaircutsChart Data={yearlyCutsChartData} />
                 ) : (
                   <div

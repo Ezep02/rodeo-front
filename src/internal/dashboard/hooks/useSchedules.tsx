@@ -22,7 +22,6 @@ export const useSchedules = () => {
     const [visibleCount, setVisibleCount] = useState(31);
     
     // conexion websocket que interactua cada vez que un turno es agregado
-
     useEffect(() => {
         if (lastJsonMessage) {
             
