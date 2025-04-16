@@ -15,7 +15,7 @@ export const useTurns = () => {
 
         const GettingPendingOrders = async () => {
             let response = await GetCustomerPendingOrders()
-            console.log(response)
+    
             setCustomerPendingOrders(response)
         }
         GettingPendingOrders()

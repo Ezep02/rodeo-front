@@ -1,6 +1,6 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
 import { Service } from "../../panel-control/models/ServicesModels";
-import { Shift } from "../models/DashboardModels";
+import { PopularServices, Shift } from "../models/DashboardModels";
 
 import {CustomerPendingOrder, ServiceOrderRequest } from "../models/OrderModels";
 
@@ -35,6 +35,14 @@ export const UpdateShiftAvailability = async (shiftID: number) => {
 
 // Obtener ordenes pendientes
 export const GetCustomerPendingOrders = async () => {
-    const response = await AuthenticationInstance.get<CustomerPendingOrder[] | []>(`${ORDER_URL}/customer`)
+    const response = await AuthenticationInstance.get<CustomerPendingOrder[]>(`${ORDER_URL}/customer`)
+    
+    return response.data
+}
+
+// Obtener los servicios populares
+export const GetPopularServices = async () => {
+    const response = await AuthenticationInstance.get<PopularServices[]>(`${SERVICE_URL}/popular-services`)
+
     return response.data
 }

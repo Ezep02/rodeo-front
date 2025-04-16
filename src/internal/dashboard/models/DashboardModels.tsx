@@ -7,6 +7,11 @@ export interface Services {
   service_Duration: number;
 }
 
+export interface PopularServices {
+  title: string;
+  total_orders: number;
+}
+
 export interface Shift {
   ID: number;
   Available?: boolean;

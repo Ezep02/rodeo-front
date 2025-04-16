@@ -12,7 +12,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       className="h-screen  overflow-hidden overflow-y-scroll bg-white"
     >
 
-      <header className="sticky top-0 border-b bg-zinc-900 z-30">
+      <header className="sticky top-0 border-b bg-black z-30">
         <Nav />
       </header>
 

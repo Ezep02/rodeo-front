@@ -39,8 +39,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
     setAuthIsLoading((prev) => !prev);
   };
 
-
-
   const [signInErrors, setSignInErrors] = useState<string[]>([]);
 
 
