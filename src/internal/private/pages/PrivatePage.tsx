@@ -60,8 +60,9 @@ const PrivatePage: React.FC = () => {
           <section
             className="grid gap-6 md:grid-cols-2"
           >
+
             <YearRevenueChart
-              Data={currentYearMonthlyRevenue}
+              Data={currentYearMonthlyRevenue?.length > 0 ? currentYearMonthlyRevenue : []}
             />
 
             <PopularServicesTable
@@ -72,7 +73,7 @@ const PrivatePage: React.FC = () => {
 
           <section>
             <TopCustomersTab
-              TableData={frequentCustomersList}
+              TableData={frequentCustomersList?.length > 0 ? frequentCustomersList : []}
             />
           </section>
         </div>

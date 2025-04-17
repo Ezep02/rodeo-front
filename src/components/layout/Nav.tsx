@@ -13,12 +13,23 @@ import {
 } from "../ui/dropdown-menu";
 
 import { Link } from "react-router-dom";
+import { LogoutUser } from "@/service/AuthService";
 
 const Header: React.FC = () => {
   const {
     user,
-    isUserAuthenticated
+    isUserAuthenticated,
+    setIsUserAuthenticated
   } = useContext(AuthContext)!;
+
+  const LogoutSession = async () => {
+    try {
+        await LogoutUser();
+        setIsUserAuthenticated(false);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
   return (
     <div
@@ -29,8 +40,8 @@ const Header: React.FC = () => {
         <div className="flex h-full items-center justify-center text-rose-500">
           <GiBullHorns size={24} />
         </div>
-        <h1 className="text-lg font-bold text-zinc-50">
-          El Rodeo
+        <h1 className="text-lg font-bold text-zinc-50 cursor-pointer">
+          <a href="/">El Rodeo</a>
         </h1>
       </div>
       {
@@ -63,7 +74,9 @@ const Header: React.FC = () => {
                 }
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  Cerrar sesion
+                  <button onClick={LogoutSession}>
+                    Cerrar sesion
+                  </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -73,14 +86,14 @@ const Header: React.FC = () => {
             className="flex gap-2 text-zinc-50 items-center text-sm"
           >
 
-            <Link 
-              to={"/auth/login"} 
+            <Link
+              to={"/auth/login"}
               className="hover:text-zinc-200"
             >
               Iniciar sesion
             </Link>
 
-            <Link 
+            <Link
               to={"/auth/register"}
               className="bg-rose-600 p-2 rounded-md hover:bg-rose-500 transition-all"
             >

@@ -39,6 +39,7 @@ const MakeReservationLayout: React.FC = () => {
       try {
         const response = await CreateNewOrder(newOrder);
         window.location.href = response.init_point;
+        console.log(response)
 
       } catch (error) {
         console.log("error creando link de pago", error)

@@ -23,7 +23,9 @@ const AuthRegisterPage = () => {
         const user = await UserRegister(data);
         setUser(user);
         setIsUserAuthenticated(true);
-
+        if (user) {
+          window.location.href = '/';
+        }
         return null;
       } catch (error: any) {
 

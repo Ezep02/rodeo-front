@@ -13,8 +13,6 @@ export const useServices = () => {
         servicesOffset,
         deleteNotification,
         setDeleteNofitification,
-        setSelectedServiceToEdit,
-        setEditarServicio,
         setSelectedServiceToDelete,
         selectedServiceToDelete,
         setOpenAddService
@@ -116,22 +114,11 @@ export const useServices = () => {
         }
     };
 
-    //abre la ventana de edicion de servicios
-    const HandleOpenEditPopUp = () => {
-        setEditarServicio((prev) => !prev);
-    };
-
-    // asigna el servicio al estado y luego abre la ventana 
-    const HandleClickEditarServicio = (service: Service) => {
-        setSelectedServiceToEdit(service);
-        HandleOpenEditPopUp();
-    };
 
     // funcion para manejar la actualizacion del servicio
     const UpdateServiceData = async (data: Service) => {
         try {
             await UpdateServiceByID(data, data.ID);
-            HandleOpenEditPopUp();
         } catch (error) {
             console.log(error);
         }
@@ -158,9 +145,7 @@ export const useServices = () => {
         DeleteService,
         deleteNotification,
         HandleOpenDeletePopUp,
-        HandleClickEditarServicio,
         UpdateServiceData,
-        HandleOpenEditPopUp,
         selectedServiceToDelete,
         AddNewService,
         HandleAddNewService

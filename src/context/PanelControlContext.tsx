@@ -32,11 +32,6 @@ interface AuthContextProps {
 
   serviceLoading: boolean;
   setServiceIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-
-  editarServicio: boolean;
-  setEditarServicio: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedServiceToEdit: Service | undefined;
-  setSelectedServiceToEdit: React.Dispatch<React.SetStateAction<Service | undefined>>;
   openAddService: boolean;
   setOpenAddService: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -58,6 +53,14 @@ interface AuthContextProps {
 
   filteredSchedules: ScheduleResponse[] | []
   setFilteredSchedules: React.Dispatch<React.SetStateAction<ScheduleResponse[] | []>>;
+
+  // A B M servicios
+  createModalOpen: boolean
+  setCreateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  editModalOpen: boolean
+  setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteDialogOpen: boolean
+  setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PanelControlContext = React.createContext<AuthContextProps | undefined>(undefined);
@@ -106,8 +109,12 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
 
 
   // EDICION, CREACION, ELIMINACION DE SERVICIOS
-  const [editarServicio, setEditarServicio] = useState<boolean>(false);
-  const [selectedServiceToEdit, setSelectedServiceToEdit] = useState<Service>();
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+
+
 
   return (
     <PanelControlContext.Provider
@@ -126,10 +133,6 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
         setServiceList,
         serviceLoading,
         setServiceIsLoading,
-        editarServicio,
-        setEditarServicio,
-        selectedServiceToEdit,
-        setSelectedServiceToEdit,
         openAddService,
         setOpenAddService,
         schedule,
@@ -149,7 +152,13 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
         filteredSchedules,
         setFilteredSchedules,
         schedulesLoader,
-        setSchedulesLoader
+        setSchedulesLoader,
+        createModalOpen,
+        setCreateModalOpen,
+        editModalOpen,
+        setEditModalOpen,
+        deleteDialogOpen,
+        setDeleteDialogOpen,
       }}
     >
       {children}

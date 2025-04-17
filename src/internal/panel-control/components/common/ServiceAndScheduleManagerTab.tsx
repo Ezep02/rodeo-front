@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 
@@ -8,11 +8,12 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Clock, Plus, Search, Trash2 } from 'lucide-react'
+import { Clock, PlusIcon, Search, Trash2 } from 'lucide-react'
 import { Service } from '../../models/ServicesModels'
 import { FaGears } from "react-icons/fa6";
 import { GiBullHorns } from 'react-icons/gi'
 import { useSchedules } from '../../hooks/useSchedules'
+import { PanelControlContext } from '@/context/PanelControlContext'
 
 type ServiceAndScheduleManagerTabProps = {
     Services: Service[]
@@ -23,6 +24,10 @@ const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> 
     const {
         HandleOpenScheduler
     } = useSchedules()
+
+    const {
+        setCreateModalOpen
+    } = useContext(PanelControlContext)!
 
     // Filtrar servicios según el término de búsqueda
     const [searchTerm, setSearchTerm] = useState("");
@@ -52,8 +57,9 @@ const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> 
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <Button size="sm" className="ml-2 bg-black hover:bg-black/80">
-                            <Plus className="mr-2 h-4 w-4" /> Agregar
+                        <Button onClick={() => setCreateModalOpen(true)}>
+                            <PlusIcon className="h-4 w-4 mr-2" />
+                            Agregar
                         </Button>
                     </div>
 
@@ -103,8 +109,8 @@ const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> 
                 <div className="space-y-4">
                     <div className="flex justify-between items-center pb-4 border-b ">
                         <h3 className="text-lg font-medium">Horarios de Atención</h3>
-                        <Button 
-                            size="sm" 
+                        <Button
+                            size="sm"
                             className="bg-black hover:bg-black/80"
                             onClick={HandleOpenScheduler}
                         >

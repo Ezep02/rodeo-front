@@ -24,7 +24,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 type RevenueChartProps = {
-    Data: CurrentYearMonthlyRevenue[]
+    Data: CurrentYearMonthlyRevenue[] | []
 }
 
 type ChartData = {

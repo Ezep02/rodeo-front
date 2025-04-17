@@ -1,4 +1,4 @@
-import React, { } from "react";
+import React, { useContext, useState } from "react";
 
 import CardLayout from "../components/layout/CardLayout";
 import BarberHaircutsChart from "../components/common/BarberHaircutsChart";
@@ -11,6 +11,9 @@ import ServiceAndScheduleManagerTab from "../components/common/ServiceAndSchedul
 import { useServices } from "../hooks/useServices";
 import Schedules from "../components/common/Schedules";
 import { useSchedules } from "../hooks/useSchedules";
+import { ServiceFormModal } from "../components/common/ServiceFormModal";
+import { Service } from "../models/ServicesModels";
+import { PanelControlContext } from "@/context/PanelControlContext";
 
 
 const PanelControlPage: React.FC = () => {
@@ -26,12 +29,17 @@ const PanelControlPage: React.FC = () => {
   const {
     isSchedulerOpen,
   } = useSchedules()
-  
+
   const {
-    serviceList
+    serviceList,
+    AddNewService
   } = useServices()
 
-  console.log(yearlyCutsChartData)
+  const {
+    setCreateModalOpen,
+    createModalOpen
+  } = useContext(PanelControlContext)!
+
 
   return (
     <div className="flex flex-1 flex-col">
@@ -128,9 +136,17 @@ const PanelControlPage: React.FC = () => {
               />
             </div>
 
+            {/* Modales */}
+            <ServiceFormModal
+              open={createModalOpen}
+              onOpenChange={setCreateModalOpen}
+              onSubmit={AddNewService}
+              mode="create"
+            />
+
             {
               isSchedulerOpen && (
-                <Schedules/>
+                <Schedules />
               )
             }
           </CardLayout>

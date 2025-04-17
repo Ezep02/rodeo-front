@@ -111,8 +111,11 @@ const Dashboard: React.FC = () => {
       {/* Información de la barbería - Banner superior */}
       <div className="bg-gray-100 p-3 text-center text-sm flex justify-center items-center gap-2">
         <MapPin className="h-4 w-4 text-red-500" />
-        <span>Av. 29, Calle 52 •</span>
-        <span className="font-medium">Como llegar?</span>
+        <span>Av. 29, Calle 48 •</span>
+        <a href="https://maps.app.goo.gl/mpWfZ32yUaZ6Xbbr6" target="_blank">
+          Como llegar?
+        </a>
+
       </div>
 
 
@@ -174,7 +177,7 @@ const Dashboard: React.FC = () => {
                           </p>
                           <Button
                             size="sm"
-                            
+
                             className="text-white "
                           >
                             Ver detalles
@@ -192,7 +195,7 @@ const Dashboard: React.FC = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
                       placeholder="Buscar servicios..."
-                      className="pl-10 w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500" 
+                      className="pl-10 w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
                       value={busqueda}
                       onChange={(e) => setBusqueda(e.target.value)}
                     />
@@ -206,11 +209,11 @@ const Dashboard: React.FC = () => {
                         <h3 className="font-medium text-gray-900">Servicios populares</h3>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {popularServices.map((popular_service, i) => (
+                        {popularServices?.map((popular_service, i) => (
                           <Card
                             key={i}
                             className="cursor-pointer hover:shadow-sm transition-all border-gray-200"
-                            
+
                           >
                             <CardContent className="p-4">
                               <div className="font-medium text-gray-900">{popular_service.title}</div>

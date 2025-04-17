@@ -1,6 +1,6 @@
 import { AuthContext } from "@/context/AuthContext"
 import { User } from "@/models/AuthModels"
-import { LogoutUser, VerifyToken } from "@/service/AuthService"
+import {  VerifyToken } from "@/service/AuthService"
 import { useEffect, useContext } from "react"
 
 // custom hook, user handler
@@ -29,18 +29,9 @@ export const useUser = () => {
         VerifySession()
     }, []);
 
-    const LogoutSession = async () => {
-        try {
-            await LogoutUser();
-            setIsUserAuthenticated(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     return {
         isUserAuthenticated,
-        LogoutSession,
         user,
         setUser
     }
