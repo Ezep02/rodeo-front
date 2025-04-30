@@ -2,18 +2,16 @@ import React, { Suspense } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Dashboard from "@/internal/dashboard/pages/Dashboard";
 import MainLayout from "@/layouts/MainLayout";
-
-
 import PrivateRoutes from "./PrivateRoutes";
-import { useUser } from "@/hooks/useUser";
 import AuthRoutes from "./AuthRoutes";
 import { DashboardContextProvider } from "@/context/DashboardContext";
 import PaymentLayout from "@/layouts/PaymentLayout";
+import { useSession } from "@/hooks/useSession";
 const PaymentRoutes = React.lazy(() => import("./PaymentRoutes"));
 
 const PublicRoutes = () => {
 
-  const { user } = useUser()
+  const {user} = useSession()
 
   return (
     <Routes>

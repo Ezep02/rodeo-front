@@ -96,7 +96,6 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
       service_duration: srv.service_duration,
       price: srv.price,
       title: srv.title,
-      preview_url: srv.preview_url
     });   
   };  
 

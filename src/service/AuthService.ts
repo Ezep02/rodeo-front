@@ -1,9 +1,9 @@
 import { AuthenticationInstance } from "../configs/AxiosConfigs";
-import { LoginUserReq, SendEmailForData, User } from "../models/AuthModels";
+import { LoginUserReq, RegisterUserReq, SendEmailForData, User } from "../models/AuthModels";
 
 const BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/auth`;
 
-export const UserRegister = async (user: User) => {
+export const UserRegister = async (user: RegisterUserReq) => {
     const response = await AuthenticationInstance.post<User>(`${BASE_URL}/register`, user)
     return response.data
 }

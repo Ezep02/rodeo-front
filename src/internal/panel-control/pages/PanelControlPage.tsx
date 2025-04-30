@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import CardLayout from "../components/layout/CardLayout";
 import BarberHaircutsChart from "../components/common/BarberHaircutsChart";
@@ -12,7 +12,6 @@ import { useServices } from "../hooks/useServices";
 import Schedules from "../components/common/Schedules";
 import { useSchedules } from "../hooks/useSchedules";
 import { ServiceFormModal } from "../components/common/ServiceFormModal";
-import { Service } from "../models/ServicesModels";
 import { PanelControlContext } from "@/context/PanelControlContext";
 
 
@@ -132,7 +131,7 @@ const PanelControlPage: React.FC = () => {
 
             <div className="p-6 pt-0">
               <ServiceAndScheduleManagerTab
-                Services={serviceList}
+                Services={serviceList?.length > 0 ? serviceList : []}
               />
             </div>
 

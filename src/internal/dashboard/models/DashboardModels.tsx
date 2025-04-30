@@ -9,7 +9,7 @@ export interface Services {
 
 export interface PopularServices {
   title: string;
-  total_orders: number;
+  total_avg: number;
 }
 
 export interface Shift {

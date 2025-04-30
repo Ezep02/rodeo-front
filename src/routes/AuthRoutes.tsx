@@ -9,7 +9,6 @@ const AuthRecoverPage = React.lazy(() => import("@/internal/auth/pages/AuthRecov
 const AuthResetPasswordPage = React.lazy(() => import("@/internal/auth/pages/AuthResetPassword"));
 
 
-
 const AuthRoutes: React.FC = () => {
 
     return (

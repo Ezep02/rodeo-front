@@ -21,6 +21,11 @@ export interface Order {
 };
 
 export interface ServiceOrderRequest {
+    User_id: number;
+    Payer_name: string;
+    Payer_surname: string;
+    Payer_email: string;
+    Payer_phone_number: string;
     Barber_id: number;
     Created_by_id: number;
     Description: string;
@@ -32,6 +37,7 @@ export interface ServiceOrderRequest {
     Schedule_day_date: Date;
     Shift_id: number
 }
+
 
 export interface CustomerPendingOrder {
     ID: number;

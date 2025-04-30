@@ -8,7 +8,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Clock, PlusIcon, Search, Trash2 } from 'lucide-react'
+import { Clock, PencilIcon, PlusIcon, Search, TrashIcon } from 'lucide-react'
 import { Service } from '../../models/ServicesModels'
 import { FaGears } from "react-icons/fa6";
 import { GiBullHorns } from 'react-icons/gi'
@@ -16,7 +16,7 @@ import { useSchedules } from '../../hooks/useSchedules'
 import { PanelControlContext } from '@/context/PanelControlContext'
 
 type ServiceAndScheduleManagerTabProps = {
-    Services: Service[]
+    Services: Service[] | []
 }
 
 const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> = ({ Services }) => {
@@ -69,11 +69,34 @@ const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> 
                         </p>
                         {
                             Services.length > 0 ? (
-                                <ul className='h-[180px] overflow-hidden overflow-y-scroll scroll-abrir-tarjeta'>
+                                <ul className='h-[280px] overflow-hidden overflow-y-scroll scroll-abrir-editar-tarjeta '>
                                     {
                                         filteredServices.map((service) => ((
                                             <li key={service.ID} className="flex items-center justify-between py-3">
+
                                                 <div>
+                                                    <h3 className="font-medium">{service.title}</h3>
+                                                    <p className="text-sm text-gray-500">{service.description}</p>
+                                                    <div className="flex gap-4 mt-1 text-sm">
+                                                        <span>${service.price.toFixed(2)}</span>
+                                                        <span>{service.service_duration} min</span>
+
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <Button variant="outline" size="icon" >
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="text-red-500 hover:text-red-600"
+                                                    // onClick={() => openDeleteDialog(service)}
+                                                    >
+                                                        <TrashIcon className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                                {/* <div>
                                                     <p className="font-medium">{service.title}</p>
                                                     <p className="text-sm text-green-300 font-semibold">${service.price}</p>
                                                 </div>
@@ -84,7 +107,9 @@ const ServiceAndScheduleManagerTab: React.FC<ServiceAndScheduleManagerTabProps> 
                                                     <Button variant="ghost" size="icon">
                                                         <Trash2 className="h-4 w-4 text-muted-foreground" />
                                                     </Button>
-                                                </div>
+                                                </div> */}
+
+
                                             </li>
                                         )))
                                     }

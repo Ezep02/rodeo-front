@@ -1,4 +1,4 @@
-import React, { useContext, } from "react";
+import React, { useContext, useState, } from "react";
 import { DashboardContext } from "../../../../context/DashboardContext";
 import { CreateNewOrder } from "../../services/DashboardService";
 import { ServiceOrderRequest } from "../../models/OrderModels";
@@ -7,12 +7,17 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card";
 import { useReservation } from "../../hooks/useReservation";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/useUser";
+import { formatOrderPayment } from "../../helpers/payment_helpers";
+import { RegisterPaymentReq, User } from "@/models/AuthModels";
+import UnregisteredUserForm from "./UnregisteredUserForm";
 const Carousel = React.lazy(() => import("@/components/ui/carousel"));
 
 const MakeReservationLayout: React.FC = () => {
   const {
     SelectDateHandler,
-    filteredSchedulesByDay
+    filteredSchedulesByDay,
+
   } = useContext(DashboardContext)!;
 
   const {
@@ -21,20 +26,23 @@ const MakeReservationLayout: React.FC = () => {
     selectedShift,
   } = useReservation()
 
+  const {
+    user,
+  } = useUser()
+
+  // Datos del formulario de reserva
+  
+  const [userData, setUserData] = useState<User | RegisterPaymentReq | undefined>(user ? user : undefined)
+
+  const [isUserRegistered, setIsUserRegistered] = useState(false)
+
+  const OpenUnregistedForm = () => {
+    setIsUserRegistered(!isUserRegistered)
+  }
+
   const HandlePayment = async () => {
-    if (selectedService && selectedShift) {
-      const newOrder: ServiceOrderRequest = {
-        Barber_id: selectedService.created_by_id,
-        Title: selectedService.title,
-        Created_by_id: selectedService.created_by_id,
-        Description: selectedService.description,
-        Service_duration: selectedService.service_duration,
-        Price: selectedService.price,
-        Schedule_start_time: selectedShift.Start_time,
-        Service_id: selectedService.ID,
-        Schedule_day_date: selectedShift.Schedule_day_date,
-        Shift_id: selectedShift?.ID,
-      };
+    if (selectedService && selectedShift && userData) {
+      const newOrder: ServiceOrderRequest = formatOrderPayment(selectedService, selectedShift, userData)
 
       try {
         const response = await CreateNewOrder(newOrder);
@@ -44,6 +52,9 @@ const MakeReservationLayout: React.FC = () => {
       } catch (error) {
         console.log("error creando link de pago", error)
       }
+    } else if (!userData) {
+      // abrir modal de solicitud de datos
+      OpenUnregistedForm()
     }
   };
 
@@ -72,6 +83,17 @@ const MakeReservationLayout: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* si no esta registrado, mostrar este formulario */}
+      {
+        isUserRegistered && (
+          <UnregisteredUserForm 
+            onClose={OpenUnregistedForm}
+            setUserData={setUserData}
+          />
+        )
+      }
+
 
       {filteredSchedulesByDay && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>

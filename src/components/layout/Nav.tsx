@@ -24,12 +24,12 @@ const Header: React.FC = () => {
 
   const LogoutSession = async () => {
     try {
-        await LogoutUser();
-        setIsUserAuthenticated(false);
+      await LogoutUser();
+      setIsUserAuthenticated(false);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
   return (
     <div

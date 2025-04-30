@@ -12,7 +12,7 @@ import {
 import { AuthContext } from "@/context/AuthContext";
 import CustomerNextTurns from "../components/common/CustomerNextTurns";
 
-import { ArrowLeft, Calendar, Clock, Info, MapPin, Scissors, Search, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Crown, Info, MapPin, Scissors, Search, Star, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useServices } from "../hooks/useServices";
 import MakeReservationLayout from "../components/layout/MakeReservationLayout";
@@ -52,6 +52,7 @@ const Dashboard: React.FC = () => {
   const {
     popularServices
   } = usePopularServices()
+
 
   const testimonios: Testimonio[] = [
     {
@@ -190,46 +191,55 @@ const Dashboard: React.FC = () => {
                     </CardContent>
                   </Card>
 
-                  {/* Buscador de servicios */}
-                  <div className="relative mb-6">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <input
-                      placeholder="Buscar servicios..."
-                      className="pl-10 w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                      value={busqueda}
-                      onChange={(e) => setBusqueda(e.target.value)}
-                    />
-                  </div>
 
                   {/* Servicios populares */}
-                  {!busqueda && (
-                    <div className="mb-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <TrendingUp className="h-4 w-4 text-red-500" />
-                        <h3 className="font-medium text-gray-900">Servicios populares</h3>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {popularServices?.map((popular_service, i) => (
-                          <Card
-                            key={i}
-                            className="cursor-pointer hover:shadow-sm transition-all border-gray-200"
 
-                          >
-                            <CardContent className="p-4">
-                              <div className="font-medium text-gray-900">{popular_service.title}</div>
-                              <div className="text-sm  font-medium mt-1">{popular_service.total_orders}</div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <TrendingUp className="h-4 w-4 text-red-500" />
+                      <h3 className="font-medium text-gray-900">Servicios populares</h3>
                     </div>
-                  )}
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {popularServices
+                        ?.sort((a, b) => b.total_avg - a.total_avg) // ordenar de mayor a menor
+                        .map((popular_service, i) => {
+                          const podiumColors = ["bg-gradient-to-b from-amber-500 to-yellow-400", "bg-gradient-to-b from-gray-400 to-gray-200", "bg-gradient-to-b from-amber-700 to-amber-600"]; // Oro, plata, bronce
+                          const positionLabels = [<Crown className="w-6 h-6 text-yellow-300" />, <Crown className="w-6 h-6 text-zinc-50" />, <Crown className="w-6 h-6 " />];
+                          return (
+                            <Card
+                              key={i}
+                              className={`hover:shadow-sm transition-all border-gray-200 ${podiumColors[i]}`}
+                            >
+                              <CardContent className="p-4">
+                                <div className="font-bold text-center flex justify-center text-lg text-gray-900">
+                                  {positionLabels[i]}
+                                </div>
+                                <div className="font-medium text-center mt-2 text-zinc-50">{popular_service.title}</div>
+                                <div className="text-sm font-medium text-center mt-1 text-zinc-100 bg-zinc-900 rounded-md shadow-md">{popular_service.total_avg}% de clientes</div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                    </div>
+
+                  </div>
 
                   {/* Listado de servicios */}
                   <div className="mb-6">
                     <h3 className="font-medium text-gray-900 mb-3">
                       {busqueda ? `Resultados para "${busqueda}"` : "Todos los servicios"}
                     </h3>
+                    {/* Buscador de servicios */}
+                    <div className="relative mb-6">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        placeholder="Buscar servicios..."
+                        className="pl-10 w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
+                        value={busqueda}
+                        onChange={(e) => setBusqueda(e.target.value)}
+                      />
+                    </div>
+
                     <div className="space-y-2">
                       {serviciosFiltrados.length > 0 ? (
                         serviciosFiltrados.map((servicio) => (

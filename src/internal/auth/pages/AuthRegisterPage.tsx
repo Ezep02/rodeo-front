@@ -2,7 +2,7 @@ import { FormRegisterField } from '@/components/common/CustomInputForm';
 import CustomToast from '@/components/common/ToastCustom';
 import { Button } from '@/components/ui/button';
 import { AuthContext } from '@/context/AuthContext';
-import { User } from '@/models/AuthModels';
+import { RegisterUserReq } from '@/models/AuthModels';
 import { UserRegister } from '@/service/AuthService';
 import { RegisterFormData, RegisterUserSchema } from '@/types/RegisterAuthTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +17,7 @@ const AuthRegisterPage = () => {
   const { setUser, setIsUserAuthenticated } = useContext(AuthContext)!;
 
   const [registerErr, registerAction, isRegisterPending] = useActionState(
-    async (_: string | null, data: User) => {
+    async (_: string | null, data: RegisterUserReq) => {
 
       try {
         const user = await UserRegister(data);
@@ -37,7 +37,7 @@ const AuthRegisterPage = () => {
   );
 
   // Manejar el registro
-  const handleRegister = (data: User) => {
+  const handleRegister = (data: RegisterUserReq) => {
     startTransition(() => {
       registerAction(data);
     });

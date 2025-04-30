@@ -67,7 +67,9 @@ export function ServiceFormModal({ open, onOpenChange, onSubmit, initialData, mo
                                 id="titles"
                                 value={formData.title}
                                 onChange={(e) => handleChange("title", e.target.value)}
-                                className="col-span-3"
+                                className="col-span-3 p-2 border rounded-md border-zinc-200 text-sm"
+                                placeholder="Nombre del servicio"
+                                type="text"
                                 required
                             />
                         </div>
@@ -79,7 +81,8 @@ export function ServiceFormModal({ open, onOpenChange, onSubmit, initialData, mo
                                 id="description"
                                 value={formData.description}
                                 onChange={(e) => handleChange("description", e.target.value)}
-                                className="col-span-3"
+                                placeholder="Una breve descripción del servicio"
+                                className="col-span-3 p-2 border rounded-md border-zinc-200 resize-none text-sm"
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -91,7 +94,7 @@ export function ServiceFormModal({ open, onOpenChange, onSubmit, initialData, mo
                                 type="number"
                                 value={formData.service_duration}
                                 onChange={(e) => handleChange("service_duration", Number.parseInt(e.target.value))}
-                                className="col-span-3"
+                                className="col-span-3 p-2 border rounded-md border-zinc-200 text-sm"
                                 min={5}
                             />
                         </div>
@@ -104,7 +107,7 @@ export function ServiceFormModal({ open, onOpenChange, onSubmit, initialData, mo
                                 type="number"
                                 value={formData.price}
                                 onChange={(e) => handleChange("price", Number.parseFloat(e.target.value))}
-                                className="col-span-3"
+                                className="col-span-3 p-2 border rounded-md border-zinc-200 text-sm"
                                 min={0}
                                 step={0.01}
                                 required

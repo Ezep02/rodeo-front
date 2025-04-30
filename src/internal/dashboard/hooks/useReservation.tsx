@@ -20,7 +20,6 @@ export const useReservation = () => {
     }
 
  
-
     const seleccionarHorario = (horario: Shift) => {
         if (horario.Available) {
             setSelectedShift(horario)
