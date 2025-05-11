@@ -26,17 +26,14 @@ const PanelControlPage: React.FC = () => {
   } = useOrder()
 
   const {
-    isSchedulerOpen,
-  } = useSchedules()
-
-  const {
     serviceList,
     AddNewService
   } = useServices()
 
   const {
     setCreateModalOpen,
-    createModalOpen
+    createModalOpen,
+    isSchedulerOpen
   } = useContext(PanelControlContext)!
 
 
