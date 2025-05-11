@@ -1,7 +1,6 @@
 import { PanelControlContext } from "@/context/PanelControlContext";
-import { generateUniqueId } from "@/utils/RandomIDGenerator";
 import { useContext, useEffect } from "react";
-import { ScheduleResponse } from "../models/ShadulesModels";
+import { ScheduleRequest, ScheduleResponse } from "../models/ShadulesModels";
 import { useSchedules } from "./useSchedules";
 
 
@@ -72,7 +71,14 @@ export const useShift = () => {
 
     // Función para crear shifts
     const AddShift = () => {
-        const newShift: ScheduleResponse = {
+        
+        function generarId(): number {
+            const timestamp = Math.floor(Date.now() / 1000); // 10 digitos
+            return timestamp; // Esto te da un ID seguro y único en segundos
+        }
+
+        const newShift: ScheduleRequest = {
+            ID: generarId(),
             Schedule_day_date: date ? new Date(date) : new Date(), // Asegura que date siempre sea una fecha válida
             Available: true,
             Schedule_status: "NEW",
@@ -84,7 +90,8 @@ export const useShift = () => {
                 // Inicializar si no existe previamente
                 return { schedule_add: [newShift], schedule_delete: [] };
             }
-
+            
+            // Si no hay un estado existente: agrega newShift a schedule_add
             return {
                 ...prev,
                 schedule_add: [...prev.schedule_add, newShift],

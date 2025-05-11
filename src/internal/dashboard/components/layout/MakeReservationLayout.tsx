@@ -31,7 +31,7 @@ const MakeReservationLayout: React.FC = () => {
   } = useUser()
 
   // Datos del formulario de reserva
-  
+
   const [userData, setUserData] = useState<User | RegisterPaymentReq | undefined>(user ? user : undefined)
 
   const [isUserRegistered, setIsUserRegistered] = useState(false)
@@ -43,19 +43,21 @@ const MakeReservationLayout: React.FC = () => {
   const HandlePayment = async () => {
     if (selectedService && selectedShift && userData) {
       const newOrder: ServiceOrderRequest = formatOrderPayment(selectedService, selectedShift, userData)
-
+      
       try {
         const response = await CreateNewOrder(newOrder);
         window.location.href = response.init_point;
-        console.log(response)
 
       } catch (error) {
         console.log("error creando link de pago", error)
       }
+
+
     } else if (!userData) {
       // abrir modal de solicitud de datos
       OpenUnregistedForm()
     }
+
   };
 
   // custom hook
@@ -87,7 +89,7 @@ const MakeReservationLayout: React.FC = () => {
       {/* si no esta registrado, mostrar este formulario */}
       {
         isUserRegistered && (
-          <UnregisteredUserForm 
+          <UnregisteredUserForm
             onClose={OpenUnregistedForm}
             setUserData={setUserData}
           />

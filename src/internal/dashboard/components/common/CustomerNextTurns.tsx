@@ -1,12 +1,29 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { useTurns } from '../../hooks/useTurns'
 import { Calendar, MapPin, MoreHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import Reschedule from './Reschedule'
+import { DashboardContext } from '@/context/DashboardContext'
+import { CustomerPendingOrder } from '../../models/OrderModels'
 
 const CustomerNextTurns: React.FC = () => {
     const { cutomerPendingOrders } = useTurns()
+
+    const {
+        isReschedulingOpen,
+        handleReschedule,
+
+    } = useContext(DashboardContext)!
     
+    const [selectedAppointment, setSelectedAppointment] = useState<CustomerPendingOrder>()
+
+    const RescheduleOnClickHandler = (appointment: CustomerPendingOrder) => {
+        // Add selected pending order and open reschedule component
+        setSelectedAppointment(appointment)
+        handleReschedule()
+    }
+
     return (
         <div className="space-y-6">
             <div className="rounded-xl border bg-card text-card-foreground shadow">
@@ -14,6 +31,15 @@ const CustomerNextTurns: React.FC = () => {
                     <h3 className="font-semibold tracking-tight text-lg">Próximas citas</h3>
                     <p className="text-sm text-muted-foreground">Tus citas programadas para los próximos días</p>
                 </div>
+
+                {/* reprogramar programadas */}
+                {
+                    isReschedulingOpen && selectedAppointment &&(
+                        <Reschedule 
+                            appointment={selectedAppointment}
+                        />
+                    )
+                }
 
                 {cutomerPendingOrders?.length > 0 ? (
                     <div className="p-6">
@@ -24,10 +50,7 @@ const CustomerNextTurns: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="relative">
-                            {/* Timeline line */}
-                            <div className="absolute top-0 bottom-0 left-[39px] border-l border-dashed border-muted-foreground/30" />
-
+                        <div>
                             {cutomerPendingOrders.map((appointment) => (
                                 <div key={appointment.ID} className="relative mb-8 last:mb-0">
                                     <div className="flex items-start gap-6">
@@ -48,10 +71,12 @@ const CustomerNextTurns: React.FC = () => {
                                                                     <span className="sr-only">Abrir menú</span>
                                                                 </Button>
                                                             </DropdownMenuTrigger>
+
                                                             <DropdownMenuContent align="end" className="w-[160px]">
-                                                                <DropdownMenuItem>Reprogramar</DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={()=> RescheduleOnClickHandler(appointment)}>Reprogramar</DropdownMenuItem>
                                                                 <DropdownMenuItem className="text-red-600">Cancelar cita</DropdownMenuItem>
                                                             </DropdownMenuContent>
+
                                                         </DropdownMenu>
 
                                                     </div>

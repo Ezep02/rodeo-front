@@ -4,8 +4,6 @@ import { RegisterPaymentReq, User } from "@/models/AuthModels";
 import { ServiceOrderRequest } from "../models/OrderModels";
 
 
-
-
 export function formatOrderPayment(service: Service, shift: Shift, user: User | RegisterPaymentReq) : ServiceOrderRequest{
   // Formatear el pedido para el pago
   const order: ServiceOrderRequest = {
@@ -30,8 +28,7 @@ export function formatOrderPayment(service: Service, shift: Shift, user: User | 
 }
 
 function generarId(): number {
-  const timestamp = Math.floor(Date.now() / 1000); // 10 dígitos
-  console.log(timestamp)
+  const timestamp = Math.floor(Date.now() / 1000); // 10 digitos
   return timestamp; // Esto te da un ID seguro y único en segundos
 }
 

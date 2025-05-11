@@ -4,7 +4,7 @@ import {
 } from "../internal/panel-control/models/ServicesModels";
 
 import {Shift} from "../internal/dashboard/models/DashboardModels";
-import { CustomerPendingOrder } from "@/internal/dashboard/models/OrderModels";
+import { CustomerPendingOrder, Order } from "@/internal/dashboard/models/OrderModels";
 
 interface DashboardContextProps {
   services: Service[];
@@ -29,7 +29,10 @@ interface DashboardContextProps {
   // ORDENES PENDIENTES
   cutomerPendingOrders: CustomerPendingOrder[] | []
   setCustomerPendingOrders: React.Dispatch<React.SetStateAction<CustomerPendingOrder[] | []>>
-
+  // REPROGRAMADOR DE CITAS
+  handleReschedule: ()=> void;
+  isReschedulingOpen: boolean;
+  setIsReschedulingOpen:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const DashboardContext = React.createContext< DashboardContextProps | undefined >(undefined);
@@ -102,6 +105,14 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   // ORDENES PENDIENTES
   const [cutomerPendingOrders, setCustomerPendingOrders] = useState<CustomerPendingOrder[]>([])
 
+  // abrir reprogramador de cita
+  const [isReschedulingOpen, setIsReschedulingOpen] = React.useState<boolean>(false)
+
+  const handleReschedule = () => {
+    setIsReschedulingOpen(!isReschedulingOpen)
+  }
+
+
   return (
     <DashboardContext.Provider
       value={{
@@ -120,7 +131,10 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         schedulerOffset,
         setSchedulerOffset,
         cutomerPendingOrders,
-      setCustomerPendingOrders
+        setCustomerPendingOrders,
+        isReschedulingOpen,
+        setIsReschedulingOpen,
+        handleReschedule,
       }}
     >
       {children}

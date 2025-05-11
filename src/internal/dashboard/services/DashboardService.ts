@@ -2,7 +2,7 @@ import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
 import { Service } from "../../panel-control/models/ServicesModels";
 import { PopularServices, Shift } from "../models/DashboardModels";
 
-import {CustomerPendingOrder, ServiceOrderRequest } from "../models/OrderModels";
+import {CustomerPendingOrder, RescheduleRequest, ServiceOrderRequest, UpdatedCustomerPendingOrder } from "../models/OrderModels";
 
 const SERVICE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
 const ORDER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
@@ -36,7 +36,6 @@ export const UpdateShiftAvailability = async (shiftID: number) => {
 // Obtener ordenes pendientes
 export const GetCustomerPendingOrders = async () => {
     const response = await AuthenticationInstance.get<CustomerPendingOrder[]>(`${ORDER_URL}/customer`)
-    
     return response.data
 }
 
@@ -44,5 +43,11 @@ export const GetCustomerPendingOrders = async () => {
 export const GetPopularServices = async () => {
     const response = await AuthenticationInstance.get<PopularServices[]>(`${SERVICE_URL}/popular-services`)
 
+    return response.data
+}
+
+// Reprogramar turno del cliente
+export const ReschedulingCustomerOrder = async (updated_appointment: RescheduleRequest) => {
+    const response = await AuthenticationInstance.post<UpdatedCustomerPendingOrder>(`${ORDER_URL}/customer/reschedule`, updated_appointment)
     return response.data
 }

@@ -15,7 +15,7 @@ export interface PopularServices {
 export interface Shift {
   ID: number;
   Available?: boolean;
-  Barber_id: boolean;
+  Barber_id: number;
   Created_by_name?: string;
   Schedule_day_date: Date;
   Start_time: string;

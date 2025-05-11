@@ -32,6 +32,7 @@ const Carousel: React.FC<MyCarouselProps> = ({ visibleDays, loadMoreDays, Select
     };
   }, [embla, handleScrollEnd]);
 
+  
 
   return (
     <div className="embla" ref={emblaRef}>
