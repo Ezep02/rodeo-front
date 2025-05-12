@@ -14,11 +14,11 @@ type RescheduleProps = {
 }
 
 const Reschedule: React.FC<RescheduleProps> = ({appointment}) => {
-
     const {
         SelectDateHandler,
         filteredSchedulesByDay,
-        handleReschedule
+        handleReschedule,
+        
     } = useContext(DashboardContext)!;
 
     // custom hook
@@ -40,9 +40,10 @@ const Reschedule: React.FC<RescheduleProps> = ({appointment}) => {
         seleccionarHorario,
         selectedShift,
         ReschedulingAppointment
+
     } = useRescheduling()
 
-    // TODO 
+    
          
 
     return (

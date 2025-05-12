@@ -8,12 +8,14 @@ import { DashboardContext } from '@/context/DashboardContext'
 import { CustomerPendingOrder } from '../../models/OrderModels'
 
 const CustomerNextTurns: React.FC = () => {
-    const { cutomerPendingOrders } = useTurns()
+    const { 
+        cutomerPendingOrders 
+    } = useTurns()
 
     const {
         isReschedulingOpen,
         handleReschedule,
-
+        
     } = useContext(DashboardContext)!
     
     const [selectedAppointment, setSelectedAppointment] = useState<CustomerPendingOrder>()
@@ -23,6 +25,7 @@ const CustomerNextTurns: React.FC = () => {
         setSelectedAppointment(appointment)
         handleReschedule()
     }
+
 
     return (
         <div className="space-y-6">
