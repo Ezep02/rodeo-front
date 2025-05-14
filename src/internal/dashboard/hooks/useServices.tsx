@@ -24,7 +24,7 @@ export const useServices = () => {
                 try {
                     const fetchedServices: Service[] = await GetServices(limit, serviceOffset);
 
-                    if (fetchedServices.length > 0) {
+                    if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
                         setServices((prev) => {
 
                             const filtered = fetchedServices.filter(
@@ -53,7 +53,7 @@ export const useServices = () => {
         try {
             const fetchedServices: Service[] = await GetServices(limit, serviceOffset);
 
-            if (fetchedServices.length > 0) {
+            if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
                 setServices((prev) => {
 
                     const filtered = fetchedServices.filter(

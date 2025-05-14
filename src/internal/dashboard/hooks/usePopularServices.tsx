@@ -14,14 +14,16 @@ export const usePopularServices = () => {
         const fetchPopularServices = async () => {
             try {
                 const response = await GetPopularServices();
-                setPopularServices(response);
+                if(response){
+                    console.log(response)
+                    setPopularServices(response);
+                }
             } catch (error) {
                 console.error("Error fetching popular services:", error);
             }
         }
         fetchPopularServices();
     },[])
-
 
     return {
         popularServices

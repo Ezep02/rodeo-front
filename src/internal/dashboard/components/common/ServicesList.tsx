@@ -6,7 +6,6 @@ import { Service } from '@/internal/panel-control/models/ServicesModels'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import PopularServices from './PopularServices'
 
 type ServicesListProps = {
   SeleccionarServicio: (service: Service) => void
@@ -20,31 +19,24 @@ const ServicesList: React.FC<ServicesListProps> = ({ SeleccionarServicio }) => {
 
   const [busqueda, setBusqueda] = useState<string>("")
 
-  const serviciosFiltrados = services.filter((servicio) =>
+  const serviciosFiltrados = services?.filter((servicio) =>
     servicio.title.toLowerCase().includes(busqueda.toLowerCase()),
   )
 
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
-
         <div>
           <h2 className="text-2xl font-bold">Nuestros Servicios</h2>
         </div>
-
-
       </div>
 
       <Tabs defaultValue="todos" className="w-full">
-
-
         <TabsList className="mb-3">
           <TabsTrigger value="todos">Todos los servicios</TabsTrigger>
         </TabsList>
 
         <TabsContent value="todos" className="space-y-4">
-
-          <PopularServices />
 
           <div className="relative ">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -70,9 +62,9 @@ const ServicesList: React.FC<ServicesListProps> = ({ SeleccionarServicio }) => {
                     <div className="flex justify-between">
 
                       <div className="flex items-center gap-2">
-                        <CardTitle>Tapper fade</CardTitle>
+                        <CardTitle>{servicio.title}</CardTitle>
                         <Badge variant="outline">
-                          40 min
+                          {servicio.service_duration}{" "}min
                         </Badge>
                       </div>
                       <span className="text-xl font-bold text-green-500">${servicio.price}</span>

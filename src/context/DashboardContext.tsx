@@ -26,12 +26,15 @@ interface DashboardContextProps {
   setSchedulerOffset:React.Dispatch<React.SetStateAction<number>>;
 
   // ORDENES PENDIENTES
-  cutomerPendingOrders: CustomerPendingOrder[] | []
+  customerPendingOrders: CustomerPendingOrder[] | []
   setCustomerPendingOrders: React.Dispatch<React.SetStateAction<CustomerPendingOrder[] | []>>
   // REPROGRAMADOR DE CITAS
   handleReschedule: ()=> void;
   isReschedulingOpen: boolean;
   setIsReschedulingOpen:React.Dispatch<React.SetStateAction<boolean>>;
+  // RESERVA
+  selectedShift: Shift | undefined
+  setSelectedShift: React.Dispatch<React.SetStateAction<Shift | undefined>>
 }
 
 export const DashboardContext = React.createContext< DashboardContextProps | undefined >(undefined);
@@ -86,10 +89,11 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
     setFilteredSchedulesByDay(days)
   };
 
- 
+  // SHIFT SELECCIONADO ( reserva )
+  const [selectedShift, setSelectedShift] = useState<Shift>()
 
   // ORDENES PENDIENTES
-  const [cutomerPendingOrders, setCustomerPendingOrders] = useState<CustomerPendingOrder[]>([])
+  const [customerPendingOrders, setCustomerPendingOrders] = useState<CustomerPendingOrder[]>([])
 
   // abrir reprogramador de cita
   const [isReschedulingOpen, setIsReschedulingOpen] = React.useState<boolean>(false)
@@ -115,11 +119,13 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         setServiceOffset,
         schedulerOffset,
         setSchedulerOffset,
-        cutomerPendingOrders,
+        customerPendingOrders,
         setCustomerPendingOrders,
         isReschedulingOpen,
         setIsReschedulingOpen,
         handleReschedule,
+        selectedShift,
+        setSelectedShift
       }}
     >
       {children}

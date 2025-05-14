@@ -1,13 +1,14 @@
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Star } from 'lucide-react'
 import React from 'react'
 
 interface Testimonio {
-  id: number
-  nombre: string
-  comentario: string
-  calificacion: number
-  fecha: string
+    id: number
+    nombre: string
+    comentario: string
+    calificacion: number
+    fecha: string
 }
 
 const Reviews: React.FC = () => {
@@ -57,35 +58,50 @@ const Reviews: React.FC = () => {
         },
     ]
     return (
-        <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-                <Star className="h-4 w-4 text-yellow-500" />
-                <h3 className="font-medium text-gray-900">Reseñas</h3>
+        < section >
+            <div className="flex items-center gap-2 mb-6">
+                <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                <h2 className="text-2xl font-bold">Reseñas</h2>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-2 gap-2">
-                {testimonios.map((testimonio) => (
-                    <Card key={testimonio.id} className="border-gray-200">
-                        <CardContent className="p-4">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <div className="font-medium">{testimonio.nombre}</div>
-                                    <div className="text-sm text-gray-500">{testimonio.fecha}</div>
-                                </div>
-                                <div className="flex">
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`w-4 h-4 ${i < testimonio.calificacion ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                            <p className="text-gray-700 text-sm mt-2">{testimonio.comentario}</p>
-                        </CardContent>
-                    </Card>
-                ))}
+
+            <div className="grid md:grid-cols-2 gap-6">
+                {
+                    Array.isArray(testimonios) && testimonios.length > 0 ? (
+                        <>
+                            {
+                                testimonios.map((t) => (
+                                    <Card
+                                        key={t.id}
+                                    >
+                                        <CardHeader>
+                                            <div className="flex justify-between">
+                                                <CardTitle>{t.nombre}</CardTitle>
+                                                <div className="flex">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} className="h-5 w-5 text-amber-400 fill-amber-400" />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <CardDescription>{t.fecha}</CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p>{t.comentario}</p>
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            }
+
+                        </>
+                    ) : (
+                        <p>Sin testimonios</p>
+                    )
+                }
             </div>
-        </div>
+
+            <div className="flex justify-center mt-6">
+                <Button variant="outline">Ver todas las reseñas</Button>
+            </div>
+        </section >
     )
 }
 

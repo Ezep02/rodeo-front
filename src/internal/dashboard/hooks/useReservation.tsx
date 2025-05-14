@@ -7,41 +7,34 @@ import { DashboardContext } from "@/context/DashboardContext"
 export const useReservation = () => {
     const {
         selectedService,
-        setSelectedService
+        setSelectedService,
+        selectedShift,
+        setSelectedShift
     } = useContext(DashboardContext)!
 
-    const [paso, setPaso] = useState<number>(1)
-    const [selectedShift, setSelectedShift] = useState<Shift | null>(null)
+    const [isCreateAppointmentModalOpen, setCreateAppointmentModalOpen] = useState(false)
 
     const seleccionarServicio = (servicio: Service) => {
         setSelectedService(servicio)
-        console.log(servicio)
-        setTimeout(() => setPaso(2), 300)
+        setCreateAppointmentModalOpen(!isCreateAppointmentModalOpen)
     }
 
- 
+
     const seleccionarHorario = (horario: Shift) => {
         if (horario.Available) {
             setSelectedShift(horario)
         }
     }
 
-    const volverPaso = (numeroPaso: number) => {
-        setPaso(numeroPaso)
-        if (numeroPaso < 2) {
-          
-            setSelectedShift(null)
-        }
-    }
 
 
     return {
         seleccionarServicio,
         seleccionarHorario,
-        volverPaso,
-        paso,
         selectedService,
         selectedShift,
+        setCreateAppointmentModalOpen,
+        isCreateAppointmentModalOpen
     }
 
 }

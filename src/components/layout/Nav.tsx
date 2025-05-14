@@ -60,10 +60,12 @@ const Header: React.FC = () => {
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
-                  <Link to={"/profile"}>Perfil</Link>
+                  {/* Perfil y configuracion de usuarios */}
+                  <Link to={"/profile"}>Perfil</Link> 
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to={"/citas"}>Citas</Link>
+                  {/* Citas pedientes e historial de visitas de usuarios */}
+                  <Link to={"/appointment"}>Citas</Link>
                 </DropdownMenuItem>
                 {
                   user?.is_barber && (

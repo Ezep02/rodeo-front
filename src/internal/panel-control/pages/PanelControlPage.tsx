@@ -10,7 +10,6 @@ import { FiTrash2 } from "react-icons/fi";
 import ServiceAndScheduleManagerTab from "../components/common/ServiceAndScheduleManagerTab";
 import { useServices } from "../hooks/useServices";
 import Schedules from "../components/common/Schedules";
-import { useSchedules } from "../hooks/useSchedules";
 import { ServiceFormModal } from "../components/common/ServiceFormModal";
 import { PanelControlContext } from "@/context/PanelControlContext";
 

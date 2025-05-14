@@ -1,28 +1,29 @@
-import React, { useContext, useState, } from "react";
-import { DashboardContext } from "../../../../context/DashboardContext";
-import { CreateNewOrder } from "../../services/DashboardService";
-import { ServiceOrderRequest } from "../../models/OrderModels";
-import { useSchedules } from "../../hooks/useSchedules";
+import { DashboardContext } from '@/context/DashboardContext';
+import React, { useContext, useState } from 'react'
+import { useReservation } from '../hooks/useReservation';
+import { useUser } from '@/hooks/useUser';
+import { RegisterPaymentReq, User } from '@/models/AuthModels';
+import { ServiceOrderRequest } from '../models/OrderModels';
+import { formatOrderPayment } from '../helpers/payment_helpers';
+import { CreateNewOrder } from '../services/DashboardService';
+import { useSchedules } from '../hooks/useSchedules';
+import Carousel from '@/components/ui/carousel';
+import UnregisteredUserForm from '../components/layout/UnregisteredUserForm';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card";
-import { useReservation } from "../../hooks/useReservation";
-import { Button } from "@/components/ui/button";
-import { useUser } from "@/hooks/useUser";
-import { formatOrderPayment } from "../../helpers/payment_helpers";
-import { RegisterPaymentReq, User } from "@/models/AuthModels";
-import UnregisteredUserForm from "./UnregisteredUserForm";
-const Carousel = React.lazy(() => import("@/components/ui/carousel"));
 
-const MakeReservationLayout: React.FC = () => {
+const Reservation:React.FC = () => {
+
   const {
     SelectDateHandler,
     filteredSchedulesByDay,
-
+    selectedService
   } = useContext(DashboardContext)!;
+
 
   const {
     seleccionarHorario,
-    selectedService,
     selectedShift,
   } = useReservation()
 
@@ -43,7 +44,7 @@ const MakeReservationLayout: React.FC = () => {
   const HandlePayment = async () => {
     if (selectedService && selectedShift && userData) {
       const newOrder: ServiceOrderRequest = formatOrderPayment(selectedService, selectedShift, userData)
-      
+
       try {
         const response = await CreateNewOrder(newOrder);
         window.location.href = response.init_point;
@@ -75,15 +76,12 @@ const MakeReservationLayout: React.FC = () => {
 
   return (
     <>
-      <div className="mb-6">
-        <h3 className="font-medium text-gray-900 mb-3">Selecciona un día</h3>
-        <div className="flex overflow-hidden pb-2 space-x-2">
-          <Carousel
-            loadMoreDays={LoadMoreDays}
-            SelectDateHandler={SelectDateHandler}
-            visibleDays={visibleDays}
-          />
-        </div>
+      <div className="mb-2 overflow-hidden">
+        <Carousel
+          loadMoreDays={LoadMoreDays}
+          SelectDateHandler={SelectDateHandler}
+          visibleDays={visibleDays}
+        />
       </div>
 
       {/* si no esta registrado, mostrar este formulario */}
@@ -96,10 +94,9 @@ const MakeReservationLayout: React.FC = () => {
         )
       }
 
-
       {filteredSchedulesByDay && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-          <h3 className="font-medium text-gray-900 mb-3">Selecciona una hora</h3>
+          <h3 className="font-medium text-gray-900 mb-3">Seleccionar horario</h3>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {
               filteredSchedulesByDay.length > 0 ? (
@@ -125,7 +122,7 @@ const MakeReservationLayout: React.FC = () => {
                   ))}
                 </>
               ) : (
-                <div className="col-span-3 sm:col-span-4 text-center">
+                <div className="col-span-3 sm:col-span-4 text-center p-2">
                   <p className="text-gray-500">No hay horarios disponibles para este día.</p>
                 </div>
               )
@@ -139,10 +136,10 @@ const MakeReservationLayout: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
-          className="mt-8"
+          className=""
         >
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3">
               <h3 className="font-bold text-gray-900 mb-4">Resumen</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
@@ -182,7 +179,8 @@ const MakeReservationLayout: React.FC = () => {
       )}
     </>
   );
-};
+}
 
-export default MakeReservationLayout;
+export default Reservation
+
 

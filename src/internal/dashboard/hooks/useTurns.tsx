@@ -8,7 +8,7 @@ import { UpdatedCustomerPendingOrder } from "../models/OrderModels"
 export const useTurns = () => {
     const {
         setCustomerPendingOrders,
-        cutomerPendingOrders,
+        customerPendingOrders,
     } = useContext(DashboardContext)!
 
     const { lastJsonMessage } = useWebSocket<UpdatedCustomerPendingOrder>(`${import.meta.env.VITE_BACKEND_WS_URL}/order/customer/notification`);
@@ -46,6 +46,6 @@ export const useTurns = () => {
 
 
     return {
-        cutomerPendingOrders
+        customerPendingOrders
     }
 }
