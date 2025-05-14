@@ -58,6 +58,13 @@ const Header: React.FC = () => {
                 <DropdownMenuItem>
                   <Link to={"/"}>Inicio</Link>
                 </DropdownMenuItem>
+
+                <DropdownMenuItem>
+                  <Link to={"/profile"}>Perfil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to={"/citas"}>Citas</Link>
+                </DropdownMenuItem>
                 {
                   user?.is_barber && (
                     <DropdownMenuItem>

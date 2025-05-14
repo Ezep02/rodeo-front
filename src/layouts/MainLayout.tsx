@@ -9,14 +9,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="h-screen  overflow-hidden overflow-y-scroll bg-white"
+      className="min-h-screen overflow-hidden overflow-y-scroll bg-white"
     >
 
       <header className="sticky top-0 border-b bg-black z-30">
         <Nav />
       </header>
 
-      <main className="w-full">
+      <main className="container py-8 space-y-10 p-8 ">
         {children}
       </main>
     </div>

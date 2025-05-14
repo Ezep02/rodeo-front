@@ -4,7 +4,7 @@ import {
 } from "../internal/panel-control/models/ServicesModels";
 
 import {Shift} from "../internal/dashboard/models/DashboardModels";
-import { CustomerPendingOrder, Order } from "@/internal/dashboard/models/OrderModels";
+import { CustomerPendingOrder } from "@/internal/dashboard/models/OrderModels";
 
 interface DashboardContextProps {
   services: Service[];
@@ -21,8 +21,7 @@ interface DashboardContextProps {
   setFilteredSchedulesByDay: React.Dispatch<React.SetStateAction<Shift[]>>;
   SelectDateHandler: (day: Date) => void;
 
-  
-  handleReserveClick: (srv: Service) => void;
+
   schedulerOffset: number;
   setSchedulerOffset:React.Dispatch<React.SetStateAction<number>>;
 
@@ -89,19 +88,6 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
 
  
 
-
-  const handleReserveClick = (srv: Service) => {
-   
-    setSelectedService({
-      ID: srv.ID,
-      created_by_id: srv.created_by_id,
-      description: srv.description,
-      service_duration: srv.service_duration,
-      price: srv.price,
-      title: srv.title,
-    });   
-  };  
-
   // ORDENES PENDIENTES
   const [cutomerPendingOrders, setCustomerPendingOrders] = useState<CustomerPendingOrder[]>([])
 
@@ -124,7 +110,6 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         setBarberSchedules,
         filteredSchedulesByDay,
         setFilteredSchedulesByDay,
-        handleReserveClick,
         SelectDateHandler,
         serviceOffset,
         setServiceOffset,

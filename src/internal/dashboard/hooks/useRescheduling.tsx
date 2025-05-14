@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useActionState, useContext, useState } from "react"
 import { Shift } from "../models/DashboardModels"
 import { CustomerPendingOrder } from "../models/OrderModels"
 import { RescheduleObjetConstructor } from "../helpers/reschedule_helpers"
@@ -8,7 +8,7 @@ import { DashboardContext } from "@/context/DashboardContext"
 
 export const useRescheduling = () => {
     const [selectedShift, setSelectedShift] = useState<Shift | null>(null)
-    
+
     const {
         handleReschedule,
         setBarberSchedules
@@ -21,53 +21,60 @@ export const useRescheduling = () => {
     }
 
     // crear funcion para realizar la reprogramacion
-    const ReschedulingAppointment = async (appointment: CustomerPendingOrder, shift_to_replace: Shift) => {
+    // const ReschedulingAppointment = async (appointment: CustomerPendingOrder, shift_to_replace: Shift) => {
 
-        if (!appointment || !shift_to_replace) {
-            throw new Error("Algo salio mal intentando crear la solicitud")
-        }
 
-        let reschedule_req = RescheduleObjetConstructor(appointment, shift_to_replace)
+    // }
 
-        try {
-            const response = await ReschedulingCustomerOrder(reschedule_req)
+    const [reschedulingErr, reschedulingAction, isReschedulingPending] = useActionState(
 
-            if (response) {
-                // actualizar disponibilidad de los schedules
-                setBarberSchedules((prev_sch) => {
+        async (_: void | null, data: { appointment: CustomerPendingOrder, shift_to_replace: Shift }) => {
+            
+            let reschedule_req = RescheduleObjetConstructor(data.appointment, data.shift_to_replace)
 
-                    const current_schedules = [...prev_sch];
+            try {
+                const response = await ReschedulingCustomerOrder(reschedule_req)
 
-                    // Index del shift a liberar
-                    const previus_shift = current_schedules.findIndex(
-                        (sch) => sch.ID === appointment.shift_id
-                    );
-                    
-                    if (previus_shift !== -1){
-                        current_schedules[previus_shift].Available = true;
-                    }
-                    
-                    // Index del shift a ocupar
-                    const not_available_shift = current_schedules.findIndex(
-                        (sch) => sch.ID === shift_to_replace.ID
-                    );
-                    
-                    if (not_available_shift !== -1){
-                        current_schedules[not_available_shift].Available = false;
-                    }                                        
-                    return current_schedules;
-                })
+                if (response) {
+                    // actualizar disponibilidad de los schedules
+                    setBarberSchedules((prev_sch) => {
 
-                handleReschedule()
+                        const current_schedules = [...prev_sch];
+
+                        // Index del shift a liberar
+                        const previus_shift = current_schedules.findIndex(
+                            (sch) => sch.ID === data.appointment.shift_id
+                        );
+
+                        if (previus_shift !== -1) {
+                            current_schedules[previus_shift].Available = true;
+                        }
+
+                        // Index del shift a ocupar
+                        const not_available_shift = current_schedules.findIndex(
+                            (sch) => sch.ID === data.shift_to_replace.ID
+                        );
+
+                        if (not_available_shift !== -1) {
+                            current_schedules[not_available_shift].Available = false;
+                        }
+                        return current_schedules;
+                    })
+
+                    handleReschedule()
+                }
+            } catch (error) {
+                console.warn("Algo no fue bien", error)
             }
-        } catch (error) {
-            console.warn("Algo no fue bien", error)
-        }
-    }
+        },
+        null
+    )
 
     return {
         seleccionarHorario,
         selectedShift,
-        ReschedulingAppointment
+        reschedulingErr,
+        reschedulingAction,
+        isReschedulingPending,
     }
 }
