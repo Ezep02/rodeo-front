@@ -12,8 +12,6 @@ const Appointments = () => {
     customerPendingOrders
   } = useTurns()
 
-  console.log(customerPendingOrders)
-
   const {
     isReschedulingOpen,
     handleReschedule,

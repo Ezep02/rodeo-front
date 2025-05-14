@@ -11,14 +11,9 @@ const ClientRoutes: React.FC = () => {
 
     return (
         <Routes>
-            <Route 
-                path="/"
-                element={
-                    <Dashboard />
-                }
-            />
+            <Route path="/" element={<Dashboard />} />
 
-            {user && (
+            {user?.ID ? (
                 <>
                     <Route path="/profile" element={
                         <Suspense fallback={
@@ -41,11 +36,12 @@ const ClientRoutes: React.FC = () => {
                         </Suspense>
                     } />
                 </>
+            ) : (
+                <Route path="*" element={<p>Algo salió mal. No hay usuario autenticado.</p>} />
             )}
-
-            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
+
 };
 
 export default ClientRoutes;

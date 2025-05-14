@@ -8,11 +8,11 @@ const PopularServices: React.FC = () => {
     const {
         popularServices
     } = usePopularServices()
-   
-    return (
 
+    return (
         <section className="mb-10 relative">
             <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl -z-10"></div>
+
             <div className="px-6 py-10 rounded-3xl">
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-3xl font-bold flex items-center gap-3">
@@ -25,17 +25,19 @@ const PopularServices: React.FC = () => {
                 {/* Conditional rendering based on whether there are popular services */}
                 {
                     Array.isArray(popularServices) && popularServices.length > 0 ? (
-                        <>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {popularServices?.sort((a, b) => b.total_avg - a.total_avg) // ordenar de mayor a menor
                                 .map((popular_service, i) => {
                                     const podiumColors = ["bg-gradient-to-r from-cyan-400 to-blue-500", "bg-gradient-to-r from-amber-400 to-orange-500", "bg-gradient-to-r from-emerald-400 to-green-500"];
+                                    const badgetColors = ["bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200", "bg-amber-50 text-amber-600 hover:bg-amber-100 border-amber-200", "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-emerald-200"]
+                                    const priceColors = ["text-blue-600", "text-amber-600", "text-emerald-600"]
                                     return (
                                         <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
                                             <div className={`h-3 hover:shadow-sm transition-all border-gray-200 ${podiumColors[i]}`}></div>
                                             <CardHeader className="pb-2">
                                                 <div className="flex justify-between items-center">
                                                     <CardTitle className="text-xl">{popular_service.title}</CardTitle>
-                                                    <Badge variant="outline" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200">
+                                                    <Badge variant="outline" className={`${badgetColors[i]}`}>
                                                         {popular_service.total_avg}% de clientes
                                                     </Badge>
                                                 </div>
@@ -51,12 +53,12 @@ const PopularServices: React.FC = () => {
                                                 </p>
                                             </CardContent>
                                             <CardFooter className="flex justify-between items-center pt-2 border-t">
-                                                <span className="text-2xl font-bold text-blue-600">$4000</span>
+                                                <span className={`${priceColors[i]} text-2xl font-bold `} >$4000</span>
                                             </CardFooter>
                                         </Card>
                                     );
                                 })}
-                        </>
+                        </div>
                     ) : (
                         <div className="py-16 flex flex-col items-center justify-center text-center">
                             <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
@@ -74,3 +76,4 @@ const PopularServices: React.FC = () => {
     )
 }
 export default PopularServices
+
