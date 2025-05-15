@@ -16,7 +16,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <Nav />
       </header>
 
-      <main className="container py-8 space-y-10 p-8">
+      <main className="container space-y-10 py-8  p-8">
         {children}
       </main>
     </div>

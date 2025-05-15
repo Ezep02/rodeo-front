@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import Reschedule from '../components/common/Reschedule'
 
-const Appointments = () => {
+const Appointments:React.FC = () => {
   const {
     customerPendingOrders
   } = useTurns()
@@ -24,9 +24,7 @@ const Appointments = () => {
     setSelectedAppointment(appointment)
     handleReschedule()
   }
-
-
-
+  
   return (
     <>
       <section className="space-y-6">

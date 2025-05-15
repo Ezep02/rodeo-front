@@ -1,8 +1,10 @@
-import React from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { BarChart3, TrendingUp } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, LabelList, Rectangle, XAxis } from "recharts";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { MonthlyHaircuts } from "../../models/ChartModel";
+
+import React from 'react'
+import { MonthlyHaircuts } from '../../models/ChartModel';
 
 const chartConfig = {
     desktop: {
@@ -25,14 +27,16 @@ const monthNames: Array<string> = [
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
-const BarberHaircutsChart: React.FC<HaircutsChartProps> = ({ Data }) => {
+
+const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
+
     // Encontramos el mes con más cortes
     let chartData: ChartData[] = Data.map((d) => ({
         mes: monthNames[d.Month],
         cortes: d.Total_haircuts
     }));
 
-    
+
     const maxMonth = chartData.reduce(
         (max, d) => (d.cortes >= max.cortes ? d : max),
         chartData[0]
@@ -44,8 +48,16 @@ const BarberHaircutsChart: React.FC<HaircutsChartProps> = ({ Data }) => {
     );
 
     return (
-        <Card className="border-none shadow-none bg-zinc-50">
+        <Card className="md:col-span-1">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-rose-500" />
+                    Rendimiento Mensual
+                </CardTitle>
+                <CardDescription>Análisis de cortes por mes</CardDescription>
+            </CardHeader>
             <CardContent>
+
                 <ChartContainer config={chartConfig}>
                     <BarChart
                         accessibilityLayer
@@ -94,19 +106,18 @@ const BarberHaircutsChart: React.FC<HaircutsChartProps> = ({ Data }) => {
                         </Bar>
                     </BarChart>
                 </ChartContainer>
+
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm bg-rose">
-                <div className="mt-4 flex items-center">
-                    <span className="text-sm font-medium">Mes de mejor rendimiento:</span>
-                    <div
-                        className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring ring-offset-2 ml-2 bg-green-100 text-green-800 hover:bg-green-100"
-                    >
-                        {maxMonth.mes}
-                    </div>
+            <CardFooter className="border-t pt-4">
+                <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm">
+                    <TrendingUp className="h-4 w-4" />
+                    <span>
+                        Mes de mejor rendimiento: <strong>{maxMonth?.mes}</strong>
+                    </span>
                 </div>
             </CardFooter>
         </Card>
-    );
-};
+    )
+}
 
-export default BarberHaircutsChart;
+export default PerformanceChart

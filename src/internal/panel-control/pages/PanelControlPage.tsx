@@ -1,17 +1,20 @@
 import React, { useContext } from "react";
-
-import CardLayout from "../components/layout/CardLayout";
-import BarberHaircutsChart from "../components/common/BarberHaircutsChart";
 import useBarber from "../hooks/useBarber";
-import { MdQueryStats } from "react-icons/md";
 import { useOrder } from "../hooks/useOrder";
-import PendingOrdersTable from "../components/common/PendingOrdersTable";
-import { FiTrash2 } from "react-icons/fi";
-import ServiceAndScheduleManagerTab from "../components/common/ServiceAndScheduleManagerTab";
 import { useServices } from "../hooks/useServices";
-import Schedules from "../components/common/Schedules";
+
 import { ServiceFormModal } from "../components/common/ServiceFormModal";
+
 import { PanelControlContext } from "@/context/PanelControlContext";
+import { Calendar1} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+import PerformanceChart from "../components/common/PerformanceChart";
+import RecentOrders from "../components/common/RecentOrders";
+import ServiceManagment from "../components/common/ServiceManagment";
+import { useSchedules } from "../hooks/useSchedules";
+import Schedules from "../components/common/Schedules";
+
 
 
 const PanelControlPage: React.FC = () => {
@@ -19,6 +22,16 @@ const PanelControlPage: React.FC = () => {
   const {
     yearlyCutsChartData
   } = useBarber()
+
+
+  const {
+    HandleSaveSchedulesChanges,
+    HandleOpenScheduler,
+    date,
+    setDate
+  } = useSchedules()
+
+
 
   const {
     orderList
@@ -35,120 +48,65 @@ const PanelControlPage: React.FC = () => {
     isSchedulerOpen
   } = useContext(PanelControlContext)!
 
-
+  
   return (
-    <div className="flex flex-1 flex-col">
-
-      <header className="border-b px-6 py-4">
-        <h1 className="text-2xl font-bold">Panel de control</h1>
-      </header>
-
-      <main className="flex-1 p-6">
-
-        <div
-          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-        >
-
-          {/*GRAFICO DE RENDIMIENTOS */}
-          <CardLayout>
-            <div className="flex flex-col space-y-1.5 p-6 pb-2">
-              <h3 className="text-2xl font-semibold">
-                Rendimiento Mensual
-              </h3>
-              <p className="text-sm text-zinc-500">
-                Analisis de cortes por mes
-              </p>
-            </div>
-
-            <div className="p-6 pt-0 ">
-              {
-                yearlyCutsChartData?.length > 0 ? (
-                  <BarberHaircutsChart Data={yearlyCutsChartData} />
-                ) : (
-                  <div
-                    className="flex flex-col items-center justify-center h-[200px]"
-                  >
-                    <MdQueryStats size={40} className="text-zinc-400" />
-                    <p className="text-zinc-800">
-                      Sin datos para mostrar
-                    </p>
-                  </div>
-                )
-              }
-
-            </div>
-          </CardLayout>
-
-          {/* VISTA DE ORDENES PENDIENTES*/}
-          <CardLayout>
-            <div
-              className="flex flex-col space-y-1.5 p-6 pb-2 "
-            >
-              <h3
-                className="text-2xl font-semibold"
-              >
-                Ordenes Recientes
-              </h3>
-              <p className="text-sm text-zinc-500">
-                Historial de citas
-              </p>
-            </div>
-            {
-              orderList?.length > 0 ? (
-                <PendingOrdersTable Data={orderList} />
-              ) : (
-                <div
-                  className="flex flex-col items-center justify-center h-[200px]"
-                >
-                  <FiTrash2 size={40} className="text-zinc-400" />
-
-                  <p className="text-zinc-800">
-                    Sin ordenes registradas
-                  </p>
-                </div>
-              )
-            }
-          </CardLayout>
-
-          {/* VISTA DE SERVICIOS Y HORARIOS */}
-          <CardLayout>
-            <div
-              className="flex flex-col space-y-1.5 p-6 pb-2"
-            >
-              <h3
-                className="text-2xl font-semibold"
-              >
-                Gestion de Servicios
-              </h3>
-              <p className="text-sm text-zinc-500">
-                Administra tus servicios y horarios
-              </p>
-            </div>
-
-            <div className="p-6 pt-0">
-              <ServiceAndScheduleManagerTab
-                Services={serviceList?.length > 0 ? serviceList : []}
-              />
-            </div>
-
-            {/* Modales */}
-            <ServiceFormModal
-              open={createModalOpen}
-              onOpenChange={setCreateModalOpen}
-              onSubmit={AddNewService}
-              mode="create"
-            />
-
-            {
-              isSchedulerOpen && (
-                <Schedules />
-              )
-            }
-          </CardLayout>
+    <>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Panel de Control</h1>
+          <p className="text-slate-500 mt-1">Administra tu barbería y monitorea el rendimiento</p>
         </div>
-      </main>
-    </div>
+        <div className="flex gap-3 mt-4 md:mt-0">
+          <Button variant="outline" className="gap-2" onClick={HandleOpenScheduler}>
+            <Calendar1 className="h-4 w-4" />
+            {
+              new Date().toLocaleDateString("es-AR", { month: "long", year: "numeric" })
+            }
+          </Button>
+          {/* <Button className="gap-2 bg-rose-500 hover:bg-rose-600">
+            <Plus className="h-4 w-4" />
+            Nueva Cita
+          </Button> */}
+        </div>
+      </div>
 
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        {/*GRAFICO DE RENDIMIENTOS */}
+
+        <PerformanceChart
+          Data={Array.isArray(yearlyCutsChartData) ? yearlyCutsChartData : []}
+        />
+
+        {/* VISTA DE ORDENES PENDIENTES*/}
+        <RecentOrders
+          Data={Array.isArray(orderList) ? orderList : []}
+        />
+
+        {/* VISTA DE SERVICIOS Y HORARIOS */}
+        <ServiceManagment
+          Services={Array.isArray(serviceList) ? serviceList : []}
+        />
+      </section>
+
+      <ServiceFormModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onSubmit={AddNewService}
+        mode="create"
+      />
+
+      {
+        isSchedulerOpen && (
+          <Schedules 
+            HandleOpenScheduler={HandleOpenScheduler}
+            HandleSaveSchedulesChanges={HandleSaveSchedulesChanges}
+            date={date ? date : new Date()}
+            setDate={setDate}
+          />
+        )
+      }
+    </>
   );
 };
 
