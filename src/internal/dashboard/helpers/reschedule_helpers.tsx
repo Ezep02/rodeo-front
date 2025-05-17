@@ -2,14 +2,6 @@ import { Shift } from "../models/DashboardModels";
 import { CustomerPendingOrder, RescheduleRequest } from "../models/OrderModels";
 
 
-// verifica si el turno es dentro de 24 horas, 
-export function CheckTimeRange(time:Date){
-    
-    let currentTime = new Date().getDate
-
-    
-}
-
 // construye el objeto de reprogramacion de appointment
 export function RescheduleObjetConstructor(appointment: CustomerPendingOrder, shift_to_replace: Shift): RescheduleRequest{
 

@@ -5,6 +5,7 @@ import {
 
 import {Shift} from "../internal/dashboard/models/DashboardModels";
 import { CustomerPendingOrder } from "@/internal/dashboard/models/OrderModels";
+import { Coupon } from "@/internal/dashboard/models/Coupons";
 
 interface DashboardContextProps {
   services: Service[];
@@ -35,6 +36,9 @@ interface DashboardContextProps {
   // RESERVA
   selectedShift: Shift | undefined
   setSelectedShift: React.Dispatch<React.SetStateAction<Shift | undefined>>
+  // CUPONES
+  availableCoupons: Coupon[] | []
+  setAvailableCoupons: React.Dispatch<React.SetStateAction<Coupon[] | []>>
 }
 
 export const DashboardContext = React.createContext< DashboardContextProps | undefined >(undefined);
@@ -102,6 +106,8 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
     setIsReschedulingOpen(!isReschedulingOpen)
   }
 
+  // CUPONES
+  const [availableCoupons, setAvailableCoupons] = useState<Coupon[] | []>([])
 
   return (
     <DashboardContext.Provider
@@ -125,7 +131,9 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         setIsReschedulingOpen,
         handleReschedule,
         selectedShift,
-        setSelectedShift
+        setSelectedShift,
+        availableCoupons,
+        setAvailableCoupons
       }}
     >
       {children}

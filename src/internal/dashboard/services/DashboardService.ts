@@ -1,8 +1,9 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
 import { Service } from "../../panel-control/models/ServicesModels";
+import { Coupon } from "../models/Coupons";
 import { PopularServices, Shift } from "../models/DashboardModels";
 
-import {CustomerPendingOrder, RescheduleRequest, ServiceOrderRequest, UpdatedCustomerPendingOrder } from "../models/OrderModels";
+import { CustomerPendingOrder, RefundRequest, RescheduleRequest, ServiceOrderRequest, UpdatedCustomerPendingOrder } from "../models/OrderModels";
 
 const SERVICE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
 const ORDER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
@@ -49,5 +50,17 @@ export const GetPopularServices = async () => {
 // Reprogramar turno del cliente
 export const ReschedulingCustomerOrder = async (updated_appointment: RescheduleRequest) => {
     const response = await AuthenticationInstance.post<UpdatedCustomerPendingOrder>(`${ORDER_URL}/customer/reschedule`, updated_appointment)
+    return response.data
+}
+
+// Cancelar turno del cliente
+export const RefoundingCustomerOrder = async (appointment: RefundRequest) => {
+    const response = await AuthenticationInstance.post<RefundRequest>(`${ORDER_URL}/customer/refund`, appointment)
+    return response.data
+}
+
+// Obtener los cupones sin usar y vencer
+export const GetCustomerCoupons = async () => {
+    const response = await AuthenticationInstance.get<Coupon[] | []>(`${ORDER_URL}/customer/coupons`)
     return response.data
 }

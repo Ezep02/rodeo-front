@@ -28,7 +28,7 @@ export const useTurns = () => {
     // ws: Si ocurre reprogramacion
     useEffect(() => {
         if (lastJsonMessage) {
-            console.log(lastJsonMessage)
+            
             // Procesar un unico turno
             setCustomerPendingOrders((prevSchedules) => {
                 const updatedSchedules = [...prevSchedules];
@@ -45,6 +45,7 @@ export const useTurns = () => {
 
         }
     }, [lastJsonMessage]);
+    
 
 
     return {

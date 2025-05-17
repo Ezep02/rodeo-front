@@ -30,7 +30,7 @@ const PrivateRoutes: React.FC = () => {
                 <span>sincronizando datos</span>
               </div>
             }>
-              <AdminContextProvider >
+              <AdminContextProvider>
                 <PrivatePage />
               </AdminContextProvider>
             </Suspense>

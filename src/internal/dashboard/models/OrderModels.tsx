@@ -67,3 +67,15 @@ export interface UpdatedCustomerPendingOrder {
     shift_id: number
 	schedule_start_time:string
 }
+
+// Refund
+export interface RefundRequest {
+  order_id: number;
+  shift_id: number;
+  refund_percentaje: number;
+  schedule_day_date: Date; 
+  schedule_start_time: string;
+  refund_type: 'reembolso' | 'promo';
+  title: string;
+}
+

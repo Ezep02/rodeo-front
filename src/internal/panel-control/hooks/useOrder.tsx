@@ -16,26 +16,69 @@ export const useOrder = () => {
         setOrderIsLoading
     } = useContext(PanelControlContext)!;
 
-    const CNN_URL = `${import.meta.env.VITE_BACKEND_WS_URL}/order/notification`;
+    const CNN_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
+    
+    // const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
 
-    const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
-  
-    // Update order list on WebSocket message
+
     useEffect(() => {
-        if (lastJsonMessage) {
-            setOrderOffset((prev) => prev + 1);
+        const eventSrc = new EventSource(`${CNN_URL}/events`);
 
-            setOrderList((prevOrderList) => {
-                const updatedList = [...prevOrderList, lastJsonMessage];
-                return updatedList
-                    .filter(
-                        (order, index, self) =>
-                            self.findIndex((o) => o.ID === order.ID) === index
-                    )
-                    .sort((a, b) => b.ID - a.ID);
-            });
-        }
-    }, [lastJsonMessage]);
+        eventSrc.onmessage = (event) => {
+            try {
+                const data: PendingOrder = JSON.parse(event.data);
+                console.log("SSE",data)
+                setOrderOffset((prev) => prev + 1);
+
+                setOrderList((prev) => [...prev, data]); 
+                
+                // setOrderList((prevOrderList) => {
+                //     const updatedList = [...prevOrderList, data];
+                //     return updatedList
+                //         .filter(
+                //             (order, index, self) =>
+                //                 self.findIndex((o) => o.ID === order.ID) === index
+                //         )
+                //         .sort((a, b) => b.ID - a.ID);
+                // });
+
+            } catch (e) {
+                console.error("Error parsing SSE data:", e);
+            }
+        };
+
+        eventSrc.onerror = (e) => {
+            console.error("Error en EventSource:", e);
+            eventSrc.close();
+        };
+
+        
+        return () => {
+            eventSrc.close();
+        };
+    }, []);
+
+
+
+
+    // Update order list on WebSocket message
+    // useEffect(() => {
+    //     if (lastJsonMessage) {
+    //         setOrderOffset((prev) => prev + 1);
+
+    //         setOrderList((prevOrderList) => {
+    //             const updatedList = [...prevOrderList, lastJsonMessage];
+    //             return updatedList
+    //                 .filter(
+    //                     (order, index, self) =>
+    //                         self.findIndex((o) => o.ID === order.ID) === index
+    //                 )
+    //                 .sort((a, b) => b.ID - a.ID);
+    //         });
+    //     }
+
+
+    // }, [lastJsonMessage]);
 
 
     // offset de las ordenes

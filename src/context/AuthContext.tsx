@@ -42,7 +42,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   const [signInErrors, setSignInErrors] = useState<string[]>([]);
 
 
-
   const GoogleLogIn = async () => {
     try {
       window.location.href = "http://localhost:8080/auth/google";

@@ -7,7 +7,7 @@ import ServicesList from "../components/common/ServicesList";
 import Reviews from "../components/common/Reviews";
 import Faq from "../components/common/Faq";
 import HowArrive from "../components/common/HowArrive";
-import Reservation from "./Reservation";
+import Reservation from "../components/common/Reservation";
 import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 

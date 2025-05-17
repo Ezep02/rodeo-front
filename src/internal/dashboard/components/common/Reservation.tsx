@@ -1,14 +1,14 @@
 import { DashboardContext } from '@/context/DashboardContext';
 import React, { useContext, useState } from 'react'
-import { useReservation } from '../hooks/useReservation';
+import { useReservation } from '../../hooks/useReservation';
 import { useUser } from '@/hooks/useUser';
 import { RegisterPaymentReq, User } from '@/models/AuthModels';
-import { ServiceOrderRequest } from '../models/OrderModels';
-import { formatOrderPayment } from '../helpers/payment_helpers';
-import { CreateNewOrder } from '../services/DashboardService';
-import { useSchedules } from '../hooks/useSchedules';
+import { ServiceOrderRequest } from '../../models/OrderModels';
+import { formatOrderPayment } from '../../helpers/payment_helpers';
+import { CreateNewOrder } from '../../services/DashboardService';
+import { useSchedules } from '../../hooks/useSchedules';
 import Carousel from '@/components/ui/carousel';
-import UnregisteredUserForm from '../components/layout/UnregisteredUserForm';
+import UnregisteredUserForm from '../layout/UnregisteredUserForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion } from "framer-motion"
