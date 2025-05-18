@@ -1,10 +1,8 @@
-import useWebSocket from "react-use-websocket";
-
 import { useContext, useEffect } from "react";
 import { PanelControlContext } from "@/context/PanelControlContext";
 import { GetOrderList } from "../services/PanelServices";
 import { PendingOrder } from "../models/OrderModel";
-
+import useWebSocket from "react-use-websocket";
 
 export const useOrder = () => {
     const {
@@ -16,69 +14,29 @@ export const useOrder = () => {
         setOrderIsLoading
     } = useContext(PanelControlContext)!;
 
-    const CNN_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
-    
-    // const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
+    const CNN_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order/notification`;
+    const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
 
 
+
+    //Update order list on WebSocket message
     useEffect(() => {
-        const eventSrc = new EventSource(`${CNN_URL}/events`);
+        if (lastJsonMessage) {
+            setOrderOffset((prev) => prev + 1);
 
-        eventSrc.onmessage = (event) => {
-            try {
-                const data: PendingOrder = JSON.parse(event.data);
-                console.log("SSE",data)
-                setOrderOffset((prev) => prev + 1);
-
-                setOrderList((prev) => [...prev, data]); 
-                
-                // setOrderList((prevOrderList) => {
-                //     const updatedList = [...prevOrderList, data];
-                //     return updatedList
-                //         .filter(
-                //             (order, index, self) =>
-                //                 self.findIndex((o) => o.ID === order.ID) === index
-                //         )
-                //         .sort((a, b) => b.ID - a.ID);
-                // });
-
-            } catch (e) {
-                console.error("Error parsing SSE data:", e);
-            }
-        };
-
-        eventSrc.onerror = (e) => {
-            console.error("Error en EventSource:", e);
-            eventSrc.close();
-        };
-
-        
-        return () => {
-            eventSrc.close();
-        };
-    }, []);
+            setOrderList((prevOrderList) => {
+                const updatedList = [...prevOrderList, lastJsonMessage];
+                return updatedList
+                    .filter(
+                        (order, index, self) =>
+                            self.findIndex((o) => o.ID === order.ID) === index
+                    )
+                    .sort((a, b) => b.ID - a.ID);
+            });
+        }
 
 
-
-
-    // Update order list on WebSocket message
-    // useEffect(() => {
-    //     if (lastJsonMessage) {
-    //         setOrderOffset((prev) => prev + 1);
-
-    //         setOrderList((prevOrderList) => {
-    //             const updatedList = [...prevOrderList, lastJsonMessage];
-    //             return updatedList
-    //                 .filter(
-    //                     (order, index, self) =>
-    //                         self.findIndex((o) => o.ID === order.ID) === index
-    //                 )
-    //                 .sort((a, b) => b.ID - a.ID);
-    //         });
-    //     }
-
-
-    // }, [lastJsonMessage]);
+    }, [lastJsonMessage]);
 
 
     // offset de las ordenes

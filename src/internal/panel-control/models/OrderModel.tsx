@@ -18,7 +18,7 @@ export interface PendingOrder {
   schedule_day_date: Date; // Go's *time.Time → puede ser null o string ISO
   service_duration: number;
   schedule_start_time: string;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string | null;
+  CreatedAt?: Date
+  UpdatedAt?: Date
+  DeletedAt?: Date
 }

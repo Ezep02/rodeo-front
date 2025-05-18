@@ -114,3 +114,5 @@ export const CreateLongInstagramToken = async (shortLivedAccessToken: string) =>
   const longToken = await InstagramInstance.get(`/oauth/access_token?grant_type=ig_exchange_token&client_secret=${import.meta.env.client_secret}&access_token=${shortLivedAccessToken}`)
   return longToken
 }
+
+

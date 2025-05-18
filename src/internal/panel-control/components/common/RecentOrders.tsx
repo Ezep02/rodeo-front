@@ -1,12 +1,12 @@
 import Avatar from '@/components/common/Avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar } from 'lucide-react'
 import React from 'react'
 import { PendingOrder } from '../../models/OrderModel'
 
 type PendingOrderProps = {
-    Data: PendingOrder[] | []
+    Data: PendingOrder[]
 }
 
 const RecentOrders: React.FC<PendingOrderProps> = ({ Data }) => {
@@ -21,7 +21,7 @@ const RecentOrders: React.FC<PendingOrderProps> = ({ Data }) => {
                 <CardDescription>Historial de citas pendientes</CardDescription>
             </CardHeader>
             <CardContent className="px-0">
-                <ul className='space-y-0'>
+                <ul className='space-y-0 overflow-y-scroll overflow-hidden'>
                     {
                         Data.map((order) => (
                             <li

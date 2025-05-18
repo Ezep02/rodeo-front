@@ -13,14 +13,22 @@ const PopularServices: React.FC = () => {
         <section className="mb-10 relative">
             <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl -z-10"></div>
 
-            <div className="px-6 py-10 rounded-3xl">
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-bold flex items-center gap-3">
-                        <Scissors className="h-7 w-7 text-rose-500" />
-                        Servicios Destacados
-                    </h2>
-                    <Badge className="px-3 py-1 text-sm bg-rose-500 hover:bg-rose-600">Lo más solicitado</Badge>
+            <div className=" sm:px-6 py-10 rounded-3xl">
+                <div className="flex sm:flex-row sm:justify-between mb-8 gap-1 flex-wrap ">
+                    <div>
+                        <h2 className="text-3xl font-bold flex items-center gap-3">
+                            <Scissors className="sm:h-7 sm:w-7 hidden sm:block text-rose-500 " />
+                            Servicios Destacados
+                        </h2>
+                        <p className='"text-sm text-zinc-500 dark:text-zinc-400"'>
+                            Top servicios del mes
+                        </p>
+                    </div>
+                    <div>
+                        <Badge className="px-3 py-1 text-sm bg-rose-500 hover:bg-rose-600 text-center hidden sm:inline-flex">Lo más solicitado</Badge>
+                    </div>
                 </div>
+
 
                 {/* Conditional rendering based on whether there are popular services */}
                 {
@@ -35,7 +43,7 @@ const PopularServices: React.FC = () => {
                                         <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
                                             <div className={`h-3 hover:shadow-sm transition-all border-gray-200 ${podiumColors[i]}`}></div>
                                             <CardHeader className="pb-2">
-                                                <div className="flex justify-between items-center">
+                                                <div className="flex sm:justify-between sm:items-center flex-wrap-reverse gap-2">
                                                     <CardTitle className="text-xl">{popular_service.title}</CardTitle>
                                                     <Badge variant="outline" className={`${badgetColors[i]}`}>
                                                         {popular_service.total_avg}% de clientes

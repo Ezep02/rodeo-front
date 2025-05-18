@@ -9,7 +9,7 @@ const HowArrive: React.FC = () => {
                     <MapPin className="h-5 w-5 text-rose-500" />
                     Cómo llegar?
                 </h2>
-                <p className="text-slate-600">Av. 29, Calle 48</p>
+                <p className="text-slate-600">Mercedes, Buenos Aires  | Av. 29, Calle 48</p>
 
                 <p className="text-slate-600">
                     Estamos ubicados en el centro de la ciudad, a solo 5 minutos de la estación principal.

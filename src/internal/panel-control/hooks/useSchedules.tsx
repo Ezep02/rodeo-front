@@ -26,6 +26,7 @@ export const useSchedules = () => {
 
     // websocket que sincroniza la lista de schedules 
     const { lastJsonMessage } = useWebSocket<ScheduleResponse[] | ScheduleResponse>(`${import.meta.env.VITE_BACKEND_WS_URL}/schedules/updates`);
+    
     useEffect(() => {
         if (lastJsonMessage) {
             setScheduleList((prevScheduleList) => {

@@ -56,6 +56,7 @@ const Dashboard: React.FC = () => {
         )
       }
 
+      {/* Mapa ilustrativo de como llegar */}
       <HowArrive />
 
       {/* Testimonios */}
