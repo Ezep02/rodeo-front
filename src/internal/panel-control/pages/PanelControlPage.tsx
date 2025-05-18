@@ -1,21 +1,19 @@
 import React, { useContext } from "react";
 import useBarber from "../hooks/useBarber";
-import { useOrder } from "../hooks/useOrder";
 import { useServices } from "../hooks/useServices";
 
 import { ServiceFormModal } from "../components/common/ServiceFormModal";
 
 import { PanelControlContext } from "@/context/PanelControlContext";
-import { Calendar1} from "lucide-react";
+import { Calendar1 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import PerformanceChart from "../components/common/PerformanceChart";
-import RecentOrders from "../components/common/RecentOrders";
 import ServiceManagment from "../components/common/ServiceManagment";
 import { useSchedules } from "../hooks/useSchedules";
 import Schedules from "../components/common/Schedules";
-
-
+import { useOrder } from "../hooks/useOrder";
+import RecentOrders from "../components/common/RecentOrders";
 
 const PanelControlPage: React.FC = () => {
 
@@ -23,14 +21,12 @@ const PanelControlPage: React.FC = () => {
     yearlyCutsChartData
   } = useBarber()
 
-
   const {
     HandleSaveSchedulesChanges,
     HandleOpenScheduler,
     date,
     setDate
   } = useSchedules()
-
 
 
   const {
@@ -48,7 +44,7 @@ const PanelControlPage: React.FC = () => {
     isSchedulerOpen
   } = useContext(PanelControlContext)!
 
-  
+
   return (
     <>
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
@@ -69,6 +65,7 @@ const PanelControlPage: React.FC = () => {
           </Button> */}
         </div>
       </div>
+
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -98,7 +95,7 @@ const PanelControlPage: React.FC = () => {
 
       {
         isSchedulerOpen && (
-          <Schedules 
+          <Schedules
             HandleOpenScheduler={HandleOpenScheduler}
             HandleSaveSchedulesChanges={HandleSaveSchedulesChanges}
             date={date ? date : new Date()}
