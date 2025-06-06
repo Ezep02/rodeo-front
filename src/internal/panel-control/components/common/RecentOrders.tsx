@@ -1,9 +1,13 @@
-import Avatar from '@/components/common/Avatar'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar } from 'lucide-react'
+import { BsCart3 } from "react-icons/bs";
+
 import React from 'react'
 import { PendingOrder } from '../../models/OrderModel'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import OrderCard from './OrderCard'
 
 type PendingOrderProps = {
     Data: PendingOrder[]
@@ -12,45 +16,66 @@ type PendingOrderProps = {
 const RecentOrders: React.FC<PendingOrderProps> = ({ Data }) => {
 
     return (
-        <Card className="md:col-span-1">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-rose-500" />
-                    Ordenes Recientes
-                </CardTitle>
-                <CardDescription>Historial de citas pendientes</CardDescription>
+        <Card className="sm:col-span-4 md:col-span-4 xl:col-span-4 col-span-1">
+            <CardHeader className="pb-4">
+                <div className="flex gap-2 justify-between sm:flex-row flex-col">
+                    <div>
+                        <CardTitle className="flex items-center gap-2 text-xl">
+                            <Calendar className="h-6 w-6 text-rose-500" />
+                            Ordenes Recientes
+                        </CardTitle>
+                        <CardDescription className="mt-1">Historial de citas pendientes y canceladas</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Select defaultValue="todas">
+                            <SelectTrigger className="w-[120px] h-9">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="todas">Todas</SelectItem>
+                                <SelectItem value="pendientes">Pendientes</SelectItem>
+                                <SelectItem value="canceladas">Canceladas</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
             </CardHeader>
+
             <CardContent className="px-0">
-                <ul className='space-y-0 overflow-y-scroll overflow-hidden'>
+                <ul className="space-y-1">
                     {
-                        Data.map((order) => (
+                        Array.isArray(Data) && Data?.length > 0 ? (
+                            <>
+                                {
+                                    Data.map((order, i) => (
+                                        <OrderCard
+                                            Order={order}
+                                            key={i}
+                                        />
+                                    ))
+                                }
+                            </>
+                        ) : (
                             <li
-                                key={order.ID}
-                                className='flex items-center justify-between px-6 py-3 hover:bg-slate-50 transition-colors'
+                                className='py-16 flex flex-col items-center justify-center text-center'
                             >
-                                <div className="flex items-center gap-3">
-                                    <Avatar name={order.payer_name} bg='bg-zinc-900' />
-                                    <div>
-                                        <p className="text-sm font-medium">{order.payer_name}{" "}{order.payer_surname}</p>
-                                        <p className="text-xs text-slate-500">{order.title}</p>
-                                    </div>
+                                <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                                    <BsCart3 className="h-12 w-12 text-slate-300" />
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm">
-                                        {
-                                            new Date(order.schedule_day_date).toLocaleDateString("es-AR", {
-                                                day: "numeric",
-                                                month: "short",
-                                                year: "2-digit"
-                                            })
-                                        }
-                                    </p>
-                                    <p className="text-xs text-slate-500">{order.schedule_start_time} PM</p>
-                                </div>
+                                <h3 className="text-2xl font-semibold mb-3 text-slate-700">Aun no hay ordenes recientes</h3>
+                                <p className="text-slate-500 max-w-md mb-8">
+                                    Las ordenes mas recientes aparecerán aqui automaticamente a medida que tus clientes reserven.
+                                </p>
                             </li>
-                        ))
+                        )
                     }
                 </ul>
+
+                <div className="flex items-center justify-center mt-6 pt-4 border-t mx-6">
+                    <Button variant="ghost" className="text-rose-500 hover:text-rose-600 hover:bg-rose-50">
+                        Ver todas las ordenes
+                    </Button>
+                </div>
             </CardContent>
         </Card>
     )

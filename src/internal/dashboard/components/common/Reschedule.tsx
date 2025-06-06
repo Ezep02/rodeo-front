@@ -53,15 +53,14 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
         });
     };
 
-
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 overflow-hidden">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2 }}
             >
-               
+
 
                 <Card className="xl:max-w-lg max-w-sm w-full p-6 bg-white rounded-xl shadow-lg">
                     {
@@ -116,8 +115,7 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
                                                                 : selectedShift?.ID === horario?.ID
                                                                     ? "bg-rose-500 text-white"
                                                                     : "bg-gray-100 hover:bg-gray-200 text-gray-900"
-                                                            }
-                          `}
+                                                            }`}
                                                         onClick={() => seleccionarHorario(horario)}
                                                     >
                                                         {horario.Start_time}

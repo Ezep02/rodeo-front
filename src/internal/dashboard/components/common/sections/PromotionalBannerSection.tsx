@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button'
 import { Scissors } from 'lucide-react'
 import React from 'react'
 
-const PromotionalBanner: React.FC = () => {
+const PromotionalBannerSection: React.FC = () => {
     return (
-        <section className="rounded-xl bg-slate-900 text-white p-8 relative overflow-hidden">
+        <section className="rounded-xl bg-slate-900 text-white p-8 relative overflow-hidden container">
 
             <div className="absolute right-0 top-0 h-full w-1/3 flex items-center justify-center opacity-20">
                 <Scissors className="h-48 w-48 text-rose-500" />
@@ -32,4 +32,4 @@ const PromotionalBanner: React.FC = () => {
     )
 }
 
-export default PromotionalBanner
+export default PromotionalBannerSection

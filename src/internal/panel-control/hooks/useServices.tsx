@@ -1,6 +1,6 @@
 import useWebSocket from "react-use-websocket";
 import { Service, ServiceRequest } from "../models/ServicesModels";
-import { useContext, useEffect } from "react";
+import { startTransition, useActionState, useContext, useEffect } from "react";
 import { PanelControlContext } from "@/context/PanelControlContext";
 import { CreateService, DeleteServiceByID, GetBarberServicesList, UpdateServiceByID } from "../services/PanelServices";
 
@@ -94,25 +94,36 @@ export const useServices = () => {
     const HandleOpenDeletePopUp = () => {
         setDeleteNofitification((prev) => !prev);
     };
+   
+    // Elimina un servicio seleccionado mediante su ID, ocurre cuando se confirma en el Pop Up
+    const [deleteServiceTransitionErr, deleteServiceAction, isDeleteTransitionServiceLoading] = useActionState(
+        async (_: void | null, service_id: number) => {
 
-    // boton que maneja el eliminar, carga el servicio en el pop up
-    const DeleteServiceHandler = (service: Service) => {
-        setSelectedServiceToDelete(service);
-    }
-
-    // funcion que ejecuta la eliminacion
-    const DeleteService = async (id: number) => {
-        try {
-            const res = await DeleteServiceByID(id);
-            if (res.status === 200) {
-                let filteredList = [...serviceList].filter((srv) => srv.ID !== id);
-                setServiceList(filteredList);
-                HandleOpenDeletePopUp();
+            try {
+                const res = await DeleteServiceByID(service_id);
+                if (res.status === 200) {
+                    let filteredList = [...serviceList].filter((srv) => srv.ID !== service_id);
+                    setServiceList(filteredList);
+                    HandleOpenDeletePopUp();
+                }
+            } catch (error) {
+                console.warn("Error eliminando servicio")
             }
-        } catch (error) {
-            console.log(error);
-        }
+        },
+        null
+    )
+    
+    // Inicia la transicion a la hora de eliminar un servicio
+    const StartDeleteTransition = (service_to_delete: number) => {
+        startTransition(() => {
+            deleteServiceAction(service_to_delete)
+        });
     };
+
+    const HandleOpenDeleteServicePopUp = (service_to_delete: Service) => {
+        setSelectedServiceToDelete(service_to_delete);
+        HandleOpenDeletePopUp()
+    }
 
 
     // funcion para manejar la actualizacion del servicio
@@ -141,13 +152,16 @@ export const useServices = () => {
     return {
         serviceList,
         SearchMoreBarberServices,
-        DeleteServiceHandler,
-        DeleteService,
         deleteNotification,
         HandleOpenDeletePopUp,
         UpdateServiceData,
         selectedServiceToDelete,
         AddNewService,
-        HandleAddNewService
+        HandleAddNewService,
+        HandleOpenDeleteServicePopUp,
+        StartDeleteTransition,
+        deleteServiceTransitionErr,
+        isDeleteTransitionServiceLoading,
+        
     }
 }

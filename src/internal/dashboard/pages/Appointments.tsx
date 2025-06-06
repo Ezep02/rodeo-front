@@ -2,18 +2,22 @@ import React, { startTransition, useContext, useState } from 'react'
 import { useTurns } from '../hooks/useTurns'
 import { DashboardContext } from '@/context/DashboardContext'
 import { CustomerPendingOrder } from '../models/OrderModels'
-import { Calendar, Check, Clock, Copy, Scissors, Ticket } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Calendar, History, Star, User } from 'lucide-react'
 import Reschedule from '../components/common/Reschedule'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import useRefound from '../hooks/useRefound'
 import { RefundFormatter } from '../helpers/refund_helpers'
-import useCoupons from '@/internal/dashboard/hooks/useCoupons'
+import NextAppointmentCard from '../components/common/NextAppointmentCard'
+import AllPendingOrders from '../components/common/dialogs/AllPendingOrders'
+import AppointmentsHeader from '../components/common/headers/AppointmentsHeader'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import AddReviewDialog from '../components/common/AddReviewDialog'
 
 const Appointments: React.FC = () => {
   const {
-    customerPendingOrders
+    customerPendingOrders,
+    customerOrderHistorial
   } = useTurns()
 
   const {
@@ -30,14 +34,6 @@ const Appointments: React.FC = () => {
     handleReschedule()
   }
 
-  const [copied, setCopied] = useState(false)
-
-  const copyToClipboard = (code: string) => {
-    navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   const {
     refundingAction
   } = useRefound()
@@ -50,213 +46,141 @@ const Appointments: React.FC = () => {
     });
   }
 
-  const {
-    availableCoupons
-  } = useCoupons()
-
-  console.log(availableCoupons)
   return (
-    <>
-      <section className='grid sm:grid-cols-2 gap-3'>
+    <div className="pt-24 pb-16 sm:px-6">
+
+      <div className="container mx-auto max-w-4xl">
+        <AppointmentsHeader />
+
         {
-          isReschedulingOpen && selectedAppointment && (
-            <Reschedule
-              appointment={selectedAppointment}
-            />
+          Array.isArray(customerPendingOrders) && customerPendingOrders.length > 0 ? (
+            <>
+              {/* Abre el historial de proximas citas pendientes, en el caso de que haya */}
+              <AllPendingOrders
+                customerPendingOrders={customerPendingOrders}
+              />
+
+              {/* Pop up de reprogramacion de cita */}
+              {
+                isReschedulingOpen && selectedAppointment && (
+                  <Reschedule
+                    appointment={selectedAppointment}
+                  />
+                )
+              }
+              {/* Proxima orden a concretarse */}
+              <NextAppointmentCard
+                Appointment={customerPendingOrders[0]}
+                CreateRefound={CreateRefound}
+                RescheduleOnClickHandler={RescheduleOnClickHandler}
+              />
+            </>
+          ) : (
+            <div className="text-center py-8 text-slate-500">
+              {/* Mensaje cuando no hay más citas pendientes */}
+              <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+              <p>No tienes citas pendientes</p>
+              <a
+                href="/"
+                className="mt-2 inline-block text-sm font-semibold text-rose-500 hover:text-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
+              >
+                Programar nueva cita
+              </a>
+            </div>
           )
         }
 
-        {/* PROXIMAS CITAS */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-rose-500" />
-                Mis Citas
-              </CardTitle>
-            </div>
-            <CardDescription>Historial y próximas citas en la barbería</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-
-              <div>
-                <h3 className="text-sm font-medium text-slate-500 mb-3">Proximas Citas</h3>
-                <>
-                  {
-                    customerPendingOrders.map((appointment, i) => (
-                      <Card
-                        key={i}
-                        className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <div className={`h-3 hover:shadow-sm transition-all border-gray-200 bg-gradient-to-r from-emerald-400 to-green-500 `}></div>
-                        <CardHeader className="pb-2">
-                          <div className="flex justify-between items-center">
-                            <CardTitle className="text-xl">{appointment.title}</CardTitle>
-                            <Badge variant="outline" className='bg-gradient-to-r from-emerald-400 to-green-500 text-white' >
-                              Confirmada
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="flex items-center gap-2 text-slate-500">
-                            <Clock className="h-4 w-4" />
-                            <span>40 minutos</span>
-                          </div>
-
-                          <div className="mt-4 flex items-center gap-4">
-                            <div className="flex items-center gap-2 text-slate-700">
-                              <Calendar className="h-4 w-4 text-rose-500" />
-
-                              <span className="font-medium">{new Date(appointment.schedule_day_date).toLocaleDateString("es-AR", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric"
-                              })}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-slate-700">
-                              <Clock className="h-4 w-4 text-rose-500" />
-                              <span className="font-medium">{appointment.schedule_start_time}{" "}AM</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <CardFooter className="flex justify-between items-center pt-2 border-t">
-                          <div className="flex justify-end gap-2 mt-4">
-
-                            <Button
-                              variant="outline" size="sm" className="gap-2"
-                              onClick={() => RescheduleOnClickHandler(appointment)}
-                            >
-                              <Calendar className="h-4 w-4" />
-                              Reprogramar
-                            </Button>
-
-                            <Button
-                              variant="destructive" size="sm"
-                              onClick={() => CreateRefound(appointment)}
-                            >
-                              Cancelar
-                            </Button>
-                          </div>
-                        </CardFooter>
-                      </Card>
-
-                    ))
-                  }
-                </>
+        {/* Historial de Citas */}
+        <Card className="bg-gray-900/50 border-gray-800">
+          <div className="p-8">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 bg-rose-500/20 rounded-lg flex items-center justify-center">
+                <History className="w-5 h-5 text-rose-500" />
               </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-slate-500 mb-3">Historial de Citas</h3>
-                <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <Card key={i}>
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
-                              <Scissors className="h-5 w-5 text-slate-600" />
-                            </div>
-                            <div>
-                              <h4 className="font-medium">Corte + arreglo de barba</h4>
-                              <p className="text-sm text-slate-500">Con Carlos Rodríguez</p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-medium">{`${5 - i} de Mayo, 2025`}</p>
-                            <p className="text-sm text-slate-500">11:00 AM (60 min)</p>
-                          </div>
-                        </div>
-                        <div className="flex justify-end gap-2 mt-4">
-                          <Button variant="outline" size="sm">
-                            Agregar reseña
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+              <h2 className="text-2xl font-bold text-white">Historial de Citas</h2>
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <Button variant="ghost" className="text-rose-500 hover:text-rose-600 hover:bg-rose-50">
-              Ver Historial Completo
-            </Button>
-          </CardFooter>
-        </Card >
 
+            <div className="space-y-4">
+              {
+                Array.isArray(customerOrderHistorial) && customerOrderHistorial.length > 0 ? (
+                  <>
+                    {
+                      customerOrderHistorial.map((appointment) => (
+                        <Card
+                          key={appointment.ID}
+                          className="bg-gray-800/50 border-gray-700 hover:border-rose-500/30 transition-colors"
+                        >
+                          <div className="p-6">
 
-        {/* Cupones Tab */}
-        < Card >
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Ticket className="h-5 w-5 text-rose-500" />
-              Mis Cupones
-            </CardTitle>
-            <CardDescription>Cupones activos y disponibles para usar en tu próxima cita</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-sm font-medium text-slate-500 mb-3">Cupones Activos</h3>
-                <div className="space-y-4">
+                            <div className='flex justify-end'>
+                              <Badge variant="outline" className="border-rose-500/30 text-rose-400 mb-2">
+                                {appointment.title}
+                              </Badge>
+                            </div>
 
-                  {
+                            <div className="flex items-start justify-between">
+                              <div className="flex gap-4">
+                                <Avatar className="border border-gray-600">
+                                  <AvatarFallback className="bg-gray-700 text-gray-300">
+                                    <User className="w-4 h-4" />
+                                  </AvatarFallback>
+                                </Avatar>
 
-                    Array.isArray(availableCoupons) && availableCoupons.length > 0 ? (
-                      <>
-                        {
-                          availableCoupons.map((coupon, i) => (
-                            <Card 
-                              className="overflow-hidden"
-                              key={i}
-                            >
-                              <div className="bg-gradient-to-r from-rose-500 to-rose-600 h-2"></div>
-                              <CardContent className="p-4">
-                                <div className="flex items-start justify-between">
-                                  <div>
-                                    <h4 className="font-medium text-lg">{coupon.discount_percent}% de Descuento</h4>
-                                    <p className="text-sm text-slate-500">Válido hasta 30 Abr 2025</p>
+                                <div className="flex-1">
+                                  <div className="flex items-center flex-col mb-2">
+                                    <h3 className="text-white font-semibold">{appointment.payer_name}{" "}{appointment.payer_surname}</h3>
+                                    <span className="text-gray-400 text-sm">
+                                      {new Date(appointment.schedule_day_date).toLocaleDateString("es-AR", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric"
+                                      })}
+                                    </span>
                                   </div>
-
-                                  <Button variant="outline" size="sm" className="h-8 gap-1" onClick={() => copyToClipboard("AZ345FG")}>
-                                    {copied ? (
-                                      <>
-                                        <Check className="h-3.5 w-3.5" />
-                                        <span>Copiado</span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Copy className="h-3.5 w-3.5" />
-                                        <span>Copiar</span>
-                                      </>
-                                    )}
-                                  </Button>
                                 </div>
-                              </CardContent>
-                              <CardFooter className="flex  items-center pt-2 border-t">
-                                <Badge className="bg-zinc-900">#AZ345FG</Badge>
-                              </CardFooter>
-                            </Card>
-                          ))
-                        }
-                      </>
-                    ) : (
-                      <p>
-                        nada
-                      </p>
-                    )
-                  }
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card >
-      </section >
+                              </div>
+                            </div>
+                          </div>
 
-    </>
+                          <div className='px-6'>
+                            <div className="flex items-center gap-1 mb-2">
+                              {Array(5)
+                                .fill(0)
+                                .map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-4 h-4 ${i < appointment.rating ? "fill-rose-500 text-rose-500" : "text-gray-600"}`}
+                                  />
+                                ))}
+                            </div>
+
+                            <div className='pb-3'>
+                              <p className="text-gray-300">{appointment.comment}</p>
+                            </div>
+                            {
+                              !appointment.review_status ? (
+                                <AddReviewDialog
+                                  previousOrder={appointment}
+                                />
+                              ) : null
+                            }
+                          </div>
+                        </Card>
+                      ))
+                    }
+                  </>
+
+                ) : (
+                  <div className='p-2'>
+                    <p className='text-zinc-50'>Al parecer tu historial de ordenes esta vacio</p>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
   )
 }
-
 export default Appointments

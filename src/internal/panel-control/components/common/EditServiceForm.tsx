@@ -9,23 +9,23 @@ interface ServiceFormProps {
 }
 
 const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
-  const { selectedServiceToEdit } = useContext(PanelControlContext)!;
+  const {  } = useContext(PanelControlContext)!;
 
   const { register, handleSubmit } = useForm<Service>();
 
-  const { UpdateServiceData, HandleOpenEditPopUp } = useServices()
+  const { UpdateServiceData } = useServices()
 
   const UpdateData = handleSubmit(async (data: Service) => {
-    let updateObjet: Service = {
-      ID: selectedServiceToEdit!.ID,
-      description: data.description,
-      price: data.price,
-      service_duration: data.service_duration,
-      title: data.title,
-      created_by_id: selectedServiceToEdit!.created_by_id
-    }
+    // let updateObjet: Service = {
+    //   ID: selectedServiceToEdit!.ID,
+    //   description: data.description,
+    //   price: data.price,
+    //   service_duration: data.service_duration,
+    //   title: data.title,
+    //   created_by_id: selectedServiceToEdit!.created_by_id
+    // }
 
-    UpdateServiceData(updateObjet)
+    // UpdateServiceData(updateObjet)
   });
 
   return (
@@ -90,7 +90,7 @@ const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
         <footer className="flex justify-end gap-4">
           <button
             type="button"
-            onClick={HandleOpenEditPopUp}
+            // onClick={HandleOpenEditPopUp}
             className="px-4 py-2 border text-zinc-700 text-sm font-medium rounded-2xl  hover:text-zinc-600 transition-all hover:shadow"
           >
             Cancelar

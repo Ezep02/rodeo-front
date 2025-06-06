@@ -8,9 +8,10 @@ import { PanelControlContext } from '@/context/PanelControlContext'
 
 type ServiceAndScheduleManagerTabProps = {
     Services: Service[] | []
+    HandleOpenDeleteServicePopUp: (service_to_delete: Service) => void
 }
 
-const ServiceManagment: React.FC<ServiceAndScheduleManagerTabProps> = ({ Services }) => {
+const ServiceManagment: React.FC<ServiceAndScheduleManagerTabProps> = ({ Services, HandleOpenDeleteServicePopUp }) => {
 
     // Filtrar servicios según el término de búsqueda
     const [searchTerm, setSearchTerm] = useState("");
@@ -20,16 +21,16 @@ const ServiceManagment: React.FC<ServiceAndScheduleManagerTabProps> = ({ Service
     );
 
     const {
-        setCreateModalOpen
+        setCreateModalOpen,
     } = useContext(PanelControlContext)!
 
 
     return (
-        <Card className="md:col-span-1">
+        <Card className="sm:col-span-4 md:col-span-4 xl:col-span-2 col-span-1">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle className="flex items-center gap-2">
-                        <Scissors className="h-5 w-5 text-rose-500" />
+                        <Scissors className="h-6 w-6 text-rose-500" />
                         Gestion de Servicios
                     </CardTitle>
                 </div>
@@ -60,7 +61,7 @@ const ServiceManagment: React.FC<ServiceAndScheduleManagerTabProps> = ({ Service
                 <ul className="space-y-0 ">
                     {
                         filteredServices.map((service, i) => (
-                            <li 
+                            <li
                                 className='flex items-center justify-between px-6 py-3 hover:bg-slate-50 transition-colors border-t'
                                 key={i}
                             >
@@ -81,19 +82,17 @@ const ServiceManagment: React.FC<ServiceAndScheduleManagerTabProps> = ({ Service
                                     <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-500">
                                         <Edit className="h-4 w-4" />
                                     </Button>
-                                    <Button 
-                                        size="icon" variant="ghost" 
+                                    <Button
+                                        size="icon" variant="ghost"
                                         className="h-8 w-8 text-slate-500"
-                                        //onClick={() => openDeleteDialog(service)}
+                                        onClick={() => HandleOpenDeleteServicePopUp(service)}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>
                             </li>
-
                         ))
                     }
-
                 </ul>
             </CardContent>
         </Card>

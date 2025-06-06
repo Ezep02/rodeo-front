@@ -6,12 +6,13 @@ import {
 import {Shift} from "../internal/dashboard/models/DashboardModels";
 import { CustomerPendingOrder } from "@/internal/dashboard/models/OrderModels";
 import { Coupon } from "@/internal/dashboard/models/Coupons";
+import { CustomerServices } from "@/internal/dashboard/models/ShopServices";
 
 interface DashboardContextProps {
-  services: Service[];
-  setServices: React.Dispatch<React.SetStateAction<Service[]>>;
-  selectedService: Service | undefined;
-  setSelectedService: React.Dispatch<React.SetStateAction<Service | undefined>>;
+  services: CustomerServices[];
+  setServices: React.Dispatch<React.SetStateAction<CustomerServices[]>>;
+  selectedService: CustomerServices | undefined;
+  setSelectedService: React.Dispatch<React.SetStateAction<CustomerServices | undefined>>;
   serviceOffset: number;
   setServiceOffset:React.Dispatch<React.SetStateAction<number>>;
 
@@ -52,10 +53,10 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
 }) => {
 
   // lista de servicios cacheados
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<CustomerServices[]>([]);
   const [serviceOffset, setServiceOffset] = useState<number>(0);
 
-  const [selectedService, setSelectedService] = useState<Service>();
+  const [selectedService, setSelectedService] = useState<CustomerServices>();
 
   // Horarios de los barbero
   const [barberSchedules, setBarberSchedules] = useState<Shift[]>([]);

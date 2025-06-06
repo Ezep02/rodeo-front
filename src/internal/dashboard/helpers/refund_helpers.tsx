@@ -11,6 +11,7 @@ export function RefundFormatter(appointment: CustomerPendingOrder, refound_type:
         schedule_start_time: appointment.schedule_start_time,
         shift_id: appointment.shift_id,
         title: appointment.title,
+        
     }
 
     return refound

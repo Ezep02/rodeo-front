@@ -1,9 +1,10 @@
-import Avatar from '@/components/common/Avatar'
+
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
 import React from 'react'
 import { FrequentCustomer } from '../../models/analyticsModels'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 type CustomerItemProps = {
     FrequentCustomer: FrequentCustomer
@@ -16,7 +17,12 @@ const CustomerItem: React.FC<CustomerItemProps> = ({ FrequentCustomer }) => {
             {/* Nombre */}
             <div className="flex items-center md:gap-3 gap-1">
                 <div className='hidden md:block'>
-                    <Avatar name={FrequentCustomer.Customer_name} bg="bg-zinc-900" />
+                    <Avatar>
+                    <AvatarFallback>
+                        {FrequentCustomer.Customer_name}
+                    </AvatarFallback>
+
+                    </Avatar>
                 </div>
 
                 <span className='md:hidden font-medium'>Cliente:</span>

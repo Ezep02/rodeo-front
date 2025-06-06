@@ -1,10 +1,10 @@
-import { Service } from "@/internal/panel-control/models/ServicesModels";
 import { Shift } from "../models/DashboardModels";
 import { RegisterPaymentReq, User } from "@/models/AuthModels";
 import { ServiceOrderRequest } from "../models/OrderModels";
+import { CustomerServices } from "../models/ShopServices";
 
 
-export function formatOrderPayment(service: Service, shift: Shift, user: User | RegisterPaymentReq) : ServiceOrderRequest{
+export function formatOrderPayment(service: CustomerServices, shift: Shift, user: User | RegisterPaymentReq) : ServiceOrderRequest{
   // Formatear el pedido para el pago
   const order: ServiceOrderRequest = {
     User_id: 'ID' in user ? user.ID : generarId(),

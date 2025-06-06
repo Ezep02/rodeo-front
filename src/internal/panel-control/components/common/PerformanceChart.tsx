@@ -32,7 +32,7 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
 
     // Encontramos el mes con más cortes
     let chartData: ChartData[] = Data.map((d) => ({
-        mes: monthNames[d.Month],
+        mes: monthNames[d.Month-1],
         cortes: d.Total_haircuts
     }));
 
@@ -48,10 +48,10 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
     );
 
     return (
-        <Card className="md:col-span-1">
+        <Card className="sm:col-span-4 md:col-span-4 xl:col-span-2 col-span-1">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-rose-500" />
+                    <BarChart3 className="h-6 w-6 text-rose-500" />
                     Rendimiento Mensual
                 </CardTitle>
                 <CardDescription>Análisis de cortes por mes</CardDescription>

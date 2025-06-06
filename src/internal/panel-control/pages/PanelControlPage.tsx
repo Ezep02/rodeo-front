@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import useBarber from "../hooks/useBarber";
 import { useServices } from "../hooks/useServices";
 
@@ -14,6 +14,7 @@ import { useSchedules } from "../hooks/useSchedules";
 import Schedules from "../components/common/Schedules";
 import { useOrder } from "../hooks/useOrder";
 import RecentOrders from "../components/common/RecentOrders";
+import DeleteServicePopUp from "../components/common/DeleteServicePopUp";
 
 const PanelControlPage: React.FC = () => {
 
@@ -35,7 +36,14 @@ const PanelControlPage: React.FC = () => {
 
   const {
     serviceList,
-    AddNewService
+    AddNewService,
+    StartDeleteTransition,
+    deleteServiceTransitionErr,
+    isDeleteTransitionServiceLoading,
+    HandleOpenDeleteServicePopUp,
+    selectedServiceToDelete,
+    HandleOpenDeletePopUp,
+    deleteNotification
   } = useServices()
 
   const {
@@ -45,6 +53,8 @@ const PanelControlPage: React.FC = () => {
   } = useContext(PanelControlContext)!
 
 
+
+
   return (
     <>
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
@@ -52,8 +62,9 @@ const PanelControlPage: React.FC = () => {
           <h1 className="text-3xl font-bold">Panel de Control</h1>
           <p className="text-slate-500 mt-1">Administra tu barbería y monitorea el rendimiento</p>
         </div>
+
         <div className="flex gap-3 mt-4 md:mt-0">
-          <Button variant="outline" className="gap-2" onClick={HandleOpenScheduler}>
+          <Button className="gap-2 bg-rose-500 hover:bg-rose-600 active:scale-[.98] transition-all" onClick={HandleOpenScheduler}>
             <Calendar1 className="h-4 w-4" />
             {
               new Date().toLocaleDateString("es-AR", { month: "long", year: "numeric" })
@@ -67,22 +78,22 @@ const PanelControlPage: React.FC = () => {
       </div>
 
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-        {/*GRAFICO DE RENDIMIENTOS */}
-
-        <PerformanceChart
-          Data={Array.isArray(yearlyCutsChartData) ? yearlyCutsChartData : []}
-        />
+      <section className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-4 gap-8">
 
         {/* VISTA DE ORDENES PENDIENTES*/}
         <RecentOrders
           Data={Array.isArray(orderList) ? orderList : []}
         />
 
+        {/*GRAFICO DE RENDIMIENTOS */}
+        <PerformanceChart
+          Data={Array.isArray(yearlyCutsChartData) ? yearlyCutsChartData : []}
+        />
+
         {/* VISTA DE SERVICIOS Y HORARIOS */}
         <ServiceManagment
           Services={Array.isArray(serviceList) ? serviceList : []}
+          HandleOpenDeleteServicePopUp={HandleOpenDeleteServicePopUp}
         />
       </section>
 
@@ -92,6 +103,16 @@ const PanelControlPage: React.FC = () => {
         onSubmit={AddNewService}
         mode="create"
       />
+
+      {selectedServiceToDelete && deleteNotification &&(
+        <DeleteServicePopUp 
+          Srv={selectedServiceToDelete}
+          HandleCancel={HandleOpenDeletePopUp}
+          HandleDelete={StartDeleteTransition}
+          deleteServiceTransitionErr={deleteServiceTransitionErr}
+          isDeleteTransitionServiceLoading={isDeleteTransitionServiceLoading}
+        />
+      )}
 
       {
         isSchedulerOpen && (

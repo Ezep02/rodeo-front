@@ -14,7 +14,6 @@ const PopularServiceCard: React.FC<TopServicesData> = ({ icon, service_count, se
     return (
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-
                 {icon}
                 <div>
                     <p className="font-medium">{service_name}</p>

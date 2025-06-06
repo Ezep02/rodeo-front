@@ -15,9 +15,10 @@ export interface PendingOrder {
   barber_id: number;
   created_by_id: number;
   shift_id: number;
-  schedule_day_date: Date; // Go's *time.Time → puede ser null o string ISO
+  schedule_day_date: Date;
   service_duration: number;
   schedule_start_time: string;
+  transaction_type: "order";
   CreatedAt?: Date
   UpdatedAt?: Date
   DeletedAt?: Date

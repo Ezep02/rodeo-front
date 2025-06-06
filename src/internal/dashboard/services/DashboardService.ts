@@ -1,16 +1,16 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
-import { Service } from "../../panel-control/models/ServicesModels";
 import { Coupon } from "../models/Coupons";
 import { PopularServices, Shift } from "../models/DashboardModels";
 
-import { CustomerPendingOrder, RefundRequest, RescheduleRequest, ServiceOrderRequest, UpdatedCustomerPendingOrder } from "../models/OrderModels";
+import { CustomerPendingOrder, CustomerPreviousOrder, RefundRequest, RescheduleRequest, ServiceOrderRequest, UpdatedCustomerPendingOrder } from "../models/OrderModels";
+import { CustomerServices } from "../models/ShopServices";
 
 const SERVICE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
 const ORDER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
 const SCHEDULES_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/schedules`;
 
 export const GetServices = async (limit: number, offset: number) => {
-    const response = await AuthenticationInstance.get<Service[]>(`${SERVICE_URL}/${limit}/${offset}`)
+    const response = await AuthenticationInstance.get<CustomerServices[]>(`${SERVICE_URL}/${limit}/${offset}`)
     return response.data
 }
 
@@ -22,7 +22,7 @@ export const CreateNewOrder = async (service: ServiceOrderRequest) => {
 }
 
 export const GetAvailableSchedules = async (limit: number, offset: number) => {
-    const response = await AuthenticationInstance.get<Shift[]>(`${SCHEDULES_URL}/${limit}/${offset}`)
+    const response = await AuthenticationInstance.get<Shift[]>(`${SCHEDULES_URL}/available/${limit}/${offset}`)
     return response.data
 }
 
@@ -39,6 +39,13 @@ export const GetCustomerPendingOrders = async () => {
     const response = await AuthenticationInstance.get<CustomerPendingOrder[]>(`${ORDER_URL}/customer`)
     return response.data
 }
+
+// Obtener ordenes anteriores
+export const GetCustomerPreviousOrders = async (offset:number) => {
+    const response = await AuthenticationInstance.get<CustomerPreviousOrder[]>(`${ORDER_URL}/customer/previous/${offset}`)
+    return response.data
+}
+
 
 // Obtener los servicios populares
 export const GetPopularServices = async () => {

@@ -1,7 +1,7 @@
 import { DashboardContext } from "@/context/DashboardContext";
 import { useContext, useEffect } from "react";
 import { GetServices } from "../services/DashboardService";
-import { Service } from "@/internal/panel-control/models/ServicesModels";
+import { CustomerServices } from "../models/ShopServices";
 
 
 export const useServices = () => {
@@ -22,7 +22,7 @@ export const useServices = () => {
                 let limit: number = 5;
 
                 try {
-                    const fetchedServices: Service[] = await GetServices(limit, serviceOffset);
+                    const fetchedServices: CustomerServices[] = await GetServices(limit, serviceOffset);
 
                     if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
                         setServices((prev) => {
@@ -51,7 +51,7 @@ export const useServices = () => {
         let limit: number = 5;
 
         try {
-            const fetchedServices: Service[] = await GetServices(limit, serviceOffset);
+            const fetchedServices: CustomerServices[] = await GetServices(limit, serviceOffset);
 
             if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
                 setServices((prev) => {

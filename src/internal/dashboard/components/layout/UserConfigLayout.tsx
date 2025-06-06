@@ -1,6 +1,5 @@
 
-import Avatar from '@/components/common/Avatar'
-import { Button } from '@/components/ui/button'
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { TabsContent, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@radix-ui/react-dropdown-menu'
@@ -9,6 +8,8 @@ import { Bell, ChevronRight, CreditCard, Edit, Gift, Mail, MapPin, Phone, Scisso
 import React, { useState } from 'react'
 
 import { DiscountCard } from '../common/DiscountCard'
+import { Button } from '@/components/ui/button'
+import { Avatar } from '@/components/ui/avatar'
 
 const UserConfigLayout: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false)
@@ -69,8 +70,8 @@ const UserConfigLayout: React.FC = () => {
                     <CardContent className="p-0">
                         <div className="flex flex-col md:flex-row md:items-end md:justify-between p-6 relative">
                             <div className="flex flex-col md:flex-row md:items-end gap-4">
-                                <Avatar name='eze'>
-
+                                <Avatar >
+                                    Eze
                                 </Avatar>
                                 <div className="space-y-1">
                                     <h3 className="text-2xl font-bold">eze</h3>

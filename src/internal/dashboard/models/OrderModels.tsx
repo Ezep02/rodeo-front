@@ -39,15 +39,36 @@ export interface ServiceOrderRequest {
 }
 
 export interface CustomerPendingOrder {
-    ID: number;
+    ID: number; // order_id
     title: string;
     shift_id: number;
     schedule_start_time: string
+    price: number
     schedule_day_date: Date;
     UpdatedAt?: string;
     CreatedAt?: string;
     DeletedAt?: null;
 }
+
+export interface CustomerPreviousOrder {
+    ID: number
+    title: string;
+    shift_id: number;
+    schedule_start_time: string
+    schedule_day_date: Date;
+    payer_name: string
+    payer_surname: string
+    price: number
+    // review
+    comment: string
+    rating: number
+    review_status: boolean
+    
+    UpdatedAt?: string;
+    CreatedAt?: string;
+    DeletedAt?: null;
+}
+
 
 // Rescheduling
 export interface RescheduleRequest {
@@ -65,6 +86,7 @@ export interface UpdatedCustomerPendingOrder {
 	title:string
 	schedule_day_date: Date
     shift_id: number
+    price:number
 	schedule_start_time:string
 }
 

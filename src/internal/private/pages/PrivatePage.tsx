@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, DollarSign, Download, Filter, MoreHorizontal, PlusCircle, Scissors, Search, Users } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Avatar from "@/components/common/Avatar";
+import { Tabs} from "@/components/ui/tabs";
 import { PieChart, LineChart } from "@/components/charts/charts";
 import StatCard from "../components/common/StatsCard";
 import PopularServiceCard from "../components/common/PopularServiceCard";
@@ -86,7 +85,7 @@ const PrivatePage: React.FC = () => {
           <CardContent className="pt-4">
             <div className="h-[300px] w-full">
               {
-                currentYearMonthlyRevenue.length > 0 ? (
+                currentYearMonthlyRevenue?.length > 0 ? (
                   <LineChart
                     Data={currentYearMonthlyRevenue}
                   />
@@ -127,7 +126,7 @@ const PrivatePage: React.FC = () => {
                         const iconBackground = ["bg-blue-100", "bg-rose-100", "bg-amber-100"]
                         return (
                           <PopularServiceCard
-
+                            key={indx}
                             service_count={srv.Service_count}
                             service_name={srv.Service_name}
                             icon={
@@ -244,54 +243,3 @@ const PrivatePage: React.FC = () => {
 };
 
 export default PrivatePage;
-
-{/* <main className="p-6">
-  <div className="grid gap-6">
-
-  
-    <section>
-      <h2 className="text-2xl font-bold mb-4">Resumen</h2>
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <OverviewCard
-          avg={monthlyRevenue?.Avg_compared_last_month ? monthlyRevenue?.Avg_compared_last_month : 0}
-          text={`$${monthlyRevenue?.Total_month_revenue}`}
-          title={"Ganancias totales"}
-        />
-
-        <OverviewCard
-          avg={monthlyAppointmens?.Avg_compared_last_month ? monthlyAppointmens?.Avg_compared_last_month : 0}
-          text={`${monthlyAppointmens?.Total_month_appointments}`}
-          title={"Reservas"}
-        />
-
-        <OverviewCard
-          avg={monthlyNewCustomers?.Avg_compared_last_month ? monthlyNewCustomers?.Avg_compared_last_month : 0}
-          text={`${monthlyNewCustomers?.Total_month_new_users}`}
-          title={"Nuevos Clientes"}
-        />
-      </div>
-    </section>
-
-    <section
-      className="grid gap-6 md:grid-cols-2"
-    >
-
-      <YearRevenueChart
-        Data={currentYearMonthlyRevenue?.length > 0 ? currentYearMonthlyRevenue : []}
-      />
-
-      <PopularServicesTable
-        PopularServicesList={monthlyPopularServices ? monthlyPopularServices : []}
-      />
-
-    </section>
-
-    <section>
-      <TopCustomersTab
-        TableData={frequentCustomersList?.length > 0 ? frequentCustomersList : []}
-      />
-    </section>
-  </div>
-
-</main> */}

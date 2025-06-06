@@ -10,6 +10,11 @@ export interface Services {
 export interface PopularServices {
   title: string;
   total_avg: number;
+  description: string;
+  service_duration:number;
+  price: number;
+  rating: number;
+  preview_url: string
 }
 
 export interface Shift {

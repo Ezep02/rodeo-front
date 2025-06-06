@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react"
-import { GetCustomerPendingOrders } from "../services/DashboardService"
+import { useContext, useEffect, useState } from "react"
+import { GetCustomerPendingOrders, GetCustomerPreviousOrders } from "../services/DashboardService"
 import { DashboardContext } from "@/context/DashboardContext"
 import useWebSocket from "react-use-websocket"
-import { UpdatedCustomerPendingOrder } from "../models/OrderModels"
+import { CustomerPreviousOrder, UpdatedCustomerPendingOrder } from "../models/OrderModels"
 
 
 export const useTurns = () => {
@@ -11,14 +11,15 @@ export const useTurns = () => {
         customerPendingOrders,
     } = useContext(DashboardContext)!
 
+    const [customerOrderHistorial, setCustomerOrderHistorial] = useState<CustomerPreviousOrder[] | []>([])
+
     const { lastJsonMessage } = useWebSocket<UpdatedCustomerPendingOrder>(`${import.meta.env.VITE_BACKEND_WS_URL}/order/customer/notification`);
 
     useEffect(() => {
 
         const GettingPendingOrders = async () => {
             let response = await GetCustomerPendingOrders()
-            if(response){
-                console.log(response)
+            if (response) {
                 setCustomerPendingOrders(response)
             }
         }
@@ -28,7 +29,7 @@ export const useTurns = () => {
     // ws: Si ocurre reprogramacion
     useEffect(() => {
         if (lastJsonMessage) {
-            
+
             // Procesar un unico turno
             setCustomerPendingOrders((prevSchedules) => {
                 const updatedSchedules = [...prevSchedules];
@@ -45,10 +46,29 @@ export const useTurns = () => {
 
         }
     }, [lastJsonMessage]);
-    
+
+
+    // ORDENES ATERIORES
+    useEffect(() => {
+        const GettingPreviusOrders = async () => {
+            try {
+                let response = await GetCustomerPreviousOrders(0)
+                if(response){
+               
+                    setCustomerOrderHistorial(response)
+                }
+
+            } catch (error) {
+                console.warn(error)
+            }
+        }
+        GettingPreviusOrders()
+
+    }, [])
 
 
     return {
-        customerPendingOrders
+        customerPendingOrders,
+        customerOrderHistorial
     }
 }

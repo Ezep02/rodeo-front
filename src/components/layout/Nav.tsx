@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { GiBullHorns } from "react-icons/gi";
-import Avatar from "../common/Avatar";
 
 import {
   DropdownMenu,
@@ -14,6 +13,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { LogoutUser } from "@/service/AuthService";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 const Header: React.FC = () => {
   const {
@@ -48,7 +48,16 @@ const Header: React.FC = () => {
         isUserAuthenticated ? (
           <div className="ml-auto flex items-center gap-2">
             <DropdownMenu>
-              <DropdownMenuTrigger><Avatar name={user?.name ? user?.name : "unknown"} /></DropdownMenuTrigger>
+              <DropdownMenuTrigger>
+
+
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback className="text-zinc-50 bg-zinc-900 uppercase font-bold hover:shadow-lg hover:shadow-zinc-100 active:scale-95">
+                    {user?.name[0]}{user?.surname[0]}
+                  </AvatarFallback>
+                </Avatar>
+
+              </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>
                   Mi cuenta<br />
@@ -61,7 +70,7 @@ const Header: React.FC = () => {
 
                 <DropdownMenuItem>
                   {/* Perfil y configuracion de usuarios */}
-                  <Link to={"/profile"}>Perfil</Link> 
+                  <Link to={"/profile"}>Perfil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   {/* Citas pedientes e historial de visitas de usuarios */}

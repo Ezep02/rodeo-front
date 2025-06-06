@@ -3,6 +3,7 @@ import { PanelControlContext } from "@/context/PanelControlContext";
 import { GetOrderList } from "../services/PanelServices";
 import { PendingOrder } from "../models/OrderModel";
 import useWebSocket from "react-use-websocket";
+import { RefundRequest } from "@/internal/dashboard/models/OrderModels";
 
 export const useOrder = () => {
     const {
@@ -15,13 +16,13 @@ export const useOrder = () => {
     } = useContext(PanelControlContext)!;
 
     const CNN_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order/notification`;
-    const { lastJsonMessage } = useWebSocket<PendingOrder>(CNN_URL);
-
-
+    const { lastJsonMessage } = useWebSocket<PendingOrder | RefundRequest>(CNN_URL);
+    
 
     //Update order list on WebSocket message
+    
     useEffect(() => {
-        if (lastJsonMessage) {
+        if (lastJsonMessage?.transaction_type === "order") {
             setOrderOffset((prev) => prev + 1);
 
             setOrderList((prevOrderList) => {
@@ -34,7 +35,16 @@ export const useOrder = () => {
                     .sort((a, b) => b.ID - a.ID);
             });
         }
-
+        else if(lastJsonMessage?.transaction_type === "refund"){
+            console.log(lastJsonMessage)
+            setOrderList((prevOrderList) => {
+                const currentOrders = [...prevOrderList]
+                // encontrar el index a actualizar
+                let indx = currentOrders.findIndex((prev) => prev.ID === lastJsonMessage.refunded_order_id)
+                currentOrders[indx].mp_status = "Canceled"
+                return currentOrders
+            })
+        }
 
     }, [lastJsonMessage]);
 
@@ -55,6 +65,7 @@ export const useOrder = () => {
                     limit,
                     orderOffset
                 );
+                console.log(fetchedOrders)
                 if (fetchedOrders?.length > 0) {
                     // si hay ordenes agregarlas a el arreglo, e incrementar el offset
                     setOrderList(fetchedOrders);

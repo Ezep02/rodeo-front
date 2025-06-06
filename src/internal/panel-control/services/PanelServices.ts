@@ -37,7 +37,7 @@ export const CreateOrderRefound = async (id: number, amount: string) => {
 
 // get barber schedules list
 export const GetBarberSchedulesList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<ScheduleResponse[]>(`${SCHEDULE_BASE_URL}/${limit}/${offset}`
+  const response = await AuthenticationInstance.get<ScheduleResponse[]>(`${SCHEDULE_BASE_URL}/barber/${limit}/${offset}`
   );
   return response.data;
 };
@@ -64,9 +64,7 @@ export const GetCurrentYearBarberHairCuts = async () => {
 
 // Get all services
 export const GetBarberServicesList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<Service[]>(
-    `${SERVICE_BASE_URL}/barber/${limit}/${offset}`
-  );
+  const response = await AuthenticationInstance.get<Service[]>(`${SERVICE_BASE_URL}/barber/${limit}/${offset}`);
   return response.data;
 };
 
@@ -89,7 +87,7 @@ export const CreateService = async (data: ServiceRequest) => {
 
 export const DeleteServiceByID = async (id: number) => {
   const response = await AuthenticationInstance.delete(
-    `${SERVICE_BASE_URL}/${id}`
+    `${SERVICE_BASE_URL}/delete/${id}`
   );
   return response;
 };

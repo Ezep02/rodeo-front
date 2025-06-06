@@ -1,50 +1,76 @@
 import React from "react";
 import { Service } from "../../models/ServicesModels";
 import { TbTrash } from "react-icons/tb";
-import { Button, CancelButton } from "@/components/common/CustomButtons";
+
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type DeleteServicePopUpProps = {
   HandleDelete: (id: number) => void;
   Srv: Service;
   HandleCancel: () => void;
+  deleteServiceTransitionErr: void | null
+  isDeleteTransitionServiceLoading: boolean
 };
 
 const DeleteServicePopUp: React.FC<DeleteServicePopUpProps> = ({
   HandleDelete,
   Srv,
   HandleCancel,
+  deleteServiceTransitionErr,
+  isDeleteTransitionServiceLoading
 }) => {
+
   return (
-    <div className="inset-0 absolute flex items-center justify-center bg-opacity-70 z-50 ">
-      <div className="bg-zinc-100 rounded-lg shadow-lg p-6 w-full max-w-lg text-center space-y-6">
+    <Dialog open={true} onOpenChange={HandleCancel}>
+      <DialogContent className="sm:max-w-[425px] max-w-[350px] rounded-md">
+        {
+          isDeleteTransitionServiceLoading ? (
+            <>
+              <div className="w-full flex justify-center items-center flex-col gap-1 p-5">
+                <p className="loader"></p>
+                <span>Procesando eliminacion</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle>Estas a un paso de eliminar el servicio</DialogTitle>
+                <DialogDescription className="text-left">
+                  ¿Estás seguro de que quieres eliminar{" "}
+                  <span className="font-bold text-rose-500">{Srv.title}</span> de tu
+                  lista de servicios? Esta acción no se puede deshacer.
+                </DialogDescription>
+              </DialogHeader>
 
-        <h2 className="text-lg font-semibold text-zinc-800">
-          Eliminar Servicio
-        </h2>
+              <DialogFooter>
+                
+                <div className="flex flex-col w-full gap-2">
+                  <Button
+                    onClick={() => HandleDelete(Srv.ID)}
+                  >
+                    <TbTrash />
+                    Eliminar
+                  </Button>
 
+                  <Button
+                    variant="outline"
+                    onClick={HandleCancel}
+                  >
 
-        <p className="text-gray-800">
-          ¿Estás seguro de que quieres eliminar{" "}
-          <span className="font-bold text-zinc-900">{Srv.title}</span> de tu
-          lista de servicios? Esta acción no se puede deshacer.
-        </p>
+                    Cancelar
+                  </Button>
+                </div>
+                
 
-        <div className="flex justify-center gap-4">
-          <div>
-            <CancelButton
-              icon={<TbTrash />}
-              onClickAction={() => HandleDelete(Srv.ID)}
-              text="Eliminar"
-            />
-          </div>
-
-          <div>
-            <Button onClickAction={HandleCancel} text="Cancelar" />
-          </div>
-        </div>
-      </div>
-    </div>
+              </DialogFooter>
+            </>
+          )
+        }
+      </DialogContent>
+    </Dialog>
   );
-};
+}
 
 export default DeleteServicePopUp;
+

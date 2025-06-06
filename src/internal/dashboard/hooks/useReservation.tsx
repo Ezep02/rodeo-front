@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { Shift } from "../models/DashboardModels"
-import { Service } from "@/internal/panel-control/models/ServicesModels"
 import { DashboardContext } from "@/context/DashboardContext"
+import { CustomerServices } from "../models/ShopServices"
 
 
 export const useReservation = () => {
@@ -14,7 +14,7 @@ export const useReservation = () => {
 
     const [isCreateAppointmentModalOpen, setCreateAppointmentModalOpen] = useState(false)
 
-    const seleccionarServicio = (servicio: Service) => {
+    const seleccionarServicio = (servicio: CustomerServices) => {
         setSelectedService(servicio)
         setCreateAppointmentModalOpen(!isCreateAppointmentModalOpen)
     }
