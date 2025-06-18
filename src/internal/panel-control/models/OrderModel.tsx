@@ -10,6 +10,7 @@ export interface PendingOrder {
   description: string;
   email: string;
   payer_phone: string;
+  payment_percentaje:number;
   date_approved: string;
   mp_status: string;
   barber_id: number;
@@ -19,6 +20,7 @@ export interface PendingOrder {
   service_duration: number;
   schedule_start_time: string;
   transaction_type: "order";
+  total_service_price: number;
   CreatedAt?: Date
   UpdatedAt?: Date
   DeletedAt?: Date

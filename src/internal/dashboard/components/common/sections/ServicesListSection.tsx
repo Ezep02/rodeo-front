@@ -1,10 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useServices } from "@/internal/dashboard/hooks/useServices"
-import ServiceCard from "../cards/ServiceCard"
 import { useReservation } from "@/internal/dashboard/hooks/useReservation"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import Reservation from "../Reservation"
+import React, { Suspense } from "react"
+import PopularServiceLoader from "../../loaders/PopularServiceLoader"
 
+
+const ServiceCard = React.lazy(() => import("../cards/ServiceCard"))
 
 const ServicesListSection: React.FC = () => {
 
@@ -41,10 +44,10 @@ const ServicesListSection: React.FC = () => {
                 w-full max-w-3xl max-h-[700px] mx-4 sm:mx-auto rounded-lg shadow-lg bg-white p-6 sm:p-8
               "
               >
-                <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 text-center">
+                <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-800">
                   Reservá tu turno
                 </DialogTitle>
-                <DialogDescription className="text-sm sm:text-base text-gray-500 mb-6 text-center">
+                <DialogDescription className="text-sm sm:text-base text-gray-500 mb-6">
                   Completá los datos a continuación para agendar tu turno en la barbería.
                 </DialogDescription>
                 <Reservation />
@@ -83,56 +86,74 @@ const ServicesListSection: React.FC = () => {
           </TabsList>
 
           <TabsContent value="todos" className="mt-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((service) => (
-                <ServiceCard 
-                  key={service.ID} service={service} 
-                  seleccionarServicio={seleccionarServicio}
-                />
-              ))}
-            </div>
+            <Suspense fallback={
+              <PopularServiceLoader />
+            }>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services.map((service) => (
+                  <ServiceCard
+                    key={service.ID} service={service}
+                    seleccionarServicio={seleccionarServicio}
+                  />
+                ))}
+              </div>
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="cortes" className="mt-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services
-                .filter((service) => service.category === "cortes")
-                .map((service) => (
-                  <ServiceCard 
-                    key={service.ID} 
-                    service={service} 
-                    seleccionarServicio={seleccionarServicio}
-                  />
-                ))}
-            </div>
+            <Suspense fallback={
+              <PopularServiceLoader />
+            }>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services
+                  .filter((service) => service.category === "cortes")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.ID}
+                      service={service}
+                      seleccionarServicio={seleccionarServicio}
+                    />
+                  ))}
+              </div>
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="barbas" className="mt-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services
-                .filter((service) => service.category === "barbas")
-                .map((service) => (
-                  <ServiceCard 
-                  key={service.ID} 
-                  service={service}
-                  seleccionarServicio={seleccionarServicio}
-                />
-                ))}
-            </div>
+            <Suspense fallback={
+              <PopularServiceLoader />
+            }>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services
+                  .filter((service) => service.category === "barbas")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.ID}
+                      service={service}
+                      seleccionarServicio={seleccionarServicio}
+                    />
+                  ))}
+              </div>
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="combos" className="mt-8">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services
-                .filter((service) => service.category === "combos")
-                .map((service) => (
-                  <ServiceCard 
-                    key={service.ID} 
-                    service={service} 
-                    seleccionarServicio={seleccionarServicio}
-                  />
-                ))}
-            </div>
+            <Suspense fallback={
+              <PopularServiceLoader />
+            }>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services
+                  .filter((service) => service.category === "combos")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.ID}
+                      service={service}
+                      seleccionarServicio={seleccionarServicio}
+                    />
+                  ))}
+              </div>
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

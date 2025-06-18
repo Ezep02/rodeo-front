@@ -6,8 +6,10 @@ import { BsCart3 } from "react-icons/bs";
 import React from 'react'
 import { PendingOrder } from '../../models/OrderModel'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import OrderCard from './OrderCard'
+
+import OrderCard from '../common/OrderCard';
+import { Button } from '@/components/ui/button';
+
 
 type PendingOrderProps = {
     Data: PendingOrder[]

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart3, TrendingUp } from 'lucide-react'
+import { BarChart as BarChartIcon, TrendingUp } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, LabelList, Rectangle, XAxis } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
@@ -32,7 +32,7 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
 
     // Encontramos el mes con más cortes
     let chartData: ChartData[] = Data.map((d) => ({
-        mes: monthNames[d.Month-1],
+        mes: monthNames[d.Month - 1],
         cortes: d.Total_haircuts
     }));
 
@@ -48,13 +48,19 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
     );
 
     return (
-        <Card className="sm:col-span-4 md:col-span-4 xl:col-span-2 col-span-1">
+        <Card className="sm:col-span-4 md:col-span-4 xl:col-span-2 col-span-1 bg-transparent border-none">
+            
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-6 w-6 text-rose-500" />
-                    Rendimiento Mensual
+                <CardTitle className="flex items-center gap-2 text-zinc-50 text-sm sm:text-2xl">
+                    
+                    <div className="w-10 h-10 bg-rose-500/20 rounded-lg flex items-center justify-center">
+                        <BarChartIcon className="w-5 h-5 text-rose-500" />
+                    </div>
+                    <div>
+                        Rendimiento Mensual
+                        <CardDescription className='text-gray-400'>Análisis de cortes por mes</CardDescription>
+                    </div>
                 </CardTitle>
-                <CardDescription>Análisis de cortes por mes</CardDescription>
             </CardHeader>
             <CardContent>
 
@@ -74,7 +80,9 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
                             tickMargin={10}
                             axisLine={false}
                             tickFormatter={(value) => value.slice(0, 3)}
+                            style={{ fill: '#ffffff' }} // Cambia color del texto del eje X a blanco
                         />
+
 
                         <Bar
                             dataKey="cortes"
@@ -100,20 +108,18 @@ const PerformanceChart: React.FC<HaircutsChartProps> = ({ Data }) => {
                             <LabelList
                                 position="top"
                                 offset={12}
-                                className="fill-foreground"
+                                fill="#ffffff" // Blanco
                                 fontSize={12}
                             />
                         </Bar>
                     </BarChart>
                 </ChartContainer>
-
             </CardContent>
-            <CardFooter className="border-t pt-4">
-                <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>
-                        Mes de mejor rendimiento: <strong>{maxMonth?.mes}</strong>
-                    </span>
+            <CardFooter className="border-t pt-4 border-none">
+                {/* Best Month Indicator */}
+                <div className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/20 rounded-lg w-full">
+                    <TrendingUp className="w-5 h-5 text-green-500" />
+                    <span className="text-green-400 font-medium">Mes de mejor rendimiento: {maxMonth?.mes}</span>
                 </div>
             </CardFooter>
         </Card>

@@ -12,7 +12,7 @@ const HeroSection: React.FC = () => {
                         <div className="space-y-6">
                             <h1 className="lg:text-7xl text-5xl font-bold text-white leading-tight">
                                 <span className="text-rose-500">El Rodeo </span>
-                                <br />Tu barberia de confianza
+                                <br />tu barberia de confianza
                             </h1>
                             <p className="text-xl text-gray-400 leading-relaxed max-w-lg">
                                 En El Rodeo, no importa si venís por primera vez o si ya sos de la casa, siempre te vas a sentir bienvenido. Más que una barbería, es un espacio pensado para que te relajes, te sientas cómodo y te vayas con la mejor versión de vos. Acá el corte es solo una parte, lo que nos define es la atención y la buena onda. Porque cuando el trato es de calidad, el resultado también lo es.

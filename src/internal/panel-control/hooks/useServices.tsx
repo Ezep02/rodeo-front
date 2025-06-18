@@ -140,15 +140,7 @@ export const useServices = () => {
         setOpenAddService((prev) => !prev);
     };
 
-    // crear un nuevo servicio
-    const AddNewService = async (data: ServiceRequest) => {
-        try {
-            await CreateService(data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
+  
     return {
         serviceList,
         SearchMoreBarberServices,
@@ -156,7 +148,6 @@ export const useServices = () => {
         HandleOpenDeletePopUp,
         UpdateServiceData,
         selectedServiceToDelete,
-        AddNewService,
         HandleAddNewService,
         HandleOpenDeleteServicePopUp,
         StartDeleteTransition,

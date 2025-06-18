@@ -1,32 +1,28 @@
-import { useContext } from "react";
 import { Service } from "../../models/ServicesModels";
-import { PanelControlContext } from "../../../../context/PanelControlContext";
 import { useForm } from "react-hook-form";
-import { useServices } from "../../hooks/useServices";
 
 interface ServiceFormProps {
   service: Service;
 }
 
 const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
-  const {  } = useContext(PanelControlContext)!;
+ 
+  const { register } = useForm<Service>();
 
-  const { register, handleSubmit } = useForm<Service>();
+  // const { UpdateServiceData } = useServices()
 
-  const { UpdateServiceData } = useServices()
+  // const UpdateData = handleSubmit(async (data: Service) => {
+  //   let updateObjet: Service = {
+  //     ID: selectedServiceToEdit!.ID,
+  //     description: data.description,
+  //     price: data.price,
+  //     service_duration: data.service_duration,
+  //     title: data.title,
+  //     created_by_id: selectedServiceToEdit!.created_by_id
+  //   }
 
-  const UpdateData = handleSubmit(async (data: Service) => {
-    // let updateObjet: Service = {
-    //   ID: selectedServiceToEdit!.ID,
-    //   description: data.description,
-    //   price: data.price,
-    //   service_duration: data.service_duration,
-    //   title: data.title,
-    //   created_by_id: selectedServiceToEdit!.created_by_id
-    // }
-
-    // UpdateServiceData(updateObjet)
-  });
+  //   UpdateServiceData(updateObjet)
+  // });
 
   return (
     <main className="absolute inset-0 grid grid-cols-12 grid-rows-12 place-items-center bg-opacity-70 z-20">
@@ -36,7 +32,7 @@ const EditServiceForm: React.FC<ServiceFormProps> = ({ service }) => {
             xl:col-start-4 xl:col-end-11 xl:row-start-3 xl:row-end-11 h-full
             col-start-1 col-end-13 row-start-1 row-end-13
           "
-        onSubmit={UpdateData}
+
       >
         <header className="flex justify-between items-center">
           <h3 className="text-xl font-semibold">Editar Servicio</h3>

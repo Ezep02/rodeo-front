@@ -17,3 +17,8 @@ export const InstagramInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const MultipartInstance = axios.create({
+  baseURL: `${import.meta.env.VITE_AUTH_BACKEND_URL}`,
+  withCredentials: true,
+});

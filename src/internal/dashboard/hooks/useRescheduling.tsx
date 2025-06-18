@@ -24,7 +24,22 @@ export const useRescheduling = () => {
     // const ReschedulingAppointment = async (appointment: CustomerPendingOrder, shift_to_replace: Shift) => {
 
 
-    // }
+ 
+    // Verifica si la cita esta dentro de las proximas 24 horas
+    const isWithin24Hours = (appointmentDate: Date): boolean => {
+        const now = new Date();
+        const appointment = new Date(appointmentDate);
+
+        // Diferencia en milisegundos
+        const diffInMs = appointment.getTime() - now.getTime();
+
+        // Convertimos la diferencia a horas
+        const diffInHours = diffInMs / (1000 * 60 * 60);
+
+        // Retorna true si está dentro de las próximas 24 horas, pero aún en el futuro
+        return diffInHours <= 24 && diffInHours > 0;
+    };
+
 
     const [reschedulingErr, reschedulingAction, isReschedulingPending] = useActionState(
 
@@ -76,5 +91,6 @@ export const useRescheduling = () => {
         reschedulingErr,
         reschedulingAction,
         isReschedulingPending,
+        isWithin24Hours
     }
 }

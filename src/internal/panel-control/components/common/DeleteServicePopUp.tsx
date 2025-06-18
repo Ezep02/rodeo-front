@@ -17,7 +17,6 @@ const DeleteServicePopUp: React.FC<DeleteServicePopUpProps> = ({
   HandleDelete,
   Srv,
   HandleCancel,
-  deleteServiceTransitionErr,
   isDeleteTransitionServiceLoading
 }) => {
 

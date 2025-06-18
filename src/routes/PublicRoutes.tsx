@@ -55,7 +55,7 @@ const PublicRoutes = () => {
             <Suspense fallback={
               <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
                 <p className="loader"></p>
-                <span>sincronizando datos</span>
+                <span>Sincronizando datos</span>
               </div>
             }>
               <MainLayout>

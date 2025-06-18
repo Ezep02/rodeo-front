@@ -13,7 +13,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion } from "framer-motion"
 
-const Reservation:React.FC = () => {
+const Reservation: React.FC = () => {
 
   const {
     SelectDateHandler,
@@ -32,23 +32,39 @@ const Reservation:React.FC = () => {
   } = useUser()
 
   // Datos del formulario de reserva
-
   const [userData, setUserData] = useState<User | RegisterPaymentReq | undefined>(user ? user : undefined)
-
   const [isUserRegistered, setIsUserRegistered] = useState(false)
+
+  // Captura el total a pagar (Reserva 50% | Completo 100%)
+  const [paymentPercentaje, setPaymentPercentaje] = useState("")
+
+  const HandlePaymentPercentaje = (e: any) => {
+    setPaymentPercentaje(e.target.value)
+  }
 
   const OpenUnregistedForm = () => {
     setIsUserRegistered(!isUserRegistered)
   }
 
+  function CalculatePaymentPercentaje(percentaje: string, price: number): number {
+    const percent = parseFloat(percentaje);
+    if (isNaN(percent)) return price;
+    return (percent / 100) * price;
+  }
+
+
+
   const HandlePayment = async () => {
     if (selectedService && selectedShift && userData) {
-      const newOrder: ServiceOrderRequest = formatOrderPayment(selectedService, selectedShift, userData)
+      // Calcular el monto a pagar según el porcentaje seleccionado
+      const amountToPay = CalculatePaymentPercentaje(paymentPercentaje, selectedService.price);
+    
+      const newOrder: ServiceOrderRequest = formatOrderPayment(selectedService, selectedShift, userData, Number(paymentPercentaje), amountToPay)
 
       try {
         const response = await CreateNewOrder(newOrder);
         window.location.href = response.init_point;
-
+        
       } catch (error) {
         console.log("error creando link de pago", error)
       }
@@ -58,7 +74,6 @@ const Reservation:React.FC = () => {
       // abrir modal de solicitud de datos
       OpenUnregistedForm()
     }
-
   };
 
   // custom hook
@@ -72,6 +87,7 @@ const Reservation:React.FC = () => {
   });
 
   const visibleDays = days.slice(0, visibleCount);
+
 
 
   return (
@@ -158,11 +174,28 @@ const Reservation:React.FC = () => {
                   <span className="text-gray-500">Duración:</span>
                   <span>{selectedService?.service_duration}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Total pagar:</span>
+
+                  <select value={paymentPercentaje} onChange={HandlePaymentPercentaje} required={true}>
+                    <option value="100">Completo 100%</option>
+                    <option value="50">Reseña 50%</option>
+                  </select>
+                </div>
+
                 <div className="pt-3 border-t">
                   <div className="flex justify-between font-bold">
                     <span>Total:</span>
-                    <span className="text-green-400">${selectedService?.price}</span>
+                    <span className="text-green-400">${paymentPercentaje !== "" ? CalculatePaymentPercentaje(paymentPercentaje, selectedService!.price) : selectedService?.price}</span>
                   </div>
+                  {
+                    paymentPercentaje === "50" && (
+                      <div className="flex justify-between font-bold">
+                        <span>Debes:</span>
+                        <span className="text-red-400">${CalculatePaymentPercentaje(paymentPercentaje, selectedService!.price)}</span>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
               <Button

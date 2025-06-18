@@ -169,7 +169,6 @@ const Appointments: React.FC = () => {
                       ))
                     }
                   </>
-
                 ) : (
                   <div className='p-2'>
                     <p className='text-zinc-50'>Al parecer tu historial de ordenes esta vacio</p>

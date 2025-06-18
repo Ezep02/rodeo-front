@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import useWebSocket from 'react-use-websocket';
 import { GetCustomerCoupons } from '../services/DashboardService';
 import { Coupon } from '../models/Coupons';

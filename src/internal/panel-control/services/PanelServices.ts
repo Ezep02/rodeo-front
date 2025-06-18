@@ -1,8 +1,10 @@
 import {
   AuthenticationInstance,
   InstagramInstance,
+  MultipartInstance,
 } from "../../../configs/AxiosConfigs";
 import { MonthlyHaircuts } from "../models/ChartModel";
+import { CloudinaryImage } from "../models/Cloudinary";
 import { PendingOrder } from "../models/OrderModel";
 import {
   Service,
@@ -77,11 +79,8 @@ export const UpdateServiceByID = async (data: Service, id: number) => {
   return response.data;
 };
 // Create service
-export const CreateService = async (data: ServiceRequest) => {
-  const response = await AuthenticationInstance.post<ServiceRequest>(
-    `${SERVICE_BASE_URL}/new`,
-    data
-  );
+export const CreateService = async (data: any) => {
+  const response = await MultipartInstance.post(`${SERVICE_BASE_URL}/new`, data);
   return response;
 };
 
@@ -113,4 +112,8 @@ export const CreateLongInstagramToken = async (shortLivedAccessToken: string) =>
   return longToken
 }
 
-
+// Cloudinary
+export const GetCloudImg = async () => {
+  const images = await AuthenticationInstance.get<CloudinaryImage[] | []>(`${SERVICE_BASE_URL}/cloudinary/images`)
+  return images.data
+}

@@ -43,6 +43,7 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
         selectedShift,
         reschedulingAction,
         isReschedulingPending,
+        isWithin24Hours
     } = useRescheduling()
 
 
@@ -52,6 +53,10 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
             reschedulingAction({ appointment, shift_to_replace })
         });
     };
+
+
+
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 overflow-hidden">
@@ -129,6 +134,17 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
                                         </div>
                                     </motion.div>
                                 )}
+                                
+                                {isWithin24Hours(appointment.schedule_day_date) && (
+                                    <div className="p-4 my-4 border-l-4  bg-rose-100 text-rose-800 rounded-md shadow-sm">
+                                        <div className="flex items-center">
+                                            <span>
+                                                Deberás abonar un cargo adicional por reprogramar con menos de 24 horas de anticipación.
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <Button
                                     className="w-full mt-4 bg-black hover:bg-gray-800 text-white"
                                     disabled={!selectedShift?.Available || !selectedShift}
@@ -148,8 +164,6 @@ const Reschedule: React.FC<RescheduleProps> = ({ appointment }) => {
                             </>
                         )
                     }
-
-
                 </Card>
             </motion.div>
         </div>

@@ -13,7 +13,7 @@ interface PieChartProps {
     Data: MonthlyPopularServices[]
 }
 
-export const PieChart:React.FC<PieChartProps> = ({Data}) => {
+export const PieChart: React.FC<PieChartProps> = ({ Data }) => {
     const chartRef = useRef<HTMLCanvasElement>(null)
     const chartInstance = useRef<Chart | null>(null)
 
@@ -42,7 +42,7 @@ export const PieChart:React.FC<PieChartProps> = ({Data}) => {
                         data,
                         backgroundColor: ["#f43f5e", "#3b82f6", "#f59e0b"],
                         borderColor: "#ffffff",
-                        borderWidth: 2,
+                        borderWidth: 1,
                     },
                 ],
             },
@@ -58,8 +58,11 @@ export const PieChart:React.FC<PieChartProps> = ({Data}) => {
                             font: {
                                 size: 11,
                             },
-                            color: "#64748b",
-                        },
+                            color: "#ffff",
+                            usePointStyle: true,
+                            pointStyle: 'circle', 
+                        }
+                        ,
                     },
                     tooltip: {
                         backgroundColor: "#1e293b",

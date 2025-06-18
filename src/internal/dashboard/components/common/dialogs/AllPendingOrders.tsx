@@ -13,7 +13,7 @@ type AllPendingOrdersProps = {
 const AllPendingOrders:React.FC<AllPendingOrdersProps> = ({customerPendingOrders}) => {
   return (
     <Dialog>
-      <DialogTrigger className="hover:text-rose-600 gap-1 text-sm hover:underline flex items-center">
+      <DialogTrigger className="hover:text-zinc-300 gap-1 py-4 text-sm text-zinc-50 hover:underline flex items-center">
         Ver historial completo{" "}<IoIosArrowForward />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

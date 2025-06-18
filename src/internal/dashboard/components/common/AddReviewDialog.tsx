@@ -65,7 +65,7 @@ const AddReviewDialog: React.FC<AddReviewDialogProps> = ({ previousOrder }) => {
         }
     }
 
-    const [reviewingErr, reviewingAction, isreviewingPending] = useActionState(
+    const [_, reviewingAction, isreviewingPending] = useActionState(
         async (_: void | null, data: FormValues) => {
             // Aquí iría tu lógica para enviar
             const { comment, rating } = data

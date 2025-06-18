@@ -1,9 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import {
-  Service,
-} from "../internal/panel-control/models/ServicesModels";
-
-import {Shift} from "../internal/dashboard/models/DashboardModels";
+import { Shift } from "../internal/dashboard/models/DashboardModels";
 import { CustomerPendingOrder } from "@/internal/dashboard/models/OrderModels";
 import { Coupon } from "@/internal/dashboard/models/Coupons";
 import { CustomerServices } from "@/internal/dashboard/models/ShopServices";
@@ -14,26 +10,26 @@ interface DashboardContextProps {
   selectedService: CustomerServices | undefined;
   setSelectedService: React.Dispatch<React.SetStateAction<CustomerServices | undefined>>;
   serviceOffset: number;
-  setServiceOffset:React.Dispatch<React.SetStateAction<number>>;
+  setServiceOffset: React.Dispatch<React.SetStateAction<number>>;
 
   barberSchedules: Shift[];
   setBarberSchedules: React.Dispatch<React.SetStateAction<Shift[]>>;
- 
+
   filteredSchedulesByDay: Shift[];
   setFilteredSchedulesByDay: React.Dispatch<React.SetStateAction<Shift[]>>;
   SelectDateHandler: (day: Date) => void;
 
 
   schedulerOffset: number;
-  setSchedulerOffset:React.Dispatch<React.SetStateAction<number>>;
+  setSchedulerOffset: React.Dispatch<React.SetStateAction<number>>;
 
   // ORDENES PENDIENTES
   customerPendingOrders: CustomerPendingOrder[] | []
   setCustomerPendingOrders: React.Dispatch<React.SetStateAction<CustomerPendingOrder[] | []>>
   // REPROGRAMADOR DE CITAS
-  handleReschedule: ()=> void;
+  handleReschedule: () => void;
   isReschedulingOpen: boolean;
-  setIsReschedulingOpen:React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReschedulingOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // RESERVA
   selectedShift: Shift | undefined
   setSelectedShift: React.Dispatch<React.SetStateAction<Shift | undefined>>
@@ -42,7 +38,7 @@ interface DashboardContextProps {
   setAvailableCoupons: React.Dispatch<React.SetStateAction<Coupon[] | []>>
 }
 
-export const DashboardContext = React.createContext< DashboardContextProps | undefined >(undefined);
+export const DashboardContext = React.createContext<DashboardContextProps | undefined>(undefined);
 
 interface ChildrenProviderProp {
   children: ReactNode;
@@ -63,7 +59,7 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
 
   // Reservation 
 
-    // cada vez que el dia cambia, se realiza un filtro en busqueda de shifts cargados previamente
+  // cada vez que el dia cambia, se realiza un filtro en busqueda de shifts cargados previamente
   const [schedulerOffset, setSchedulerOffset] = useState<number>(0);
 
   const [filteredSchedulesByDay, setFilteredSchedulesByDay] = useState<Shift[]>([]);
@@ -72,25 +68,25 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
 
   const SelectDateHandler = (day: Date) => {
     const fechaObjeto = new Date(day);
-   
+
     // Filtrar los turnos acorde al dia seleccionado
     let days = barberSchedules.filter((sch) => {
       // Normalizar fechas a formato fecha
       const fechaSchedule = new Date(sch.Schedule_day_date).toLocaleDateString("es-AR", {
-        weekday: "short", 
+        weekday: "short",
         month: "short",
         day: "numeric"
       });
       const fechaSeleccionada = fechaObjeto.toLocaleDateString("es-AR", {
-        weekday: "short", 
+        weekday: "short",
         month: "short",
         day: "numeric"
       });
-  
+
       // Comparar fechas
       return fechaSchedule === fechaSeleccionada;
     });
-   
+
     setFilteredSchedulesByDay(days)
   };
 

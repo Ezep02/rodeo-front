@@ -47,12 +47,6 @@ export const GetCustomerPreviousOrders = async (offset:number) => {
 }
 
 
-// Obtener los servicios populares
-export const GetPopularServices = async () => {
-    const response = await AuthenticationInstance.get<PopularServices[]>(`${SERVICE_URL}/popular-services`)
-
-    return response.data
-}
 
 // Reprogramar turno del cliente
 export const ReschedulingCustomerOrder = async (updated_appointment: RescheduleRequest) => {

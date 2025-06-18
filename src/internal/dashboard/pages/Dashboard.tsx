@@ -2,8 +2,6 @@ import React from "react";
 import ReviewSectionLayout from "../components/layout/ReviewSectionLayout";
 import useReviews from "../hooks/useReviews";
 
-import PopularServicesSection from "../components/common/sections/PopularServicesSection";
-
 {/* SECTIONS */ }
 import PromotionalBannerSection from "../components/common/sections/PromotionalBannerSection";
 import FaqSection from "../components/common/sections/FaqSection";
@@ -32,10 +30,9 @@ const Dashboard: React.FC = () => {
       {/* Banner promocional */}
       <PromotionalBannerSection />
 
-      {/* POPULAR SERVICES */}
-      <PopularServicesSection />
-
+    
       {/* Listado de servicios */}
+      
       <ServicesListSection/>
       {/* SeleccionarServicio={seleccionarServicio} */}
 
@@ -43,7 +40,6 @@ const Dashboard: React.FC = () => {
       <HowArriveSection />
 
       {/* Testimonios */}
-
       <ReviewSectionLayout>
         {/* Mosaico de reseñas */}
         <ReviewSection
@@ -54,7 +50,6 @@ const Dashboard: React.FC = () => {
       {/* Preguntas frecuentes */}
       <FaqSection />
 
-      
       {/* FOOTER */}
       <FooterSection/>
 

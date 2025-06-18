@@ -36,6 +36,8 @@ export interface ServiceOrderRequest {
     Schedule_start_time: string
     Schedule_day_date: Date;
     Shift_id: number
+    Total_service_price: number
+    Payment_percentaje: number
 }
 
 export interface CustomerPendingOrder {
