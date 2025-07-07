@@ -1,87 +1,80 @@
-import React, { useContext } from "react";
-import { PanelControlContext } from "@/context/PanelControlContext";
-import { useSchedules } from "../hooks/useSchedules";
-import Schedules from "../components/common/Schedules";
+import React, { Suspense } from "react";
+
+import SlotDialog from "../components/dialogs/SlotsDialog";
 import DashboardHeader from "../components/headers/DashboardHeader";
-import RecentOrderSection from "../components/sections/RecentOrderSection";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MonthlyPerformanceSection from "../components/sections/MonthlyPerformanceSection";
-import ServiceManagementSection from "../components/sections/ServiceManagmentSection";
-import useInstagram from "../hooks/useInstagram";
-import GalerySection from "../components/sections/GalerySection";
+import { useOrder } from "../hooks/useOrder";
+import { Loader2 } from "lucide-react";
+
+
+
+const RecentOrderSection = React.lazy(() => import("../components/sections/RecentOrderSection"))
+const ServiceManagementSection = React.lazy(() => import("../components/sections/ServiceManagmentSection"))
+const MonthlyPerformanceSection = React.lazy(() => import("../components/sections/MonthlyPerformanceSection"))
+const GalerySection = React.lazy(()=> import("../components/sections/GalerySection"))
 
 const PanelControlPage: React.FC = () => {
 
   const {
-    HandleSaveSchedulesChanges,
-    HandleOpenScheduler,
-    date,
-    setDate
-  } = useSchedules()
-
-
-  const {
-    isSchedulerOpen
-  } = useContext(PanelControlContext)!
-
+    nextAppointment
+  } = useOrder()
 
   return (
     <>
       <div className="pt-10 pb-16 ">
         <div className="container ">
-
           {/* Dashboard Header */}
-          <DashboardHeader
-            HandleOpenScheduler={HandleOpenScheduler}
-          />
+          <DashboardHeader>
+            <SlotDialog />
+          </DashboardHeader>
 
           {/* Main Dashboard Content */}
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
+            
             {/* Recent Orders */}
-            <RecentOrderSection />
+            <Suspense
+              fallback={
+                <div className="bg-gray-900/50 border-gray-800 min-h-[60vh] lg:col-span-2 flex justify-center items-center">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                </div>
+              }
+            >
+              <RecentOrderSection
+                NextAppointment={nextAppointment}
+              />
+            </Suspense>
 
-            {/* Tabs for Performance and Services */}
-            <Tabs defaultValue="performance" className="space-y-4 ">
-              <TabsList className="bg-gray-900/50 border border-gray-800">
-                <TabsTrigger
-                  value="performance"
-                  className="text-gray-300 data-[state=active]:bg-rose-500 data-[state=active]:text-white"
-                >
-                  Rendimiento
-                </TabsTrigger>
-                <TabsTrigger
-                  value="services"
-                  className="text-gray-300 data-[state=active]:bg-rose-500 data-[state=active]:text-white"
-                >
-                  Servicios
-                </TabsTrigger>
-              </TabsList>
+            {/* Grafico de rendimientos */}
+            <Suspense
+              fallback={
+                <div className="bg-gray-900/50 border-gray-800 min-[30vh] flex justify-center items-center p-5">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                </div>
+              }
+            >
+              <MonthlyPerformanceSection />
+            </Suspense>
 
-              {/* Grafico de rendimientos */}
-              <TabsContent value="performance">
-                <MonthlyPerformanceSection />
-              </TabsContent>
-
-              <TabsContent value="services">
-                <ServiceManagementSection />
-              </TabsContent>
-            </Tabs>
+            <Suspense
+              fallback={
+                <div className="bg-gray-900/50 border-gray-800 min-[30vh] flex justify-center items-center p-5">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                </div>
+              }
+            >
+              <ServiceManagementSection />
+            </Suspense>
 
             {/* Galeria */}
-            <GalerySection />
+            <Suspense
+              fallback={
+                <div className="bg-gray-900/50 border-gray-800 min-[30vh] flex justify-center items-center p-5">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                </div>
+              }
+            >
+              <GalerySection />
+            </Suspense>
           </div>
-
-          {
-            isSchedulerOpen && (
-              <Schedules
-                HandleOpenScheduler={HandleOpenScheduler}
-                HandleSaveSchedulesChanges={HandleSaveSchedulesChanges}
-                date={date ? date : new Date()}
-                setDate={setDate}
-              />
-            )
-          }
-
         </div>
       </div>
     </>

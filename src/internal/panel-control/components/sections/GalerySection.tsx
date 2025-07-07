@@ -1,9 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Camera, Plus } from 'lucide-react'
+import { Camera } from 'lucide-react'
 import React from 'react'
 import CloudinaryDialog from '../dialogs/CloudinaryDialog'
-import AddGalleryPostDialog from '../dialogs/AddGalleryPostDialog'
 
 const GalerySection: React.FC = () => {
     return (
@@ -25,8 +23,7 @@ const GalerySection: React.FC = () => {
                     <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         {/* Formulario para subir imagenes al cloud */}
                         <CloudinaryDialog />
-
-                        <AddGalleryPostDialog/>
+                      
                     </div>
                 </div>
 

@@ -1,30 +1,42 @@
-
-import React, { startTransition, useActionState, useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
-import { Separator } from '@radix-ui/react-dropdown-menu';
+import React, { startTransition, useActionState, useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { GetOrderByToken } from '../services/paymentServices';
+import { Download, ArrowLeft } from 'lucide-react';
+import { GetOrderByToken, PaymentSlot } from '../services/paymentServices';
 import { useParams } from 'react-router-dom';
-import { PaymentResponse } from '../models/paymentModels';
+import { GiBullHorns } from 'react-icons/gi';
 
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 
 const Success: React.FC = () => {
-
-  const [successfullOrder, setSuccessfullOrder] = useState<PaymentResponse | undefined>();
-
   const { token } = useParams<{ token: string }>();
+  const [paymentData, setPaymentData] = useState<PaymentSlot | null>(null);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
-  const [recoveringOrderErr, recoveringOrderAction, isRecoveringOrderPending] = useActionState(
+  const [isErr, recoveringOrderAction, isPending] = useActionState(
     async (_: string | null, token: string) => {
       try {
-
-        const result: PaymentResponse = await GetOrderByToken(token.slice(6));
-        setSuccessfullOrder(result);
-
+        const result = await GetOrderByToken(token.slice(6));
+        setPaymentData(result);
         return null;
       } catch (error: any) {
-        return error?.response?.data || "Error de autenticación";
+        console.error(error);
+        return error?.response?.data || 'Error de autenticación';
       }
     },
     null
@@ -38,126 +50,120 @@ const Success: React.FC = () => {
     }
   }, [token]);
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      {
-        isRecoveringOrderPending ? (
-          <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-            <p className="loader"></p>
-            <span>Recuperando datos</span>
-          </div>
-        ) : (
-          <div className="w-full max-w-md">
-            {
-              recoveringOrderErr ? (
-                <div className='text-center flex flex-col gap-4'>
-                  <h3>Sesion exipirada</h3>
-                  <Button
-                    className="w-full bg-black hover:bg-gray-800 text-white"
-                    onClick={() => window.window.location.href = '/'}
-                  >
-                    Voler al inicio
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
-                      <CheckCircle className="h-10 w-10 text-green-600" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-gray-900">Cita Confirmada!</h1>
-                    <p className="text-gray-600 mt-2">
-                      Su cita ha sido reservada con éxito.
-                    </p>
-                  </div>
-                  <Card className="mb-6">
-                    <div className="p-6">
-                      <h2 className="text-lg font-semibold text-gray-900 mb-4">Transaction Details</h2>
+  useEffect(() => {
+    if (!paymentData) return;
 
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Transaction ID</span>
-                          <span className="font-medium">{successfullOrder?.ID}</span>
-                        </div>
+    const calculateTimeLeft = () => {
+      const targetDate = new Date(paymentData.date);
+      const [hours, minutes] = paymentData.time.split(':').map(Number);
+      targetDate.setHours(hours, minutes, 0, 0);
 
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Fecha de Aprobacion</span>
-                          <span className="font-medium">
-                            {new Date(successfullOrder?.Created_at ? successfullOrder?.Created_at : "").toLocaleDateString("es-AR", {
-                              day: "2-digit", month: "long", year: "numeric"
-                            })}
-                          </span>
-                        </div>
-                        {/* new Date(successfullOrder?.schedule_day_date).toLocaleDateString() */}
-                        <Separator className="my-2" />
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
 
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Servicio</span>
-                          <span className="font-medium">{successfullOrder?.title}</span>
-                        </div>
-
-
-
-                        <Separator className="my-2" />
-
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Cita</span>
-                          <span className="font-medium"> {new Date(successfullOrder?.schedule_day_date ? successfullOrder?.schedule_day_date : "").toLocaleDateString("es-AR", {
-                            day: "2-digit", month: "long", year: "numeric"
-                          })}, {successfullOrder?.schedule_start_time}</span>
-                        </div>
-
-                        <Separator className="my-2 border-b" />
-
-                        <div className="flex justify-between text-lg font-semibold">
-                          <span>Total</span>
-                          <span className='text-green-400'>${successfullOrder?.price.toFixed(2)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                    <h3 className="font-medium text-amber-800 mb-2">Importante</h3>
-                    <p className="text-amber-700 text-sm">
-                      Si necesita reprogramar el horario, hágalo con al menos 24 horas de anticipación.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Button
-                      className="w-full bg-black hover:bg-gray-800 text-white"
-                      onClick={() => window.print()}
-                    >
-                      Descargar comprobante
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => window.window.location.href = '/'}
-                    >
-                      Voler al inicio
-                    </Button>
-                  </div>
-
-                  <div className="text-center mt-8">
-                    <p className="text-sm text-gray-500">
-                      Gracias por elegir nuestra barberia!
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Tenes una consulta? Comunicate con nostros en <span className="font-medium">support@classiccuts.com</span>
-                    </p>
-                  </div>
-                </>
-              )
-            }
-          </div>
-        )
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeLeft({ days, hours, minutes, seconds });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
-    </div>
+    };
 
-  )
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
+  }, [paymentData]);
+
+  if (isPending) {
+    return (
+      <div className="h-screen flex items-center justify-center flex-col gap-2">
+        <div className="loader mb-2" />
+        <span className="text-sm text-muted-foreground">Recuperando datos...</span>
+      </div>
+    );
+  }
+
+  if (isErr || !paymentData) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+        <h2 className="text-xl font-semibold mb-4">Sesión expirada o datos no disponibles</h2>
+        <Button
+          className="bg-black text-white hover:bg-gray-800"
+          onClick={() => (window.location.href = '/')}
+        >
+          Volver al inicio
+        </Button>
+      </div>
+    );
+  }
+
+  const formattedDate = new Date(paymentData.date).toLocaleDateString('es-AR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md mx-auto bg-white shadow-xl rounded-2xl">
+        <CardHeader className="text-center pb-4">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 flex items-center justify-center">
+              <GiBullHorns size={30} className='text-rose-500'/>
+            </div>
+          </div>
+          <CardTitle className="text-xl font-bold text-gray-900">¡Cita Confirmada!</CardTitle>
+          <p className="text-gray-600 text-sm mt-2">Su cita ha sido reservada con éxito.</p>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="">
+            <h3 className="text-base font-semibold text-gray-800 mb-2">Tiempo restante</h3>
+            <div className="bg-gray-900 rounded-xl p-6 text-white">
+              <div className="grid grid-cols-4 gap-4 text-center">
+                {(['days', 'hours', 'minutes', 'seconds'] as const).map((unit) => (
+                  <div key={unit}>
+                    <div className="text-2xl font-bold">{String(timeLeft[unit]).padStart(2, '0')}</div>
+                    <div className="text-xs text-gray-300 capitalize">{unit}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Fecha de cita</span>
+              <span className="font-medium">{formattedDate}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Hora</span>
+              <span className="font-medium">{paymentData.time}</span>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Button className="w-full bg-black hover:bg-gray-800 text-white" onClick={() => window.print()}>
+              <Download className="w-4 h-4 mr-2" />
+              Descargar comprobante
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => (window.location.href = '/')}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver al inicio
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default Success;

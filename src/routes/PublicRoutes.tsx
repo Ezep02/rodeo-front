@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import PrivateRoutes from "./PrivateRoutes";
 import AuthRoutes from "./AuthRoutes";
@@ -19,9 +19,7 @@ const PublicRoutes = () => {
         path="/*"
         element={
           <DashboardContextProvider>
-            <MainLayout>
-              <ClientRoutes />
-            </MainLayout>
+            <ClientRoutes />
           </DashboardContextProvider>
         }
       />
@@ -38,7 +36,7 @@ const PublicRoutes = () => {
         element={
           <PaymentLayout>
             <Suspense fallback={
-              <div className="h-full w-full flex justify-center items-center">
+              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
                 <p className="loader"></p>
               </div>
             }>
@@ -55,7 +53,6 @@ const PublicRoutes = () => {
             <Suspense fallback={
               <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
                 <p className="loader"></p>
-                <span>Sincronizando datos</span>
               </div>
             }>
               <MainLayout>
@@ -63,7 +60,10 @@ const PublicRoutes = () => {
               </MainLayout>
             </Suspense>
           ) : (
-            <Outlet />
+            <div className="h-screen w-full flex justify-center items-center flex-col gap-1 bg-black">
+              <p className="loader"></p>
+              <a href="/" className="">Volver</a>
+            </div>
           )
         }
       />

@@ -5,17 +5,35 @@ import { AuthContext } from "@/context/AuthContext";
 
 import Dashboard from "@/internal/dashboard/pages/Dashboard";
 
+import MainLayout from "@/layouts/MainLayout";
+import AppointmentLayout from "@/layouts/AppointmentLayout";
+
 
 const Profile = lazy(() => import("@/internal/dashboard/pages/Profile"))
-const Appointments = lazy(() => import("@/internal/dashboard/pages/Appointments"))
-
+const Appointments = lazy(() => import("@/internal/Appointment/page/Appointments"))
+const ReservationPage = lazy(() => import("@/internal/reservation/pages/reservation"))
 
 const ClientRoutes: React.FC = () => {
     const { user } = useContext(AuthContext)!;
 
     return (
         <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={
+                <MainLayout>
+                    <Dashboard />
+                </MainLayout>
+            } />
+
+            <Route path="/reservation" element={
+                <Suspense fallback={
+                    <div className="h-screen w-full flex justify-center items-center flex-col gap-1 bg-black">
+                        <p className="loader"></p>
+                    </div>
+                }>
+                    <ReservationPage />
+                </Suspense>
+
+            } />
 
             {user?.ID ? (
                 <>
@@ -35,7 +53,9 @@ const ClientRoutes: React.FC = () => {
                                 <p className="loader"></p>
                             </div>
                         }>
-                            <Appointments />
+                            <AppointmentLayout>
+                                <Appointments />
+                            </AppointmentLayout>
                         </Suspense>
                     } />
                 </>

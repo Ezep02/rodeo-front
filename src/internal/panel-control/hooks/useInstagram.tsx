@@ -15,28 +15,27 @@ import { useEffect } from "react"
 
 const useInstagram = () => {
 
-    
-    useEffect(()=> {
-        let fields = ""
-        let access_token = "IGQWRPRW1oUWZAUQV9memR2dXdPOE5SVlk3ZAEY1S1dVLWFMR3VlY1hYNU5ZAblFsSDQ0SUk0MUxRbWNscFVYcGNWQzNwamNVNEV4ekcxN0w3ZA1E3UXlNWGhHUVdVd3FLSzhyaW83T3RlZAzVpcGVpcFV5TjQxeHhqVHcZD" 
+
+    useEffect(() => {
+        let access_token = "IGQWRPRW1oUWZAUQV9memR2dXdPOE5SVlk3ZAEY1S1dVLWFMR3VlY1hYNU5ZAblFsSDQ0SUk0MUxRbWNscFVYcGNWQzNwamNVNEV4ekcxN0w3ZA1E3UXlNWGhHUVdVd3FLSzhyaW83T3RlZAzVpcGVpcFV5TjQxeHhqVHcZD"
         // search images
         const FetchImages = async () => {
-            
+
             try {
                 const res = await InstagramInstance.get(`/me/media?fields=id,caption,media_type,media_url,permalink,timestamp&access_token=${access_token}`)
                 console.log(res)
-                
+
             } catch (error) {
                 console.log(error)
             }
-        }   
+        }
         FetchImages()
     }, [])
 
 
     return {
-        
-    }   
+
+    }
 }
 
 export default useInstagram

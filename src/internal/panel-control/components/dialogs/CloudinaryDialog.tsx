@@ -48,7 +48,7 @@ const CloudinaryDialog: React.FC = () => {
 
     const UPLOAD_PRESET = "public_upload"; // preset UNSIGNED creado en Cloudinary
 
-    const [cloudinaryUploadErr, cloudinaryUploadAction, iscloudinaryUploadPending] = useActionState(
+    const [_, cloudinaryUploadAction, iscloudinaryUploadPending] = useActionState(
         async (_: string | null, img: File[] | []) => {
             try {
                 console.log(url)

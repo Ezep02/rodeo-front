@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Upload, Camera, ImageIcon, X, Loader2, Cloud, Plus } from 'lucide-react'
+import { Upload, Camera, ImageIcon, X, Loader2, Plus } from 'lucide-react'
 import { Description } from '@radix-ui/react-dialog'
 
 
@@ -49,7 +49,7 @@ const AddGalleryPostDialog: React.FC = () => {
 
     const UPLOAD_PRESET = "public_upload"; // preset UNSIGNED creado en Cloudinary
 
-    const [cloudinaryUploadErr, cloudinaryUploadAction, iscloudinaryUploadPending] = useActionState(
+    const [_, cloudinaryUploadAction, iscloudinaryUploadPending] = useActionState(
         async (_: string | null, img: File[] | []) => {
             try {
                 console.log(url)

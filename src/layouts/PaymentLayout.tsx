@@ -8,7 +8,7 @@ const PaymentLayout: React.FC<PaymentLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="h-screen bg-zinc-100 overflow-hidden"
+      className="h-screen bg-zinc-100"
     >
       <main className="w-full">
         {children}

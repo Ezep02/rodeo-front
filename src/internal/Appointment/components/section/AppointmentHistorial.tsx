@@ -1,0 +1,58 @@
+import React from 'react'
+import { useAppointment } from '../../hooks/useAppointment'
+import { Calendar } from 'lucide-react'
+import AppointmentCard from '../card/AppointmentCard'
+import AppointmentsHeader from '@/internal/dashboard/components/headers/AppointmentsHeader'
+
+const AppointmentHistorial: React.FC = () => {
+
+    const {
+        customerAppointment
+    } = useAppointment()
+
+    return (
+        <section
+            className='bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden'
+        >
+            <div className="p-8">
+                <AppointmentsHeader />
+
+                <div className="space-y-4">
+                    {
+                        Array.isArray(customerAppointment) && customerAppointment.length > 0 ? (
+                            <>
+                                {
+                                    customerAppointment.map((appt, indx) => (
+                                        <div key={appt.id}>
+                                            <AppointmentCard
+                                                appointment={appt}
+                                                key={indx}
+                                            />
+                                            {indx < customerAppointment.length - 1 && <div className="border-b border-gray-100 mx-2" />}
+                                        </div>
+                                    ))
+                                }
+                            </>
+                        ) : (
+                            <div className='p-2'>
+                                <div className="text-center py-8 text-slate-500">
+                                    {/* Mensaje cuando no hay más citas pendientes */}
+                                    <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-100" />
+                                    <p>No tienes citas pendientes</p>
+                                    <a
+                                        href="/reservation"
+                                        className="mt-2 inline-block text-sm font-semibold text-rose-500 hover:text-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
+                                    >
+                                        Programar nueva cita
+                                    </a>
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default AppointmentHistorial

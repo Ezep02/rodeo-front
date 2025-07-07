@@ -1,4 +1,4 @@
-import { CurrentYearMonthlyRevenue, FrequentCustomer, MonthlyAppointmens, MonthlyNewCustomers, MonthlyPopularServices, MonthlyRevenue } from "@/internal/private/models/analyticsModels";
+import { CurrentYearMonthlyRevenue, FrequentCustomer, MonthlyAppointmens, MonthlyNewCustomers, MonthlyPopularServices, MonthlyRevenue } from "@/internal/analytics/models/analyticsModels";
 import React, { useState } from "react";
 
 type AdminContextProps = {

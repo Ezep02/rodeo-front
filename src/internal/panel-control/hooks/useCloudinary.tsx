@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { GetCloudImg } from "../services/PanelServices";
+
 import { CloudinaryImage } from "../models/Cloudinary";
+import { GetCloudImg } from "../services/cloudinary";
 
 
 const useCloudinary = () => {

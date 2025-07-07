@@ -1,4 +1,4 @@
-import React, { startTransition, useActionState, useState } from "react"
+import React, { startTransition, useActionState, useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -9,43 +9,47 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Scissors, Upload, ImageIcon, X, AlertCircle, Check } from "lucide-react"
-import { Service, ServiceRequest } from "../../models/ServicesModels"
-import { CreateService } from "../../services/PanelServices"
+import { Scissors, ImageIcon, AlertCircle, Check, Plus } from "lucide-react"
+import { Product } from "../../models/ServicesModels"
+
 import useCloudinary from "../../hooks/useCloudinary"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { CloudinaryImage } from "../../models/Cloudinary"
+import { PanelControlContext } from "@/context/PanelControlContext"
+import { CreateProduct } from "../../services/product_service"
 
-type ServiceFormModalProps = {
-    open: boolean
-    onOpenChange: (open: boolean) => void
-    initialData?: Service
-    mode: "create" | "edit"
-}
-
-export function ServiceFormModal({ open, onOpenChange, initialData, mode }: ServiceFormModalProps) {
+const ServiceFormModal: React.FC = () => {
     const {
         register,
         handleSubmit,
-        reset,
         setValue,
         watch,
         formState: { errors },
-    } = useForm<ServiceRequest>({
+    } = useForm<Product>({
         defaultValues: {
-            title: "",
+            name: "",
             description: "",
-            service_duration: 30,
             price: 0,
             category: "cortes",
             preview_url: ""
         },
     })
+
+    // open
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const HandleIsOpen = () => {
+        setIsOpen((prev) => !prev)
+    }
+
+    const {
+        setProductList
+    } = useContext(PanelControlContext)!
 
     const selectedCategory = watch("category")
 
@@ -63,34 +67,53 @@ export function ServiceFormModal({ open, onOpenChange, initialData, mode }: Serv
         setImgSelected(image)
     }
 
-    const [formErr, startFormAction, isFormPending] = useActionState(
-        async (_: string | null, data: ServiceRequest) => {
+    const [_, startFormAction, isFormPending] = useActionState(
+        async (_: string | null, data: Product) => {
             try {
                 const updatedData = {
                     ...data,
-                    preview_url: selectedImg?.url
+                    preview_url: selectedImg?.url ? selectedImg.url : ""
                 }
 
-                const res = await CreateService(updatedData)
-                console.log(res)
+                const res = await CreateProduct(updatedData)
+
+                // si todo fue bien, 
+                if (res.product) {
+                    setProductList((prev) => {
+                        return [...prev, res.product]; // Agrega el nuevo producto al final de la lista
+                    });
+                    HandleIsOpen()
+                }
+
                 return null
             } catch (error: any) {
                 console.warn(error)
-                return error?.response?.data || "Error de autenticación"
+                return error?.response?.data?.error || "Ocurrio un error creando el producto"
             }
         },
         null
     )
 
-    const handleStartTransition = (data: ServiceRequest) => {
+    const handleStartTransition = (data: Product) => {
         startTransition(() => {
             startFormAction(data)
         })
     }
 
+
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={HandleIsOpen}>
+            <DialogTrigger asChild>
+                <button>
+                    <Plus />
+                    Agregar
+                </button>
+
+            </DialogTrigger>
+
             <DialogContent className="lg:max-w-7xl max-w-full lg:max-h-[90vh] max-h-screen bg-gray-900 border-gray-800 text-white overflow-y-auto">
+
 
                 <DialogHeader className="space-y-3">
                     <div className="flex items-center gap-3">
@@ -99,15 +122,14 @@ export function ServiceFormModal({ open, onOpenChange, initialData, mode }: Serv
                         </div>
                         <div className="text-start">
                             <DialogTitle>
-                                {mode === "create" ? "Agregar nuevo servicio" : "Editar servicio"}
+                                Agregar nuevo servicio
                             </DialogTitle>
                             <DialogDescription>
-                                {mode === "create"
-                                    ? "Completa los detalles para agregar un nuevo servicio."
-                                    : "Actualiza los detalles del servicio."}
+                                Completa los detalles para agregar un nuevo servicio
                             </DialogDescription>
                         </div>
                     </div>
+
                 </DialogHeader>
 
                 <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
@@ -197,14 +219,14 @@ export function ServiceFormModal({ open, onOpenChange, initialData, mode }: Serv
                                     className="flex flex-col space-y-6 col-span-full lg:col-span-1"
                                 >
                                     <div className="space-y-2">
-                                        <Label htmlFor="title">Nombre *</Label>
+                                        <Label htmlFor="name">Nombre *</Label>
                                         <Input
-                                            id="title"
-                                            {...register("title", { required: true })}
+                                            id="name"
+                                            {...register("name", { required: true })}
                                             placeholder="Nombre del servicio"
                                             className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
                                         />
-                                        {errors.title && <p className="text-red-500 text-sm">Este campo es obligatorio</p>}
+                                        {errors.name && <p className="text-red-500 text-sm">Este campo es obligatorio</p>}
                                     </div>
 
                                     <div className="space-y-2">
@@ -246,18 +268,6 @@ export function ServiceFormModal({ open, onOpenChange, initialData, mode }: Serv
                                     </div>
 
                                     <div className="grid sm:grid-cols-2 gap-6">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="service_duration">Duración (min) *</Label>
-                                            <Input
-                                                id="service_duration"
-                                                type="number"
-                                                {...register("service_duration", { required: true, valueAsNumber: true })}
-                                                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
-                                            />
-                                            {errors.service_duration && (
-                                                <p className="text-red-500 text-sm">Campo requerido</p>
-                                            )}
-                                        </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="price">Precio *</Label>
@@ -277,18 +287,16 @@ export function ServiceFormModal({ open, onOpenChange, initialData, mode }: Serv
                                             type="submit"
                                             className="w-full bg-rose-500 hover:bg-rose-600 text-white"
                                         >
-                                            {mode === "create" ? "Agregar Servicio" : "Guardar Cambios"}
+                                            Agregar Servicio
                                         </Button>
                                     </DialogFooter>
                                 </form>
                             </>
-
                         )
                     }
                 </div>
-
-
             </DialogContent>
         </Dialog>
     )
 }
+export default ServiceFormModal

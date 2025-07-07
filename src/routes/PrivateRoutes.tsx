@@ -7,7 +7,7 @@ import { PanelControlContextProvider } from "@/context/PanelControlContext";
 
 
 const PanelControlPage = React.lazy(() => import("@/internal/panel-control/pages/PanelControlPage"));
-const PrivatePage = React.lazy(() => import("@/internal/private/pages/PrivatePage"));
+const PrivatePage = React.lazy(() => import("@/internal/analytics/pages/PrivatePage"));
 
 
 const PrivateRoutes: React.FC = () => {
@@ -16,18 +16,23 @@ const PrivateRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/barber" element={
-        <PanelControlContextProvider>
-          <PanelControlPage />
-        </PanelControlContextProvider>
+        <Suspense fallback={
+          <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+            <p className="loader"></p>
+          </div>
+        }>
+          <PanelControlContextProvider>
+            <PanelControlPage />
+          </PanelControlContextProvider>
+        </Suspense>
       } />
-      
+
       {user?.is_admin && (
         <>
           <Route path="/admin" element={
             <Suspense fallback={
               <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
                 <p className="loader"></p>
-                <span>sincronizando datos</span>
               </div>
             }>
               <AdminContextProvider>

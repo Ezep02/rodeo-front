@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 
 const AuthLoginPage = () => {
-    const { setUser, setIsUserAuthenticated} = useContext(AuthContext)!;
+    const { setUser, setIsUserAuthenticated } = useContext(AuthContext)!;
 
     const [loginErr, loginAction, isLoginPending] = useActionState(
         async (_: string | null, data: LoginFormData) => {
@@ -32,11 +32,15 @@ const AuthLoginPage = () => {
         null
     );
 
+    const GoogleAuth = () => {
+        window.location.href = `${import.meta.env.VITE_AUTH_BACKEND_URL}/auth/google`;
+    }
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormData>({ resolver: zodResolver(LoginUserSchema)});
+    } = useForm<LoginFormData>({ resolver: zodResolver(LoginUserSchema) });
 
     // Manejar login
     const handleLogin = (data: LoginFormData) => {
@@ -120,7 +124,7 @@ const AuthLoginPage = () => {
                                         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                                             <span className="relative z-10 px-2 text-muted-foreground text-zinc-600">O continua con</span>
                                         </div>
-                                        <Button variant="outline" className="w-full">
+                                        <Button variant="outline" className="w-full" type="button" onClick={GoogleAuth}>
                                             <i>
                                                 <FaGoogle />
                                             </i>
@@ -139,7 +143,7 @@ const AuthLoginPage = () => {
                             )
                         }
 
-                        
+
                     </div>
                 </div >
             </div >

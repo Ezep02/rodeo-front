@@ -1,60 +1,78 @@
-import React from "react";
-import ReviewSectionLayout from "../components/layout/ReviewSectionLayout";
-import useReviews from "../hooks/useReviews";
+import React, { Suspense } from "react";
 
 {/* SECTIONS */ }
-import PromotionalBannerSection from "../components/common/sections/PromotionalBannerSection";
-import FaqSection from "../components/common/sections/FaqSection";
-import HowArriveSection from "../components/common/sections/HowArriveSection";
-import ReviewSection from "../components/common/sections/ReviewSection";
-import HeroSection from "../components/common/sections/HeroSection";
-import StatsSection from "../components/common/sections/StatsSection";
-import ServicesListSection from "../components/common/sections/ServicesListSection";
-import FooterSection from "../components/common/sections/FooterSection";
+import HeroSection from "../components/sections/HeroSection";
+import HeroImageSection from "../components/sections/HeroImageSection";
+// import StatsSection from "../components/sections/StatsSection";
+
+import PromotionSection from "../components/sections/PromotionSection";
+
+import FaqSection from "../components/sections/FaqSection";
+import FooterSection from "../components/sections/FooterSection";
+import { Loader2 } from "lucide-react";
+
+
+const StatsSection = React.lazy(() => import("../components/sections/StatsSection"))
+const PopularServices = React.lazy(() => import("../components/sections/PopularServices"))
+const ReviewSection = React.lazy(() => import("../components/sections/ReviewSection"))
 
 
 const Dashboard: React.FC = () => {
 
-  const {
-    customerReviews
-  } = useReviews()
-
   return (
-    <>
-      {/* HERO SECTION */}
-      <HeroSection />
+    <div className="min-h-screen bg-gray-50">
 
-      {/* STATS SECTION */}
-      <StatsSection />
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <HeroSection />
 
-      {/* Banner promocional */}
-      <PromotionalBannerSection />
+        {/* Hero Image Section */}
+        <HeroImageSection />
 
-    
-      {/* Listado de servicios */}
-      
-      <ServicesListSection/>
-      {/* SeleccionarServicio={seleccionarServicio} */}
+        {/* Statistics Section */}
+        <Suspense
+          fallback={
+            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+            </div>
+          }
+        >
+          <StatsSection />
+        </Suspense>
 
-      {/* Mapa ilustrativo de como llegar */}
-      <HowArriveSection />
+        {/* Popular Services Section */}
+        <Suspense
+          fallback={
+            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+            </div>
+          }
+        >
+          <PopularServices />
+        </Suspense>
 
-      {/* Testimonios */}
-      <ReviewSectionLayout>
-        {/* Mosaico de reseñas */}
-        <ReviewSection
-          reviews={customerReviews}
-        />
-      </ReviewSectionLayout>
 
-      {/* Preguntas frecuentes */}
-      <FaqSection />
+        {/* Promotions Section */}
+        <PromotionSection />
 
-      {/* FOOTER */}
-      <FooterSection/>
+        {/* Reviews Section */}
+        <Suspense
+          fallback={
+            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+            </div>
+          }
+        >
+          <ReviewSection />
+        </Suspense>
 
-    </>
+        {/* FAQ Section */}
+        <FaqSection />
 
+        {/* Footer */}
+        <FooterSection />
+      </div>
+    </div>
   );
 };
 

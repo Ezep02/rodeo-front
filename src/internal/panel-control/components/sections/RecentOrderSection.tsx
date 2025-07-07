@@ -2,17 +2,17 @@ import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Calendar, ShoppingBag } from 'lucide-react'
 import React from 'react'
-import { useOrder } from '../../hooks/useOrder'
+
 import OrderItemCard from '../cards/OrderItemCard'
+import { Appointment } from '../../models/Appointments'
 
-const RecentOrderSection: React.FC = () => {
+type ComponentProps = {
+    NextAppointment: Appointment[]
+}
 
-    const {
-        orderList
-    } = useOrder()
-
+const RecentOrderSection: React.FC<ComponentProps> = ({ NextAppointment }) => {
     return (
-        <Card className="bg-gray-900/50 border-gray-800 min-h-[60vh]">
+        <Card className="bg-gray-900/50 border-gray-800 min-h-[60vh] lg:col-span-2">
             <div className="p-6">
                 <div className="flex sm:flex-row sm:justify-between flex-col mb-6 gap-3">
                     <div className="flex items-center gap-3">
@@ -38,17 +38,14 @@ const RecentOrderSection: React.FC = () => {
                     </Select>
                 </div>
 
-                {Array.isArray(orderList) && orderList?.length > 0 ? (
+                {Array.isArray(NextAppointment) && NextAppointment?.length > 0 ? (
                     <div className="space-y-4">
-                        {/* Order items would go here */}
                         {
-                            orderList.map((order, indx) => (
-                                <>
-                                    <OrderItemCard
-                                        key={indx}
-                                        OrderItem={order}
-                                    />
-                                </>
+                            NextAppointment.map((appt, i) => (
+                                <OrderItemCard
+                                    key={i}
+                                    Item={appt}
+                                />
                             ))
                         }
                     </div>

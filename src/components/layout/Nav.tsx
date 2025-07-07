@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "../ui/dropdown-menu";
@@ -14,6 +13,8 @@ import {
 import { Link } from "react-router-dom";
 import { LogoutUser } from "@/service/AuthService";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { ChevronDown, User } from "lucide-react";
 
 const Header: React.FC = () => {
   const {
@@ -33,93 +34,95 @@ const Header: React.FC = () => {
 
   return (
     <div
-      className="container mx-auto flex h-16 items-center justify-between px-4 "
+      className="container mx-auto flex h-16 items-center justify-between px-4 " 
     >
+      <nav className="w-full backdrop-blur-sm">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to={"/"} className="flex items-center space-x-2">
+            <div className="flex h-full items-center justify-center text-rose-500">
+              <GiBullHorns size={24} />
+            </div>
+            <h1 className="text-lg font-bold text-zinc-50 cursor-pointer">
+              El Rodeo
+            </h1>
+          </Link>
 
-      <div className="flex items-center gap-1">
-        <div className="flex h-full items-center justify-center text-rose-500">
-          <GiBullHorns size={24} />
-        </div>
-        <h1 className="text-lg font-bold text-zinc-50 cursor-pointer">
-          <a href="/">El Rodeo</a>
-        </h1>
-      </div>
-      {
-        isUserAuthenticated ? (
-          <div className="ml-auto flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-
-
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="text-zinc-50 bg-zinc-900 uppercase font-bold hover:shadow-lg hover:shadow-zinc-100 active:scale-95">
+          {/* User Menu */}
+          {
+            isUserAuthenticated ? (
+              <div className="flex items-center space-x-4 ">
+                <Avatar>
+                  <AvatarFallback className="text-sm font-medium text-zinc-50 bg-transparent uppercase">
                     {user?.name[0]}{user?.surname[0]}
                   </AvatarFallback>
                 </Avatar>
-
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>
-                  Mi cuenta<br />
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem>
-                  <Link to={"/"}>Inicio</Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  {/* Perfil y configuracion de usuarios */}
-                  <Link to={"/profile"}>Perfil</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {/* Citas pedientes e historial de visitas de usuarios */}
-                  <Link to={"/appointment"}>Citas</Link>
-                </DropdownMenuItem>
-                {
-                  user?.is_barber && (
-                    <DropdownMenuItem>
-                      <Link to={"/dashboard/panel-control/barber"}>Panel de control</Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-gray-800 p-1">
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 bg-white text-black border border-gray-200">
+                    <DropdownMenuItem asChild>
+                      <Link to={"/mi-cuenta"} className="flex items-center space-x-2 cursor-pointer">
+                        <User className="h-4 w-4" />
+                        <span>Mi cuenta</span>
+                      </Link>
                     </DropdownMenuItem>
-                  )
-                }
-                {
-                  user?.is_admin && (
-                    <DropdownMenuItem>
-                      <Link to={"/dashboard/panel-control/admin"}>Analiticas</Link>
+
+                    <DropdownMenuItem asChild>
+                      <Link to={"/"} className="cursor-pointer">
+                        Inicio
+                      </Link>
                     </DropdownMenuItem>
-                  )
-                }
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <button onClick={LogoutSession}>
-                    Cerrar sesion
-                  </button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ) : (
-          <div
-            className="flex gap-2 text-zinc-50 items-center text-sm"
-          >
 
-            <Link
-              to={"/auth/login"}
-              className="hover:text-zinc-200"
-            >
-              Iniciar sesion
-            </Link>
+                    <DropdownMenuItem asChild>
+                      <Link to={"/appointment"} className="cursor-pointer">
+                        Citas
+                      </Link>
+                    </DropdownMenuItem>
 
-            <Link
-              to={"/auth/register"}
-              className="bg-rose-600 p-2 rounded-md hover:bg-rose-500 transition-all"
-            >
-              Registrarse
-            </Link>
-          </div>
-        )
-      }
+                    <DropdownMenuItem asChild>
+                      <Link to={"/dashboard/panel-control/barber"} className="cursor-pointer">
+                        Panel de control
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <Link to={"/dashboard/panel-control/admin"} className="cursor-pointer">
+                        Analíticas
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem className="text-red-600 cursor-pointer" onClick={LogoutSession}>Cerrar sesión</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <div
+                className="flex gap-2 text-zinc-50 items-center text-sm"
+              >
+
+                <Link
+                  to={"/auth/login"}
+                  className="hover:text-zinc-200"
+                >
+                  Iniciar sesion
+                </Link>
+
+                <Link
+                  to={"/auth/register"}
+                  className="bg-rose-600 p-2 rounded-md hover:bg-rose-500 transition-all"
+                >
+                  Registrarse
+                </Link>
+              </div>
+            )}
+        </div>
+      </nav >
     </div >
   );
 };

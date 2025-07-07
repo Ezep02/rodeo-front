@@ -1,37 +1,22 @@
 import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-
-import { Scissors, Search, Plus } from "lucide-react"
-import { useServices } from "../../hooks/useServices"
+import { Scissors, Search } from "lucide-react"
+import { useProduct } from "../../hooks/useProduct"
 import ServiceItem from "../cards/ServiceItemCard"
-import { ServiceFormModal } from "../dialogs/ServiceFormModal"
-import DeleteServicePopUp from "../common/DeleteServicePopUp"
-import { useContext, useState } from "react"
-import { PanelControlContext } from "@/context/PanelControlContext"
+import ServiceFormModal from "../dialogs/ServiceFormModal"
+import { useState } from "react"
 
 const ServiceManagementSection = () => {
-  const {
-    setCreateModalOpen,
-    createModalOpen
-  } = useContext(PanelControlContext)!
 
   const {
-    serviceList,
-    StartDeleteTransition,
-    deleteServiceTransitionErr,
-    isDeleteTransitionServiceLoading,
-    HandleOpenDeleteServicePopUp,
-    selectedServiceToDelete,
-    HandleOpenDeletePopUp,
-    deleteNotification
-  } = useServices()
+    productList,
+  } = useProduct()
 
 
   // Filtrar servicios según el término de búsqueda
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredServices = serviceList.filter((service) =>
-    service.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredServices = productList.filter((service) =>
+    service.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -49,21 +34,8 @@ const ServiceManagementSection = () => {
           </div>
         </div>
 
-        <ServiceFormModal
-          open={createModalOpen}
-          onOpenChange={setCreateModalOpen}
-          mode="create"
-        />
+        <ServiceFormModal />
 
-        {selectedServiceToDelete && deleteNotification && (
-          <DeleteServicePopUp
-            Srv={selectedServiceToDelete}
-            HandleCancel={HandleOpenDeletePopUp}
-            HandleDelete={StartDeleteTransition}
-            deleteServiceTransitionErr={deleteServiceTransitionErr}
-            isDeleteTransitionServiceLoading={isDeleteTransitionServiceLoading}
-          />
-        )}
 
         {/* Search and Add */}
         <div className="flex gap-3 mb-6">
@@ -77,21 +49,16 @@ const ServiceManagementSection = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          <Button size="icon" onClick={() => setCreateModalOpen(true)} className="bg-rose-500">
-            <Plus className="h-4 w-4" />
-          </Button>
         </div>
 
-        <div className="text-sm text-gray-400 mb-4">Servicios actualmente activos: {serviceList.length}</div>
+        <div className="text-sm text-gray-400 mb-4">Servicios actualmente activos: {productList.length}</div>
 
         {/* Services List */}
         <div className="space-y-4">
-
-          {filteredServices?.map((service) => (
+          {filteredServices?.map((prod, idx) => (
             <ServiceItem
-              ServiceData={service}
-              onDelete={HandleOpenDeleteServicePopUp}
+              key={idx}
+              product={prod}
             />
           ))}
         </div>

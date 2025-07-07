@@ -32,7 +32,7 @@ export interface SendEmailForData {
 }
 
 export interface LoginUserReq {
-  email?: string;
+  email: string;
   password: string;
 }
 

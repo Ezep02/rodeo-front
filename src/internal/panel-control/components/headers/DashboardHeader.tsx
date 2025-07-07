@@ -1,13 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { Calendar1 } from 'lucide-react'
 import React from 'react'
 
 type DashboardHeaderProps = {
-    HandleOpenScheduler: () => void
+    children: React.ReactNode
 }
 
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ HandleOpenScheduler }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ children }) => {
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
@@ -17,12 +15,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ HandleOpenScheduler }
                 <p className="text-gray-400">Administra tu barbería y monitorea el rendimiento</p>
             </div>
 
-            <Button className="gap-2 bg-rose-500 hover:bg-rose-600 active:scale-[.98] transition-all" onClick={HandleOpenScheduler}>
-                <Calendar1 className="h-4 w-4" />
-                {
-                    new Date().toLocaleDateString("es-AR", { month: "long", year: "numeric" })
-                }
-            </Button>
+            {children}
         </div>
     )
 }

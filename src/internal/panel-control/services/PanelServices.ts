@@ -1,96 +1,22 @@
 import {
   AuthenticationInstance,
   InstagramInstance,
-  MultipartInstance,
 } from "../../../configs/AxiosConfigs";
 import { MonthlyHaircuts } from "../models/ChartModel";
-import { CloudinaryImage } from "../models/Cloudinary";
-import { PendingOrder } from "../models/OrderModel";
-import {
-  Service,
-  ServiceRequest,
-} from "../models/ServicesModels";
-import { Schedule, ScheduleResponse } from "../models/ShadulesModels";
 
 
-const ORDER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/order`;
-const SCHEDULE_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/schedules`;
-const SERVICE_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/services`;
 const ANALYTICS_BARBER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/barber`;
 
 
 // ORDERS
 
 // Get All Orders
-export const GetOrderList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<PendingOrder[]>(`${ORDER_BASE_URL}/pending/${limit}/${offset}`
-  );
-  return response.data;
-};
-
-export const CreateOrderRefound = async (id: number, amount: string) => {
-  const response = await AuthenticationInstance.post(
-    `${ORDER_BASE_URL}/refound/${id}/${amount}`
-  );
-  return response.data;
-};
-
-// SCHEDULES
-
-// get barber schedules list
-export const GetBarberSchedulesList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<ScheduleResponse[]>(`${SCHEDULE_BASE_URL}/barber/${limit}/${offset}`
-  );
-  return response.data;
-};
-
-// Update / Create Or Delete Barber schedules
-export const UpdateBarberSchedules = async (updatedList: Schedule) => {
-  const response = await AuthenticationInstance.post<Schedule>(
-    `${SCHEDULE_BASE_URL}`,
-    updatedList
-  );
-  return response.data;
-};
 
 // Get barber yearly haircouts
-
 export const GetCurrentYearBarberHairCuts = async () => {
   let currentYearHairCuts = await AuthenticationInstance.get<MonthlyHaircuts[]>(`${ANALYTICS_BARBER_BASE_URL}/yearly-haircut`)
   return currentYearHairCuts.data
 }
-
-
-
-// SERVICES
-
-// Get all services
-export const GetBarberServicesList = async (limit: number, offset: number) => {
-  const response = await AuthenticationInstance.get<Service[]>(`${SERVICE_BASE_URL}/barber/${limit}/${offset}`);
-  return response.data;
-};
-
-// Update service by Service ID
-export const UpdateServiceByID = async (data: Service, id: number) => {
-  const response = await AuthenticationInstance.put<Service>(
-    `${SERVICE_BASE_URL}/update/${id}`,
-    data
-  );
-  return response.data;
-};
-// Create service
-export const CreateService = async (data: any) => {
-  const response = await MultipartInstance.post(`${SERVICE_BASE_URL}/new`, data);
-  return response;
-};
-
-export const DeleteServiceByID = async (id: number) => {
-  const response = await AuthenticationInstance.delete(
-    `${SERVICE_BASE_URL}/delete/${id}`
-  );
-  return response;
-};
-
 
 
 // Instagram
@@ -112,8 +38,3 @@ export const CreateLongInstagramToken = async (shortLivedAccessToken: string) =>
   return longToken
 }
 
-// Cloudinary
-export const GetCloudImg = async () => {
-  const images = await AuthenticationInstance.get<CloudinaryImage[] | []>(`${SERVICE_BASE_URL}/cloudinary/images`)
-  return images.data
-}

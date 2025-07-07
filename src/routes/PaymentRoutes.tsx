@@ -1,22 +1,14 @@
-import React, { Suspense } from "react";
+import Success from "@/internal/payments/pages/Success";
 import { Navigate, Route, Routes } from "react-router-dom";
-
-
-const Success = React.lazy(() => import("@/internal/payments/pages/Success"))
 
 const PaymentRoutes = () => {
   return (
     <Routes>
-      <Route path="/success/:token" element={<Suspense fallback={
-        <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-          <p className="loader"></p>
-          <span>Obteniendo pago</span>
-        </div>
-      }>
+      <Route path="/success/:token" element={
         <Success />
-      </Suspense>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      } />
+      < Route path="*" element={< Navigate to="/" replace />} />
+    </Routes >
   );
 };
 

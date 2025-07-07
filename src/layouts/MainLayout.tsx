@@ -9,10 +9,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="min-h-screen bg-gray-950"
+      className="min-h-screen bg-black overflow-hidden "
     >
 
-      <header className="sticky top-0 border-b backdrop-blur-sm z-30">
+      <header className="sticky top-0 backdrop-blur-sm z-30">
         <Nav />
       </header>
 

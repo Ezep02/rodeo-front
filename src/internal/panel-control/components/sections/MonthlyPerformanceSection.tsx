@@ -6,16 +6,15 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import PerformanceChart from "../charts/PerformanceChart";
-import useBarber from "../../hooks/useBarber";
 import { AlertCircle, BarChartIcon } from "lucide-react";
 
 const MonthlyPerformanceSection = () => {
-    const { yearlyCutsChartData } = useBarber();
+    // const { yearlyCutsChartData } = useBarber();
 
     return (
         <Card className="bg-gray-900/50 border-gray-800">
-            {Array.isArray(yearlyCutsChartData) && yearlyCutsChartData.length > 0 ? (
-                <PerformanceChart Data={yearlyCutsChartData} />
+            {Array.isArray([]) && [].length > 0 ? (
+                <PerformanceChart Data={[]} />
             ) : (
                 <Card className="bg-transparent border-none sm:col-span-4 md:col-span-4 xl:col-span-2 col-span-1">
                     <CardHeader className="flex items-start gap-4">
