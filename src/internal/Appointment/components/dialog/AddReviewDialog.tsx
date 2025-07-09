@@ -33,7 +33,6 @@ const AddReviewDialog: React.FC<AddReviewDialogProps> = ({ appointment }) => {
         setIsOpen((prev) => !prev)
     }
 
-
     const {
         register,
         handleSubmit,

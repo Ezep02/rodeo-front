@@ -2,10 +2,7 @@ import React, { Suspense } from "react";
 
 import SlotDialog from "../components/dialogs/SlotsDialog";
 import DashboardHeader from "../components/headers/DashboardHeader";
-import { useOrder } from "../hooks/useOrder";
 import { Loader2 } from "lucide-react";
-
-
 
 const RecentOrderSection = React.lazy(() => import("../components/sections/RecentOrderSection"))
 const ServiceManagementSection = React.lazy(() => import("../components/sections/ServiceManagmentSection"))
@@ -13,10 +10,6 @@ const MonthlyPerformanceSection = React.lazy(() => import("../components/section
 const GalerySection = React.lazy(()=> import("../components/sections/GalerySection"))
 
 const PanelControlPage: React.FC = () => {
-
-  const {
-    nextAppointment
-  } = useOrder()
 
   return (
     <>
@@ -38,9 +31,7 @@ const PanelControlPage: React.FC = () => {
                 </div>
               }
             >
-              <RecentOrderSection
-                NextAppointment={nextAppointment}
-              />
+              <RecentOrderSection/>
             </Suspense>
 
             {/* Grafico de rendimientos */}

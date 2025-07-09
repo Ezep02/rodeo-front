@@ -34,7 +34,7 @@ const Header: React.FC = () => {
 
   return (
     <div
-      className="container mx-auto flex h-16 items-center justify-between px-4 " 
+      className="container mx-auto flex h-16 items-center justify-between px-4 "
     >
       <nav className="w-full backdrop-blur-sm">
         <div className="flex items-center justify-between">
@@ -82,18 +82,24 @@ const Header: React.FC = () => {
                         Citas
                       </Link>
                     </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                      <Link to={"/dashboard/panel-control/barber"} className="cursor-pointer">
-                        Panel de control
-                      </Link>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                      <Link to={"/dashboard/panel-control/admin"} className="cursor-pointer">
-                        Analíticas
-                      </Link>
-                    </DropdownMenuItem>
+                    {
+                      user?.is_barber && (
+                        <DropdownMenuItem asChild>
+                          <Link to={"/dashboard/panel-control/barber"} className="cursor-pointer">
+                            Panel de control
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    }
+                    {
+                      user?.is_admin && (
+                        <DropdownMenuItem asChild>
+                          <Link to={"/dashboard/panel-control/admin"} className="cursor-pointer">
+                            Analíticas
+                          </Link>
+                        </DropdownMenuItem>
+                      )
+                    }
 
                     <DropdownMenuSeparator />
 

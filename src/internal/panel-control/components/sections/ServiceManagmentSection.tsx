@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card"
-import { Scissors, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { useProduct } from "../../hooks/useProduct"
 import ServiceItem from "../cards/ServiceItemCard"
 import ServiceFormModal from "../dialogs/ServiceFormModal"
@@ -22,18 +22,7 @@ const ServiceManagementSection = () => {
   return (
     <Card className="bg-gray-900/50 border-gray-800">
       <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-rose-500/20 rounded-lg flex items-center justify-center">
-              <Scissors className="w-5 h-5 text-rose-500" />
-            </div>
-            <div className="">
-              <h2 className="text-sm sm:text-2xl font-bold text-white">Gestion de Servicios</h2>
-              <p className="text-gray-400 text-sm">Administra tus servicios y horarios</p>
-            </div>
-          </div>
-        </div>
-
+        
         <ServiceFormModal />
 
 

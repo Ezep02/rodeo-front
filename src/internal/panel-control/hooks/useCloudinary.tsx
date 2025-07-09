@@ -16,11 +16,10 @@ const useCloudinary = () => {
         const CloudinaryFetchGallery = async () => {
 
             try {
-                
+
                 const result = await GetCloudImg()
-              
-                if(result.length > 0){
-                    setCloudImgGallery(result)
+                if (result.assets.length > 0) {
+                    setCloudImgGallery(result.assets)
                 }
             } catch (error) {
                 console.warn("Algo no fue bien recibiendo las imagenes", error)

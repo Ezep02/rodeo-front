@@ -34,14 +34,15 @@ const AppointmentHistorial: React.FC = () => {
                                 }
                             </>
                         ) : (
-                            <div className='p-2'>
-                                <div className="text-center py-8 text-slate-500">
-                                    {/* Mensaje cuando no hay más citas pendientes */}
-                                    <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-100" />
-                                    <p>No tienes citas pendientes</p>
+                            <div className="p-2">
+                                <div className="text-center py-8">
+                                    <Calendar className="h-12 w-12 mx-auto mb-3 text-rose-400" />
+
+                                    <p className="text-gray-700">No tienes citas pendientes</p>
+
                                     <a
                                         href="/reservation"
-                                        className="mt-2 inline-block text-sm font-semibold text-rose-500 hover:text-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
+                                        className="mt-2 inline-block text-sm font-medium text-gray-900 hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-400 transition"
                                     >
                                         Programar nueva cita
                                     </a>

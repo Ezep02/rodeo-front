@@ -4,15 +4,17 @@ import { Calendar, ShoppingBag } from 'lucide-react'
 import React from 'react'
 
 import OrderItemCard from '../cards/OrderItemCard'
-import { Appointment } from '../../models/Appointments'
+import { useOrder } from '../../hooks/useOrder'
 
-type ComponentProps = {
-    NextAppointment: Appointment[]
-}
 
-const RecentOrderSection: React.FC<ComponentProps> = ({ NextAppointment }) => {
+const RecentOrderSection: React.FC = () => {
+
+    const {
+        nextAppointment
+    } = useOrder()
+
     return (
-        <Card className="bg-gray-900/50 border-gray-800 min-h-[60vh] lg:col-span-2">
+        <Card className="bg-gray-900/50 border-gray-800 min-h-[50vh] lg:col-span-2">
             <div className="p-6">
                 <div className="flex sm:flex-row sm:justify-between flex-col mb-6 gap-3">
                     <div className="flex items-center gap-3">
@@ -38,10 +40,10 @@ const RecentOrderSection: React.FC<ComponentProps> = ({ NextAppointment }) => {
                     </Select>
                 </div>
 
-                {Array.isArray(NextAppointment) && NextAppointment?.length > 0 ? (
-                    <div className="space-y-4">
+                {Array.isArray(nextAppointment) && nextAppointment?.length > 0 ? (
+                    <div className="space-y-4  max-h-[60vh] overflow-hidden overflow-y-scroll scroll-abrir-tarjeta">
                         {
-                            NextAppointment.map((appt, i) => (
+                            nextAppointment.map((appt, i) => (
                                 <OrderItemCard
                                     key={i}
                                     Item={appt}

@@ -14,7 +14,7 @@ const Appointments: React.FC = () => {
         {/* Historial de Citas */}
         <Suspense
           fallback={
-            <div className="bg-gray-900/50 border-gray-800 min-h-[60vh] lg:col-span-2 flex justify-center items-center rounded-md">
+            <div className="min-h-[50vh] lg:col-span-2 flex justify-center items-center rounded-md">
               <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
             </div>
           }

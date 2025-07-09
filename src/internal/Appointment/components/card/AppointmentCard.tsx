@@ -34,22 +34,32 @@ type CardProps = {
 const AppointmentCard: React.FC<CardProps> = ({ appointment }) => {
   const [isExpanded, setExpanded] = useState(false)
 
-  const getPaymentStatus = (time: Date) => {
-    const now = new Date()
-    const date = new Date(time)
-    if (now <= date) {
+  const getPaymentStatus = (dateAppt: Date, time: string) => {
+    const now = new Date();
+
+    // Crear una nueva fecha combinando la fecha y la hora
+    const [hours, minutes] = time.split(':').map(Number);
+    const fullDate = new Date(dateAppt);
+    fullDate.setHours(hours);
+    fullDate.setMinutes(minutes);
+    fullDate.setSeconds(0);
+    fullDate.setMilliseconds(0);
+
+    if (now <= fullDate) {
       return {
         label: 'Pendiente',
-        color: 'bg-yellow-500/10 text-yellow-400 border'
-      }
+        color: 'bg-yellow-500/20 text-yellow-400 border'
+      };
     }
+
     return {
       label: 'Completado',
       color: 'bg-lime-600/10 text-lime-500 border'
-    }
-  }
+    };
+  };
 
-  const paymentStatus = getPaymentStatus(appointment.slot.date)
+
+  const paymentStatus = getPaymentStatus(appointment.slot.date, appointment.slot.time)
   const totalPrice = appointment.products.reduce((acc, product) => acc + product.price, 0)
   const paidAmount = (appointment.payment_percentage / 100) * totalPrice
   const remainingAmount = totalPrice - paidAmount
