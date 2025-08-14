@@ -2,12 +2,11 @@ import React, { ReactNode, useState } from "react";
 import {
   Product,
 } from "../internal/panel-control/models/ServicesModels";
-import { MonthlyHaircuts } from "@/internal/panel-control/models/ChartModel";
-import { Appointment } from "@/internal/panel-control/models/Appointments";
+import { MonthlyHaircuts } from "@/internal/barber/models/ChartModel";
+import { Category } from "@/internal/panel-control/models/Category";
 
 interface AuthContextProps {
-  
- 
+
   // PRODUCTS
   productList: Product[];
   setProductList: React.Dispatch<React.SetStateAction<Product[]>>;
@@ -20,16 +19,10 @@ interface AuthContextProps {
   setServicesOffset: React.Dispatch<React.SetStateAction<number>>;
   selectedServiceToDelete: Product | undefined
   setSelectedServiceToDelete: React.Dispatch<React.SetStateAction<Product | undefined>>;
-  // A B M servicios
-  editModalOpen: boolean
-  setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  deleteDialogOpen: boolean
-  setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
-  // NEXT APPOINTMENT
-  nextAppointment: Appointment[] | []
-  setNextAppointment: React.Dispatch<React.SetStateAction<Appointment[]>>
-
+  // Categorias
+  categories: Category[] | []
+  setCategories: React.Dispatch<React.SetStateAction<Category[] | []>>;
 }
 
 export const PanelControlContext = React.createContext<AuthContextProps | undefined>(undefined);
@@ -37,9 +30,6 @@ export const PanelControlContext = React.createContext<AuthContextProps | undefi
 interface ChildrenProviderProp { children: ReactNode }
 
 export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ children }) => {
-
-
-  
 
 
   // Guardar los cambios del scheduler
@@ -50,15 +40,11 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
   const [productList, setProductList] = useState<Product[]>([]);
   const [servicesOffset, setServicesOffset] = useState<number>(0);
   const [selectedServiceToDelete, setSelectedServiceToDelete] = useState<Product>();
-  // EDICION, CREACION, ELIMINACION DE SERVICIOS
-  const [editModalOpen, setEditModalOpen] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
 
-  // V1 APPOINTMENTS
-  const [nextAppointment, setNextAppointment] = useState<Appointment[] | []>([])
-
-
+  // categorias
+  // Lista de categorias
+  const [categories, setCategories] = useState<Category[]>([])
 
 
   return (
@@ -74,12 +60,8 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
         setServicesOffset,
         selectedServiceToDelete,
         setSelectedServiceToDelete,
-        editModalOpen,
-        setEditModalOpen,
-        deleteDialogOpen,
-        setDeleteDialogOpen,
-        nextAppointment,
-        setNextAppointment
+        categories,
+        setCategories
       }}
     >
       {children}

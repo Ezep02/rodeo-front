@@ -78,9 +78,6 @@ const CancelDialog: React.FC<CancelProps> = ({ appointment }) => {
                                 Sí, cancelar
                             </Button>
                         </div>
-
-
-
                     </>
                 )}
             </DialogContent>

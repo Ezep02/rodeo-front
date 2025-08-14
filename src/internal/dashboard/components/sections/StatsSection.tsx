@@ -1,5 +1,5 @@
 import { Star, StarHalf } from "lucide-react"
-import useInformation from "../../hooks/useInformation"
+import useInformation from "../../../../hooks/useInformation"
 
 const StatsSection = () => {
 

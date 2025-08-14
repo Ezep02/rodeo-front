@@ -1,93 +1,35 @@
-import { DashboardContext } from "@/context/DashboardContext";
-import { useContext, useEffect } from "react";
-import {  ProductList } from "../../reservation/services/shop_service";
+import { useEffect, useState } from "react";
+import { ProductList } from "../../reservation/services/shop_service";
+import { Product } from "../model/Product";
 
 
 export const useProductShop = () => {
 
-    const {
-        productShop,
-        setProductShop
-    } = useContext(DashboardContext)!
+    const [serviceList, setServiceList] = useState<Product[] | []>([])
 
-    
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
     // Cargar inicial de productos
     useEffect(() => {
 
         const FetchProducts = async () => {
+            setIsLoading(true)
             try {
                 const res = await ProductList()
-                if(res.products){
-                    setProductShop(res.products)
+                if (res.products) {
+                    setServiceList(res.products)
                 }
             } catch (error) {
                 console.warn("Product shop err", error)
             }
-        }
+
+            setIsLoading(false)
+        }   
         FetchProducts()
     }, [])
 
-
-
-
-    // useEffect(() => {
-    //     if (services.length == 0) {
-
-    //         const AllServices = async () => {
-
-    //             let limit: number = 5;
-
-    //             try {
-    //                 const fetchedServices: CustomerServices[] = await GetServices(limit, serviceOffset);
-
-    //                 if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
-    //                     setServices((prev) => {
-
-    //                         const filtered = fetchedServices.filter(
-    //                             (newService) => !prev.some((existingService) => existingService.ID === newService.ID)
-    //                         );
-
-    //                         return [...prev, ...filtered];
-    //                     });
-
-    //                     sumServiceOffset()
-    //                 }
-
-    //             } catch (error) {
-    //                 console.error("Error fetching services:", error);
-    //             }
-    //         };
-    //         AllServices()
-    //     }
-    // }, []);
-
-    // Funcion utilizada para mover el offset
-    // const SearchMoreServices = async () => {
-
-    //     let limit: number = 5;
-
-    //     try {
-    //         const fetchedServices: CustomerServices[] = await GetServices(limit, serviceOffset);
-
-    //         if (Array.isArray(fetchedServices) && fetchedServices.length > 0) {
-    //             setServices((prev) => {
-
-    //                 const filtered = fetchedServices.filter(
-    //                     (newService) => !prev.some((existingService) => existingService.ID === newService.ID)
-    //                 );
-
-    //                 return [...prev, ...filtered];
-    //             });
-
-    //             sumServiceOffset()
-    //         }
-
-    //     } catch (error) {
-    //         console.error("Error fetching services:", error);
-    //     }
-    // }
-
     return {
-      productShop,
+        serviceList,
+        isLoading
     }
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { useAppointment } from '../../hooks/useAppointment'
 import { Calendar } from 'lucide-react'
 import AppointmentCard from '../card/AppointmentCard'
-import AppointmentsHeader from '@/internal/dashboard/components/headers/AppointmentsHeader'
 
 const AppointmentHistorial: React.FC = () => {
 
@@ -11,12 +10,8 @@ const AppointmentHistorial: React.FC = () => {
     } = useAppointment()
 
     return (
-        <section
-            className='bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden'
-        >
-            <div className="p-8">
-                <AppointmentsHeader />
-
+        <section className='flex  border-gray-200 grow'>
+            <div className="flex flex-col flex-grow">
                 <div className="space-y-4">
                     {
                         Array.isArray(customerAppointment) && customerAppointment.length > 0 ? (

@@ -5,7 +5,7 @@ interface AuthContextProps {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   isUserAuthenticated: boolean;
-  setIsUserAuthenticated: (value: boolean) => void;
+  setIsUserAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   GoogleLogIn: () => void;
   authLoader: boolean;
   setAuthLoader: React.Dispatch<React.SetStateAction<boolean>>;

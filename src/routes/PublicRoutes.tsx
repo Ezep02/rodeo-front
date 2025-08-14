@@ -47,7 +47,7 @@ const PublicRoutes = () => {
       />
 
       <Route
-        path={`/dashboard/panel-control/*`}
+        path={`/dashboard/barber/*`}
         element={
           user?.is_barber ? (
             <Suspense fallback={

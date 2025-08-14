@@ -1,204 +1,167 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Appointment } from '../../models/Appointment'
 import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent
-} from '@/components/ui/collapsible'
-import {
-  Calendar,
-  ChevronDown,
-  ChevronRight,
-  StarIcon
-} from 'lucide-react'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { SlOptions } from 'react-icons/sl'
+import { MdAccessTime } from 'react-icons/md'
+import { IoCheckmarkCircle, IoCloseCircle, IoRefresh, IoTime } from 'react-icons/io5'
+
 import AddReviewDialog from '../dialog/AddReviewDialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { SlOptions } from "react-icons/sl";
 import RescheduleDialog from '../dialog/RescheduleDialog'
 import CancelDialog from '../dialog/CancelDialog'
-
-const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`
-const formatDate = (date: Date) =>
-  new Date(date).toLocaleDateString('es-AR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
+import { getPaymentStatus } from '@/utils/getAppointmentStatus'
+import { formatTime } from '@/internal/analytics/utils/TimeFormater'
 
 type CardProps = {
   appointment: Appointment
 }
 
-const AppointmentCard: React.FC<CardProps> = ({ appointment }) => {
-  const [isExpanded, setExpanded] = useState(false)
+const getStatusIcon = (
+  status: string,
+  date: Date,
+  time: string
+) => {
+  const slotDateTime = new Date(date)
+  const [hours, minutes] = time.split(':').map(Number)
+  slotDateTime.setHours(hours, minutes, 0, 0)
 
-  const getPaymentStatus = (dateAppt: Date, time: string) => {
-    const now = new Date();
+  const now = new Date()
 
-    // Crear una nueva fecha combinando la fecha y la hora
-    const [hours, minutes] = time.split(':').map(Number);
-    const fullDate = new Date(dateAppt);
-    fullDate.setHours(hours);
-    fullDate.setMinutes(minutes);
-    fullDate.setSeconds(0);
-    fullDate.setMilliseconds(0);
-
-    if (now <= fullDate) {
-      return {
-        label: 'Pendiente',
-        color: 'bg-yellow-500/20 text-yellow-400 border'
-      };
-    }
-
+  if (slotDateTime > now && status !== 'cancelled') {
     return {
-      label: 'Completado',
-      color: 'bg-lime-600/10 text-lime-500 border'
-    };
-  };
+      icon: <IoTime className="text-yellow-500 w-5 h-5" />,
+      label: 'Pendiente'
+    }
+  }
 
+  switch (status) {
+    case 'active':
+      return {
+        icon: <IoCheckmarkCircle className="text-green-500 w-5 h-5" />,
+        label: 'Atendido'
+      }
+    case 'cancelled':
+      return {
+        icon: <IoCloseCircle className="text-red-500 w-5 h-5" />,
+        label: 'Cancelada'
+      }
+    case 'updated':
+      return {
+        icon: <IoRefresh className="text-blue-500 w-5 h-5" />,
+        label: 'Reprogramada'
+      }
+    default:
+      return {
+        icon: null,
+        label: 'Sin estado'
+      }
+  }
+}
 
-  const paymentStatus = getPaymentStatus(appointment.slot.date, appointment.slot.time)
+const AppointmentCard: React.FC<CardProps> = ({ appointment }) => {
   const totalPrice = appointment.products.reduce((acc, product) => acc + product.price, 0)
   const paidAmount = (appointment.payment_percentage / 100) * totalPrice
-  const remainingAmount = totalPrice - paidAmount
 
-  const isInFuture = (() => {
-    const slotDate = new Date(appointment.slot.date); // base date from ISO
-    const [hours, minutes] = appointment.slot.time.split(":").map(Number);
+  const slotDate = new Date(appointment.slot.date)
+  const [hours, minutes] = appointment.slot.time.split(':').map(Number)
+  slotDate.setHours(hours, minutes, 0, 0)
 
-    slotDate.setHours(hours);
-    slotDate.setMinutes(minutes);
-    slotDate.setSeconds(0);
-    slotDate.setMilliseconds(0);
+  const isInFuture = slotDate > new Date()
+  const paymentStatus = getPaymentStatus(appointment.payment_percentage)
 
-    return slotDate > new Date();
-  })();
-
+  const { icon: statusIcon, label: statusLabel } = getStatusIcon(
+    appointment.status,
+    slotDate,
+    appointment.slot.time
+  )
 
   return (
-    <Card className="hover:bg-gray-50 rounded-lg cursor-pointer p-5 border-none  shadow-none">
-      <div className="flex items-center justify-between mb-2">
-        <Badge className={`${appointment.status === "cancelled" ? "bg-red-100 text-red-600 border border-red-200" : paymentStatus.color} text-xs`}>
-          {appointment.status === "cancelled" ? 'Cancelado' : paymentStatus.label}
-        </Badge>
+    <Card className="rounded-2xl border-none shadow-none p-5 bg-white flex flex-col gap-4">
 
-        {isInFuture && appointment.status !== "cancelled" && (
+      {/* Estado */}
+      <div className="flex items-center gap-2">
+        {statusIcon}
+        <span className="text-sm text-zinc-600">{statusLabel}</span>
+      </div>
+
+      {/* Info + Acciones */}
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <p className="text-zinc-800 font-semibold text-base">
+            {new Date(appointment.slot.date).toLocaleDateString('es-AR', {
+              weekday: 'long',
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            })}
+          </p>
+
+          <div className="flex items-center gap-2 text-sm text-zinc-600">
+            <MdAccessTime className="text-lg" />
+            <span>{formatTime(appointment.slot.time)}</span>
+          </div>
+
+          <p className="text-sm text-neutral-500">
+            ${paidAmount.toFixed(0)} / ${totalPrice.toFixed(0)}
+          </p>
+        </div>
+
+        {isInFuture && appointment.status !== 'cancelled' && (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <SlOptions className="text-zinc-500 hover:text-zinc-700" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
               <DropdownMenuLabel>Acciones</DropdownMenuLabel>
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-                <div>
-                  <RescheduleDialog appointment={appointment} />
-                </div>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()} >
+                <RescheduleDialog appointment={appointment} />
               </DropdownMenuItem>
 
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-                <div>
-                  <CancelDialog appointment={appointment} />
-                </div>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <CancelDialog appointment={appointment} />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </div>
 
-      <Collapsible open={isExpanded}>
-        <CollapsibleTrigger asChild>
-          <div className="flex flex-col py-2 rounded px-2">
-            <div
-              className="flex items-center justify-between py-3 rounded px-2 cursor-pointer hover:bg-gray-100"
-              onClick={() => setExpanded(prev => !prev)}
-            >
-              <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-gray-700" />
-                <span className="text-sm text-gray-800">
-                  {formatDate(appointment.slot.date)} - {appointment.slot.time}
-                </span>
-              </div>
-              {isExpanded ? (
-                <ChevronDown className="w-4 h-4 text-gray-600" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-gray-600" />
-              )}
-            </div>
+      {/* Estado de pago */}
+      <div className="mt-1">
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${paymentStatus.className}`}>
+          {paymentStatus.label}
+        </span>
+      </div>
 
-            {/* Review Section solo si se completó */}
-            {new Date() > new Date(appointment.slot.date) && (
-              <div className="mb-4 p-3 rounded-lg bg-gray-50">
-                {appointment.review ? (
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm text-gray-700">
-                      {appointment.review.comment}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`h-4 w-4 ${i < appointment.review.rating
-                            ? 'text-yellow-300 fill-yellow-400'
-                            : 'text-gray-300'
-                            }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : appointment.status !== "cancelled" && (
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-700">
-                      ¿Qué te pareció el servicio?
-                    </p>
-                    <AddReviewDialog appointment={appointment} />
-                  </div>
-                )}
-              </div>
-            )}
+      {/* Review */}
+      {new Date() > slotDate && !appointment.review && (
+        <section className="bg-zinc-50 p-3 rounded-lg flex flex-col gap-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <p className="text-sm text-zinc-700">¿Qué te pareció el servicio?</p>
+            <AddReviewDialog appointment={appointment} />
           </div>
-        </CollapsibleTrigger>
+        </section>
+      )}
 
-        <CollapsibleContent className="pt-4 mx-3">
-          <div className="grid grid-cols-2 gap-6 text-sm text-gray-700">
-            <div className="flex flex-col border-t border-gray-200 pt-2">
-              <span className="text-gray-500">Seleccionaste:</span>
-              {appointment.products.map((prod) => (
-                <div key={prod.id} className="flex justify-between">
-                  <span>{prod.name}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <div className="space-y-1 border-t border-gray-200 pt-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Pagado ({appointment.payment_percentage}%):</span>
-                  <Badge className="bg-lime-100 text-lime-600 border border-lime-200">
-                    {formatCurrency(paidAmount)}
-                  </Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Pendiente:</span>
-                  <Badge className="bg-red-100 text-red-600 border border-red-200">
-                    {formatCurrency(remainingAmount)}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
-            <span className="text-sm text-gray-500">
-              Solicitada: {formatDate(appointment.created_at)}
-            </span>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+      {/* Ver detalles */}
+      <div className="pt-2">
+        <button
+          className="text-sm text-primary underline underline-offset-4 hover:text-primary/80 transition"
+          onClick={() => console.log('Ver más detalles de', appointment.id)}
+        >
+          Ver detalles
+        </button>
+      </div>
     </Card>
+
   )
 }
 

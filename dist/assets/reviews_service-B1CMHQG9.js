@@ -1,0 +1,1 @@
+import{A as s}from"./index-AL-VPenz.js";const a="http://localhost:9090/api/v1/reviews",r=async e=>(await s.post(`${a}/`,e)).data,c=async(e,t)=>(await s.get(`${a}/user/${e}/page/${t}`)).data;export{r as C,c as G};

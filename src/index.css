@@ -1,6 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  font-weight: normal;
+  font-style: normal;
+  color: #5d657b;
+  overflow-x: hidden;
+  background: #f1f5f9;
+}
+
 
 .loader {
   width: 30px;
@@ -39,10 +58,31 @@
 }
 
 .embla__container {
-  display: flex; 
-  gap: 1rem; 
+  display: flex;
+  gap: 1rem;
 }
 
 .embla__slide {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
+}
+
+.custom-shadow {
+  box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12),
+    0px 0px 2px 0px rgba(145, 158, 171, 0.2);
+}
+
+/* SLIDER DE FORMULARIO HORIZONTAL*/
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInFromRight 0.2s ease-out forwards;
 }

@@ -1,7 +1,7 @@
-import { Product } from "../models/ServicesModels";
 import { useContext, useEffect } from "react";
 import { PanelControlContext } from "@/context/PanelControlContext";
-import { GetProductList } from "../services/product_service";
+import { CreateProduct, DeleteProduct, GetProductList, UpdateProduct } from "../services/product_service";
+import { Product } from "../models/ServicesModels";
 
 
 export const useProduct = () => {
@@ -10,23 +10,9 @@ export const useProduct = () => {
         productList,
         setServicesOffset,
         servicesOffset,
-        setSelectedServiceToDelete,
-        selectedServiceToDelete,
+        categories
+
     } = useContext(PanelControlContext)!;
-
-    // conexion websocket encargada de recibir nuevos servicios, cambios repentinos como modificaciones y eliminaciones 
-    // const { lastJsonMessage } = useWebSocket<Product>(`${import.meta.env.VITE_BACKEND_WS_URL}/services/notification-update`);
-    // useEffect(() => {
-    //     if (lastJsonMessage) {
-    //         setProductList((prevProductList) => {
-    //             const updatedProductList = prevProductList.filter(
-    //                 (srv) => srv.ID !== lastJsonMessage.ID
-    //             );
-
-    //             return [...updatedProductList, lastJsonMessage];
-    //         });
-    //     }
-    // }, [lastJsonMessage]);
 
 
     // Mover el offset de servicios creados por el barbero
@@ -39,10 +25,8 @@ export const useProduct = () => {
 
         if (productList.length === 0) {
             const LoadProducts = async () => {
-
-                const limit = 5;
                 // Obtener nuevos datos desde la API
-                const response = await GetProductList(limit, servicesOffset);
+                const response = await GetProductList(servicesOffset);
 
                 if (response.products.length > 0) {
 
@@ -66,9 +50,8 @@ export const useProduct = () => {
     // Funcion utilizada para mover el offset
     const SearchMoreBarberServices = async () => {
 
-        const limit = 5;
         // Obtener nuevos datos desde la API
-        const response = await GetProductList(limit, servicesOffset);
+        const response = await GetProductList(servicesOffset);
 
         if (response.products.length > 0) {
 
@@ -85,17 +68,61 @@ export const useProduct = () => {
         }
     }
 
+    const CreateService = async (service: Omit<Product, "id">) => {
+        try {
+            let res = await CreateProduct(service);
+            if (res) {
+                setProductList((prev) => [...prev, service as Product]);
+            }
+        } catch (error) {
+            console.warn("Error al crear el servicio:", error);
+        }
+    }
 
-    // abre el pop en busqueda de preguntar si realmente quiere eliminar el servicio
-   
-    const HandleOpenDeleteServicePopUp = (service_to_delete: Product) => {
-        setSelectedServiceToDelete(service_to_delete);
+    const UpdateService = async (service: Product) => {
+
+        try {
+            // console.log("service update", service)
+            const res = await UpdateProduct(service, service.id);
+            if (res) {
+                console.log("UPDATE RES", res)
+                setProductList(prev =>
+                    prev.map(s =>
+                        s.id === service.id
+                            ? {
+                                ...s,
+                                ...service,
+                                category: categories.find(c => c.id === service.category_id) || s.category
+                            }
+                            : s
+                    )
+                );
+
+
+            }
+        } catch (error) {
+            console.error("Error al actualizar el servicio:", error);
+        }
+    }
+
+    const DeleteService = async (id: number) => {
+        try {
+            const res = await DeleteProduct(id)
+            if (res) {
+                setProductList((prev) =>
+                    prev.filter((s) => (s.id !== id))
+                );
+            }
+        } catch (error) {
+            console.error("Error al eliminar el servicio:", error);
+        }
     }
 
     return {
         productList,
         SearchMoreBarberServices,
-        selectedServiceToDelete,
-        HandleOpenDeleteServicePopUp,
+        CreateService,
+        UpdateService,
+        DeleteService
     }
 }

@@ -2,6 +2,8 @@
 export type OcupationRate = {
     month: string
     ocuppancy_percentage: number
+
+    // REMOVER -> ahora pertene a panel control
 }
 
 export type MonthBookingCount = {

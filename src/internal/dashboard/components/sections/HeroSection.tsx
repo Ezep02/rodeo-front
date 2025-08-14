@@ -1,11 +1,20 @@
-import { Badge } from '@/components/ui/badge'
-import { Star } from 'lucide-react'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import LoginDialog from '../dialog/Login'
+import { AuthContext } from '@/context/AuthContext';
+import RegisterDialog from '../dialog/Register';
 
 const HeroSection: React.FC = () => {
+
+  const {
+    setUser,
+    setIsUserAuthenticated,
+    isUserAuthenticated
+  } = useContext(AuthContext)!;
+
   return (
-    <div className="mb-16">
+    <div className="bg-white p-8 md:p-16 flex flex-col justify-between">
+
       <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
         Encontra un lugar
         <br />
@@ -15,19 +24,34 @@ const HeroSection: React.FC = () => {
         Tu próxima cita en la barbería a solo un toque de distancia — Reserva un turno en segundos, sin llamadas ni esperas
       </p>
 
-      <div className="flex flex-col sm:flex-row  gap-4">
-        <Link to={"/reservation"} className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm flex items-center font-semibold">
-          Reserva Ya - Es Facil
-        </Link>
-        <Badge
-          variant="outline"
-          className="px-4 py-2 text-sm border-2 border-orange-200 text-orange-700 bg-orange-50"
-        >
-          <div className="flex items-center space-x-2">
-            <Star className="w-4 h-4 fill-orange-400 text-orange-400" />
-            <span className="font-medium">#1 BARBER PLATFORM</span>
-          </div>
-        </Badge>
+      <div className="flex gap-4">
+
+        {
+          isUserAuthenticated ? (
+            <Link to={"/reservation"} className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm flex items-center font-semibold">
+              Reserva Ya - Es Facil
+            </Link>
+          ) : (
+            <>
+
+              <RegisterDialog
+                setIsUserAuthenticated={setIsUserAuthenticated}
+                setUser={setUser}
+              />
+              
+              <LoginDialog
+                setIsUserAuthenticated={setIsUserAuthenticated}
+                setUser={setUser}
+              />
+
+            </>
+          )
+        }
+
+
+
+
+
       </div>
     </div>
   )

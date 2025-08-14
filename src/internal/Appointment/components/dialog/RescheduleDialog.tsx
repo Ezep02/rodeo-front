@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { Appointment } from '../../models/Appointment';
 import { useRescheduling } from '@/internal/Appointment/hooks/useRescheduling';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import Calendar from '@/components/common/Calendar';
+import ScheduleSlider from '@/components/common/ScheduleSlider';
 
 type RescheduleProps = {
     appointment: Appointment
@@ -18,15 +18,18 @@ const RescheduleDialog: React.FC<RescheduleProps> = ({ appointment }) => {
         toggleDialog,
         selectedTime,
         setSelectedTime,
-        date,
-        setDate,
+        setSlotDate,
+        slotDate,
         MoveSlotOffset,
         filteredSlots,
         handleReschedule,
         isWithin24Hours,
         isReschedulingPending,
     } = useRescheduling(appointment);
-    
+
+
+
+
     return (
         <Dialog open={isOpen} onOpenChange={toggleDialog}>
 
@@ -45,19 +48,15 @@ const RescheduleDialog: React.FC<RescheduleProps> = ({ appointment }) => {
                 ) : (
                     <div className='overflow-hidden'>
                         <div className="mb-6">
-                            <header className='flex justify-between items-center py-2'>
-                                <div>
-                                    <DialogTitle>Reprogramar cita</DialogTitle>
-                                    <DialogDescription>Selecciona día</DialogDescription>
-                                </div>
-                            </header>
 
                             <div className="flex flex-col pb-2 ">
 
-                                <Calendar
-                                    selectedDate={date}
-                                    setSelectedDate={setDate}
-                                    moveSlotOffset={MoveSlotOffset}
+                                <ScheduleSlider
+                                    title='Reprogramar cita'
+                                    description='Selecciona día'
+                                    selectedDate={slotDate}
+                                    setSelectedDate={setSlotDate}
+                                    moveApptOffset={MoveSlotOffset}
                                 />
                             </div>
                         </div>

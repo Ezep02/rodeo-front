@@ -2,7 +2,7 @@ import { Scissors } from 'lucide-react'
 import React from 'react'
 import useCloudVideos from '../../hooks/useCloudVideos'
 
-const HeroImageSection:React.FC = () => {
+const HeroImageSection: React.FC = () => {
 
     const {
         cloudinaryVideos
@@ -10,7 +10,7 @@ const HeroImageSection:React.FC = () => {
 
 
     return (
-        <div className="relative">
+        <div className="bg-white p-8 md:px-16 flex flex-col md:flex-row items-center justify-between">
             <div className=" rounded-2xl overflow-hidden p-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {cloudinaryVideos.map((src, index) => (

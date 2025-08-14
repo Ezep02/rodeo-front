@@ -1,15 +1,8 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs";
+import { Product } from "../model/Product";
 
 const PRODUCT_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/products`;
 
-export type Product = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  preview_url: string;
-};
 
 // Get all products
 type GetProducListReq = {
@@ -22,3 +15,13 @@ export const ProductList = async () => {
   return response.data;
 };
 
+// Get active promotion
+type GetPromotionListReq = {
+  promotion: Product[]
+  message: string
+}
+
+export const PromotionList = async () => {
+  const response = await AuthenticationInstance.get<GetPromotionListReq>(`${PRODUCT_BASE_URL}/promotion`)
+  return response.data
+}

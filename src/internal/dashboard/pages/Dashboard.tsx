@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 
 {/* SECTIONS */ }
 import HeroSection from "../components/sections/HeroSection";
-import HeroImageSection from "../components/sections/HeroImageSection";
 // import StatsSection from "../components/sections/StatsSection";
 
 import PromotionSection from "../components/sections/PromotionSection";
@@ -12,66 +11,90 @@ import FooterSection from "../components/sections/FooterSection";
 import { Loader2 } from "lucide-react";
 
 
+
 const StatsSection = React.lazy(() => import("../components/sections/StatsSection"))
 const PopularServices = React.lazy(() => import("../components/sections/PopularServices"))
 const ReviewSection = React.lazy(() => import("../components/sections/ReviewSection"))
+const PostSection = React.lazy(() => import("../components/sections/PostSection"))
+const HeroImageSection = React.lazy(() => import("../components/sections/HeroImageSection"))
+
 
 
 const Dashboard: React.FC = () => {
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
 
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <HeroSection />
 
-        {/* Hero Image Section */}
+      <HeroSection />
+
+      {/* Hero Image Section */}
+      <Suspense
+        fallback={
+          <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md bg-[rgb(240,244,248)]">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          </div>
+        }
+      >
         <HeroImageSection />
+      </Suspense>
 
-        {/* Statistics Section */}
-        <Suspense
-          fallback={
-            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
-              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-            </div>
-          }
-        >
-          <StatsSection />
-        </Suspense>
-
-        {/* Popular Services Section */}
-        <Suspense
-          fallback={
-            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
-              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-            </div>
-          }
-        >
-          <PopularServices />
-        </Suspense>
+      {/* Statistics Section */}
+      <Suspense
+        fallback={
+          <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md bg-[rgb(240,244,248)]">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          </div>
+        }
+      >
+        <StatsSection />
+      </Suspense>
 
 
-        {/* Promotions Section */}
-        <PromotionSection />
+      {/* BANNER PROMOCIONAL */}
+      <Suspense
+        fallback={
+          <div className="min-h-[40vh] flex justify-center items-center py-4">
+            <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+            <span className="ml-2 text-gray-500 text-sm">Cargando servicios...</span>
+          </div>
+        }
+      >
+        < PostSection />
+      </Suspense>
 
-        {/* Reviews Section */}
-        <Suspense
-          fallback={
-            <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
-              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-            </div>
-          }
-        >
-          <ReviewSection />
-        </Suspense>
+      {/* Popular Services Section */}
+      <Suspense
+        fallback={
+          <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          </div>
+        }
+      >
+        <PopularServices />
+      </Suspense>
 
-        {/* FAQ Section */}
-        <FaqSection />
 
-        {/* Footer */}
-        <FooterSection />
-      </div>
+      {/* Promotions Section */}
+      <PromotionSection />
+
+      {/* Reviews Section */}
+      <Suspense
+        fallback={
+          <div className="min-h-[20vh] lg:col-span-2 flex justify-center items-center rounded-md">
+            <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          </div>
+        }
+      >
+        <ReviewSection />
+      </Suspense>
+
+      {/* FAQ Section */}
+      <FaqSection />
+
+      {/* Footer */}
+      <FooterSection />
     </div>
   );
 };

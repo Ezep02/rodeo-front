@@ -17,9 +17,9 @@ export const useRescheduling = (appointment: Appointment) => {
 
     // Slots y fechas del hook useSlots
     const {
-        date,
         filteredSlots,
-        setDate,
+        setSlotDate,
+        slotDate,
         MoveSlotOffset,
         setHashMap,
     } = useSlots();
@@ -137,7 +137,7 @@ export const useRescheduling = (appointment: Appointment) => {
                 old_slot_id: data.appointment.slot.id,
                 surcharge_price: total_surcharge
             }
-            
+
             try {
                 let res = await ReschedulingWithSurcharge(obj)
                 window.location.href = res.init_point
@@ -153,8 +153,8 @@ export const useRescheduling = (appointment: Appointment) => {
         toggleDialog,
         selectedTime,
         setSelectedTime,
-        date,
-        setDate,
+        setSlotDate,
+        slotDate,
         MoveSlotOffset,
         filteredSlots,
         handleReschedule,

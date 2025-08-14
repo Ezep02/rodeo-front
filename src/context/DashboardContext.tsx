@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
-import { Product } from "@/internal/reservation/services/shop_service";
+
 import { Appointment } from "@/internal/Appointment/models/Appointment";
+import { Product } from "@/internal/reservation/model/Product";
 
 interface DashboardContextProps {
   // V1 
@@ -10,6 +11,9 @@ interface DashboardContextProps {
   // APPOINTMENTS
   customerAppointment: Appointment[]
   setCustomerAppointment: React.Dispatch<React.SetStateAction<Appointment[] | []>>
+
+  sliderDate: Date
+  setSliderDate: React.Dispatch<React.SetStateAction<Date>>
 
 }
 
@@ -29,13 +33,18 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   // V1 APPOINTMENTS
   const [customerAppointment, setCustomerAppointment] = useState<Appointment[]>([])
 
+  // Slader
+  const [sliderDate, setSliderDate] = useState<Date>(new Date)
+
   return (
     <DashboardContext.Provider
       value={{
         productShop,
         setProductShop,
         customerAppointment,
-        setCustomerAppointment
+        setCustomerAppointment,
+        sliderDate,
+        setSliderDate
       }}
     >
       {children}

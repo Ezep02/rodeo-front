@@ -9,14 +9,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="min-h-screen bg-black overflow-hidden "
+      className="bg-[rgb(240,244,248)]"
     >
 
-      <header className="sticky top-0 backdrop-blur-sm z-30">
+      <header className="sticky top-0 backdrop-blur-sm z-30 bg-zinc-950">
         <Nav />
       </header>
 
-      <main className="">
+      <main>
         {children}
       </main>
     </div>

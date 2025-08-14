@@ -1,6 +1,7 @@
 import { AuthenticationInstance, MultipartInstance } from "@/configs/AxiosConfigs";
 import { Product } from "../models/ServicesModels";
 
+
 const PRODUCT_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/products`;
 
 // Get all products
@@ -9,20 +10,13 @@ type GetProducListReq = {
     total: number
 }
 
-// Create products
-type CreateProductReq = {
-    message: string
-    product: Product
-}
-
 type UpdateProductReq = {
     message: string
     product: Product
 }
 
-export const GetProductList = async (limit: number, offset: number) => {
-    const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/`);
-    console.log(limit, offset)
+export const GetProductList = async (offset: number) => {
+    const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/${offset}`);
     return response.data;
 };
 
@@ -33,7 +27,7 @@ export const UpdateProduct = async (data: Product, id: number) => {
 };
 
 export const CreateProduct = async (data: any) => {
-    const response = await MultipartInstance.post<CreateProductReq>(`${PRODUCT_BASE_URL}/`, data);
+    const response = await MultipartInstance.post(`${PRODUCT_BASE_URL}/`, data);
     return response.data;
 };
 

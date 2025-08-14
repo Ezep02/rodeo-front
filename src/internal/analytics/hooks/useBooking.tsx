@@ -56,8 +56,6 @@ const useBooking = () => {
         fetchBookingWeeklyRate()
     }, [])
 
-
-
     return {
         weeklyBooking,
         monthBooking,

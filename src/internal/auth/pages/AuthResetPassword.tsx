@@ -1,9 +1,10 @@
-import CustomToast from '@/components/common/ToastCustom';
+
+import ErrorAlert from '@/components/alerts/ErrorAlert';
 import { Button } from '@/components/ui/button';
 import { ResetUserPassowrd } from '@/service/AuthService';
 import { ResetPasswordFormData, ResetUserPasswordSchema } from '@/types/ResetPasswordTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { startTransition, useActionState } from 'react';
+import { startTransition, useActionState, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { GiBullHorns } from 'react-icons/gi';
@@ -13,23 +14,24 @@ import { useParams } from 'react-router-dom';
 
 const AuthResetPassword = () => {
     const { token } = useParams();
-  
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<ResetPasswordFormData>({ resolver: zodResolver(ResetUserPasswordSchema) });
 
-
+    const [showError, setShowError] = useState<boolean>(false)
     const [resetPasswordErr, resetPasswordAction, isresetPasswordPending] = useActionState(
         async (_: string | null, data: ResetPasswordFormData) => {
             try {
 
                 let res = await ResetUserPassowrd(data.password, token?.slice(6)!);
                 console.log(res)
-                
+
                 return null;
             } catch (error: any) {
+                setShowError(true)
                 return error?.response?.data || "Error de autenticación";
             }
         },
@@ -47,11 +49,13 @@ const AuthResetPassword = () => {
         <div className='min-h-svh grid'>
 
             <div className='flex flex-col gap-4 p-6 md:p-10'>
-                {
-                    resetPasswordErr && (
-                        <CustomToast message={resetPasswordErr} type="error" duration={3000} />
-                    )
-                }
+
+                <ErrorAlert
+                    message={resetPasswordErr}
+                    show={showError}
+                    onClose={() => setShowError(false)}
+                />
+
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">{
                         isresetPasswordPending ? (
@@ -64,7 +68,7 @@ const AuthResetPassword = () => {
                                 className="flex flex-col gap-6"
                                 onSubmit={handleSubmit(handleResetPassword)}
                             >
-                               
+
                                 <div>
                                     <div className="flex justify-center items-center w-full h-full text-rose-500">
                                         <GiBullHorns size={60} />

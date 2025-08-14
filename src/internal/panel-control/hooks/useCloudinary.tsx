@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from "react";
 
-import { CloudinaryImage } from "../models/Cloudinary";
 import { GetCloudImg } from "../services/cloudinary";
+import { CloudinaryImage } from "../models/Cloudinary";
 
 
 const useCloudinary = () => {
@@ -10,6 +10,7 @@ const useCloudinary = () => {
     // Cloudinary instance
 
     const [cloudImgGallery, setCloudImgGallery] = useState<CloudinaryImage[] | []>([])
+    const [cloudNextCursor, setCloudNextCursor] = useState<string>("")
 
     useEffect(() => {
 
@@ -17,8 +18,14 @@ const useCloudinary = () => {
 
             try {
 
-                const result = await GetCloudImg()
+                const result = await GetCloudImg("")
+
                 if (result.assets.length > 0) {
+
+                    if (result.next_cursor) {
+                        setCloudNextCursor(result.next_cursor)
+                    }
+
                     setCloudImgGallery(result.assets)
                 }
             } catch (error) {
@@ -29,8 +36,26 @@ const useCloudinary = () => {
         CloudinaryFetchGallery()
     }, [])
 
+    const FetchMoreImg = async () => {
+        try {
+            const result = await GetCloudImg(cloudNextCursor)
+            if (result.assets.length > 0) {
+
+                if (result.next_cursor) {
+                    setCloudNextCursor(result.next_cursor)
+                }
+                
+                setCloudImgGallery(prev => [...prev, ...result.assets])
+            }
+        } catch (error) {
+            console.warn("Algo no fue bien recibiendo las imagenes", error)
+        }
+    }
+
     return {
-        cloudImgGallery
+        cloudImgGallery,
+        FetchMoreImg,
+        cloudNextCursor
     }
 }
 

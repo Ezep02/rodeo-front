@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
-import { Slot, SlotReq } from "../internal/panel-control/models/Slots";
-import { CreateSlot, DeleteSlot, SlotList, UpadateSlot } from "../internal/panel-control/services/slot_service"
+import { useContext, useEffect, useState } from "react"
+import { Barber, Slot, SlotReq } from "../internal/barber/models/Slots";
+import { CreateSlot, DeleteSlot, SlotByDateRange, UpadateSlot } from "../internal/barber/services/slot_service"
+import { AuthContext } from "@/context/AuthContext";
 
 type GroupedSlots = {
     NEW: SlotReq[];
@@ -9,12 +10,18 @@ type GroupedSlots = {
 
 export const useSlots = () => {
 
+    const { user } = useContext(AuthContext)!
+
     // cargar schedules iniciales y funcion de offset
     const [slotOffset, setSlotOffset] = useState<number>(0)
 
-    const MoveSlotOffset = async () => {
+    const MoveSlotOffset = async (startOfWeek: Date, endOfWeek: Date) => {
+
         try {
-            const res = await SlotList(slotOffset);
+            const startISO = startOfWeek.toISOString().slice(0, 10);
+            const endISO = endOfWeek.toISOString().slice(0, 10);
+
+            const res = await SlotByDateRange(startISO, endISO);
 
             if (res.slots.length > 0) {
                 setHashMap((prevMap) => {
@@ -28,6 +35,7 @@ export const useSlots = () => {
                             date: new Date(slot.date),
                             time: slot.time,
                             status: "NOT CHANGE",
+                            barber: slot.barber,
                             is_booked: slot.is_booked,
                         };
 
@@ -62,10 +70,21 @@ export const useSlots = () => {
 
     // V1 Slots controllers
     const [filteredSlots, setFilteredSlots] = useState<Slot[]>([]);
-    const [date, setDate] = useState<Date | undefined>(new Date())
+    const [slotDate, setSlotDate] = useState<Date>(new Date)
     const [hashMap, setHashMap] = useState<Map<string, Slot[]>>(new Map());
     const [deleteIds, setDeleteIds] = useState<Slot[]>([])
     const [slotIsLoading, setSlotLoading] = useState<boolean>(false)
+    const [totalChanges, setTotalChanges] = useState<number>(0)
+
+
+    // Restas y sumar cambios
+    const SumChange = () => {
+        setTotalChanges((prev) => prev + 1)
+    }
+
+    const SubstractChange = () => {
+        setTotalChanges((prev) => prev - 1)
+    }
 
     const HandleSlotLoader = () => {
         setSlotLoading((prev) => !prev)
@@ -89,38 +108,60 @@ export const useSlots = () => {
             if (hasFetched) return;
             hasFetched = true;
 
-            const res = await SlotList(slotOffset);
+            const today = new Date();
 
-            // Construir el nuevo Map sin duplicados
-            const newMap = new Map<string, Slot[]>();
+            // Obtener el dia de la semana (0=domingo, 1=lunes, ..., 6=sabado)
+            const dayOfWeek = today.getDay();
 
-            res.slots.forEach((slot) => {
-                const dateToStr = formatDateKey(new Date(slot.date));
+            // Calcular inicio de semana (domingo)
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - dayOfWeek);
+            startOfWeek.setHours(0, 0, 0, 0);
 
-                const slotItem: Slot = {
-                    id: slot.id,
-                    date: new Date(slot.date),
-                    time: slot.time,
-                    status: "NOT CHANGE",
-                    is_booked: slot.is_booked,
-                };
+            // Fin de semana 
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
 
-                if (!newMap.has(dateToStr)) {
-                    newMap.set(dateToStr, []);
-                }
+            // Formatear fechas a 'YYYY-MM-DD'
+            const startStr = startOfWeek.toISOString().slice(0, 10);
+            const endStr = endOfWeek.toISOString().slice(0, 10);
 
-                const hashItems = newMap.get(dateToStr)!;
+            try {
+                const res = await SlotByDateRange(startStr, endStr);
 
-                // Evitar duplicados por ID
-                const alreadyExists = hashItems.some((s) => s.id === slotItem.id);
-                if (!alreadyExists) {
-                    hashItems.push(slotItem);
-                }
-            });
+                // Construir el nuevo Map sin duplicados
+                const newMap = new Map<string, Slot[]>();
 
-            setHashMap(newMap);
-            // Si necesitas avanzar el offset, descomentá:
-            //MoveSlotOffset();
+                res.slots.forEach((slot) => {
+                    const dateToStr = formatDateKey(new Date(slot.date));
+
+                    const slotItem: Slot = {
+                        id: slot.id,
+                        date: new Date(slot.date),
+                        time: slot.time,
+                        status: "NOT CHANGE",
+                        is_booked: slot.is_booked,
+                        barber: slot.barber
+                    };
+
+                    if (!newMap.has(dateToStr)) {
+                        newMap.set(dateToStr, []);
+                    }
+
+                    const hashItems = newMap.get(dateToStr)!;
+
+                    // Evitar duplicados por ID
+                    const alreadyExists = hashItems.some((s) => s.id === slotItem.id);
+                    if (!alreadyExists) {
+                        hashItems.push(slotItem);
+                    }
+                });
+
+                setHashMap(newMap);
+            } catch (error) {
+                console.warn("Algo no fue bien recuperando los slots")
+            }
         };
 
         FetchSlotList();
@@ -130,13 +171,20 @@ export const useSlots = () => {
     // # MANEJO DE OPERACIONES SOBRE EL COMPONENTE
     const AddSlot = (date: Date) => {
         const dateToStr = formatDateKey(date);
-        const newMap = new Map(hashMap); // copiar el map original
+        const newMap = new Map(hashMap);
+
+        let barber: Barber = {
+            id: user?.ID ?? 0,
+            name: user?.name ?? "",
+            surname: user?.surname ?? ""
+        }
 
         const slot: Slot = {
             date: date,
             time: "",
             status: "NEW",
             is_booked: false,
+            barber: barber
         };
 
         if (!newMap.has(dateToStr)) {
@@ -145,6 +193,8 @@ export const useSlots = () => {
 
         const hashItems = newMap.get(dateToStr);
         hashItems?.push(slot);
+
+        SumChange()
 
         setHashMap(newMap);
     };
@@ -170,19 +220,24 @@ export const useSlots = () => {
                 hashItems[indx].status = "DELETE";
                 const newIds = [...deleteIds, hashItems[indx]];
                 setDeleteIds(newIds);
+                // Cambios +1
+                SumChange()
             }
             // Si no pertenece a los casos anteriores entonces es NEW, debe eliminarse
-            hashItems.splice(indx, 1)
+            if (itemStatus === "NEW") {
+                hashItems.splice(indx, 1)
+            }
             setHashMap(copiedMap)
+            SubstractChange()
         }
 
     };
 
     const UpdateCurrentSlot = (time: string, indx: number) => {
 
-        if (!date) return console.warn("Fecha inválida en update useEffect");
+        if (!slotDate) return console.warn("Fecha inválida en update useEffect");
         // 1. Parsear la fecha
-        const dateToStr = formatDateKey(date);
+        const dateToStr = formatDateKey(slotDate);
 
         // 2. Copiar el map original
         const copiedMap = new Map(hashMap);
@@ -198,9 +253,37 @@ export const useSlots = () => {
             if (itemStatus === "NOT CHANGE") {
                 hashItems[indx].time = time
                 hashItems[indx].status = "UPDATE"
+                SumChange()
             }
 
             hashItems[indx].time = time
+            setHashMap(copiedMap)
+
+        }
+    }
+
+    // Crear funcion de reset a not change 
+    const CancelDelete = (date: Date, indx: number) => {
+        if (!date) return console.warn("Fecha inválida en update useEffect");
+        // 1. Parsear la fecha
+        const dateToStr = formatDateKey(date);
+
+        // 2. Copiar el map original
+        const copiedMap = new Map(hashMap);
+
+        // 3. Extraer el Arreglo de Slots
+        const hashItems = copiedMap.get(dateToStr)
+
+        // 4. Actualizar el slot de la posicion indx, solo si hashItems existe
+        if (hashItems && hashItems[indx]) {
+
+            // Preparar slots para enviar en la consulta
+            let itemStatus = hashItems[indx].status
+            if (itemStatus === "DELETE") {
+                hashItems[indx].status = "NOT CHANGE"
+
+                SubstractChange()
+            }
             setHashMap(copiedMap)
         }
     }
@@ -208,8 +291,9 @@ export const useSlots = () => {
     // Actualizar filteredSlots cada vez que cambia la fecha
     useEffect(() => {
 
-        if (!date) return console.warn("Fecha inválida en useEffect");
-        const dateToStr = formatDateKey(date);
+        if (!slotDate) return console.warn("Fecha inválida en useEffect");
+        const dateToStr = formatDateKey(slotDate);
+
 
         // copiar el map original
         const newMap = new Map(hashMap);
@@ -222,7 +306,7 @@ export const useSlots = () => {
         // Si no encontro nada, actualizar a un arreglo vacio
         setFilteredSlots([])
 
-    }, [date, hashMap]);
+    }, [slotDate, hashMap]);
 
 
     // ### GUARDAR CAMBIOS REQUESTS ####
@@ -327,9 +411,16 @@ export const useSlots = () => {
         if (deleteIds.length > 0) DeleteSlots(deleteIds)
     }
 
+
+    // Obtener la cantidad de slot segun el dia 
+    const GetSlotQuantByDate = (date: Date): number => {
+        const dateToStr = formatDateKey(date);
+        const slots = hashMap.get(dateToStr);
+        return slots ? slots.length : 0;
+    }
+
+
     return {
-        date,
-        setDate,
         filteredSlots,
         AddSlot,
         RemoveSlot,
@@ -341,6 +432,11 @@ export const useSlots = () => {
         slotOffset,
         MoveSlotOffset,
         hashMap,
-        setHashMap
+        setHashMap,
+        CancelDelete,
+        totalChanges,
+        slotDate,
+        setSlotDate,
+        GetSlotQuantByDate
     }
 }

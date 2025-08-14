@@ -1,4 +1,6 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
+import { Appointment } from "../models/Appointment";
+import {  } from "../models/Review";
 
 
 const REVIEW_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/reviews`;
@@ -10,19 +12,7 @@ type Review = {
     rating: number
 }
 
-type CustomerReviews = {
-    schedule_id: number
-    order_id: number
-    comment: string
-    rating: number
-    user_id: number
-    title: string
-    schedule_day_date: Date
-    schedule_start_time: string
-    payer_name: string
-    payer_surname: string
-    CreatedAt: Date
-}
+
 
 type ReviewResponse = {
     message: string
@@ -35,7 +25,19 @@ export const CreateReview = async (review: Review) => {
     return response.data
 }
 
-export const GetCustomerReviews = async (offset: number) => {
-    const response = await AuthenticationInstance.get<CustomerReviews[]>(`${REVIEW_URL}/all/${offset}`)
+export const GetReviewList = async (offset: number) => {
+    const response = await AuthenticationInstance.get<Appointment[]>(`${REVIEW_URL}/all/${offset}`)
+    return response.data
+}
+
+
+// # Reviews del usuario
+type CustomerReviewsRes = {
+    message: string
+    reviews: Appointment[]
+}
+
+export const GetCustomerReviewList = async (userID: number, page_offset: number) => {
+    const response = await AuthenticationInstance.get<CustomerReviewsRes>(`${REVIEW_URL}/user/${userID}/page/${page_offset}`)
     return response.data
 }

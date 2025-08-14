@@ -1,0 +1,1 @@
+import{A as r,r as o}from"./index-AL-VPenz.js";const e="http://localhost:9090/api/v1/info",s=async()=>(await r.get(`${e}/`)).data.info,f=()=>{const[n,a]=o.useState();return o.useEffect(()=>{(async()=>{try{let t=await s();t&&a(t)}catch{console.warn("ERROR recuperando informacion")}})()},[]),{info:n}};export{f as u};

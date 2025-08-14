@@ -32,9 +32,11 @@ const Header: React.FC = () => {
     }
   };
 
+ 
+
   return (
     <div
-      className="container mx-auto flex h-16 items-center justify-between px-4 "
+      className="container mx-auto flex h-16 items-center justify-between px-4"
     >
       <nav className="w-full backdrop-blur-sm">
         <div className="flex items-center justify-between">
@@ -50,7 +52,7 @@ const Header: React.FC = () => {
 
           {/* User Menu */}
           {
-            isUserAuthenticated ? (
+            isUserAuthenticated && (
               <div className="flex items-center space-x-4 ">
                 <Avatar>
                   <AvatarFallback className="text-sm font-medium text-zinc-50 bg-transparent uppercase">
@@ -84,17 +86,24 @@ const Header: React.FC = () => {
                     </DropdownMenuItem>
                     {
                       user?.is_barber && (
-                        <DropdownMenuItem asChild>
-                          <Link to={"/dashboard/panel-control/barber"} className="cursor-pointer">
-                            Panel de control
-                          </Link>
-                        </DropdownMenuItem>
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link to={"/dashboard/barber/cronograma"} className="cursor-pointer">
+                              Cronograma
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link to={"/dashboard/barber/panel-control"} className="cursor-pointer">
+                              Panel Control
+                            </Link>
+                          </DropdownMenuItem>
+                        </>
                       )
                     }
                     {
                       user?.is_admin && (
                         <DropdownMenuItem asChild>
-                          <Link to={"/dashboard/panel-control/admin"} className="cursor-pointer">
+                          <Link to={"/dashboard/barber/admin"} className="cursor-pointer">
                             Analíticas
                           </Link>
                         </DropdownMenuItem>
@@ -106,25 +115,6 @@ const Header: React.FC = () => {
                     <DropdownMenuItem className="text-red-600 cursor-pointer" onClick={LogoutSession}>Cerrar sesión</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            ) : (
-              <div
-                className="flex gap-2 text-zinc-50 items-center text-sm"
-              >
-
-                <Link
-                  to={"/auth/login"}
-                  className="hover:text-zinc-200"
-                >
-                  Iniciar sesion
-                </Link>
-
-                <Link
-                  to={"/auth/register"}
-                  className="bg-rose-600 p-2 rounded-md hover:bg-rose-500 transition-all"
-                >
-                  Registrarse
-                </Link>
               </div>
             )}
         </div>

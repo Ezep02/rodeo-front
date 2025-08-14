@@ -1,6 +1,4 @@
-
 import { FormRegisterPaymentField } from "@/components/common/CustomInputForm";
-import CustomToast from "@/components/common/ToastCustom";
 import { Button } from "@/components/ui/button";
 import { RegisterPaymentReq } from "@/models/AuthModels";
 import { RegisterPaymentSchema } from "@/types/RegisterPaymentData";
@@ -11,15 +9,16 @@ import { useForm } from "react-hook-form";
 type RegisterPaymentFormProps = {
     onClose: () => void;
     setUserData: (userData: RegisterPaymentReq) => void;
-    
 };
 
-const UnregisteredUserForm: React.FC<RegisterPaymentFormProps> = ({onClose, setUserData}) => {
-    const [registerErr, registerAction, isRegisterPending] = useActionState(
+const UnregisteredUserForm: React.FC<RegisterPaymentFormProps> = ({ onClose, setUserData }) => {
+    const [_, registerAction, isRegisterPending] = useActionState(
         async (_: string | null, data: RegisterPaymentReq) => {
             setUserData(data);
             onClose();
-            
+
+
+
             return null;
         },
 
@@ -44,11 +43,8 @@ const UnregisteredUserForm: React.FC<RegisterPaymentFormProps> = ({onClose, setU
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
             <div className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-2xl shadow-lg p-8 space-y-6">
-                {
-                    registerErr && (
-                        <CustomToast message={registerErr} type="error" duration={3000} />
-                    )
-                }
+
+
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
                         {

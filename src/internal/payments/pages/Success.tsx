@@ -10,23 +10,14 @@ import { Download, ArrowLeft } from 'lucide-react';
 import { GetOrderByToken, PaymentSlot } from '../services/paymentServices';
 import { useParams } from 'react-router-dom';
 import { GiBullHorns } from 'react-icons/gi';
+import CountDownTimer from '@/components/common/CountDownTimer';
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
 
 const Success: React.FC = () => {
   const { token } = useParams<{ token: string }>();
   const [paymentData, setPaymentData] = useState<PaymentSlot | null>(null);
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+
+
 
   const [isErr, recoveringOrderAction, isPending] = useActionState(
     async (_: string | null, token: string) => {
@@ -50,32 +41,6 @@ const Success: React.FC = () => {
     }
   }, [token]);
 
-  useEffect(() => {
-    if (!paymentData) return;
-
-    const calculateTimeLeft = () => {
-      const targetDate = new Date(paymentData.date);
-      const [hours, minutes] = paymentData.time.split(':').map(Number);
-      targetDate.setHours(hours, minutes, 0, 0);
-
-      const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
-
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeLeft({ days, hours, minutes, seconds });
-      } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      }
-    };
-
-    calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 1000);
-    return () => clearInterval(timer);
-  }, [paymentData]);
 
   if (isPending) {
     return (
@@ -113,7 +78,7 @@ const Success: React.FC = () => {
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 flex items-center justify-center">
-              <GiBullHorns size={30} className='text-rose-500'/>
+              <GiBullHorns size={30} className='text-rose-500' />
             </div>
           </div>
           <CardTitle className="text-xl font-bold text-gray-900">¡Cita Confirmada!</CardTitle>
@@ -121,7 +86,13 @@ const Success: React.FC = () => {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className="">
+
+          <CountDownTimer
+            date={paymentData.date}
+            time={paymentData.time}
+          />
+          
+          {/* <div className="">
             <h3 className="text-base font-semibold text-gray-800 mb-2">Tiempo restante</h3>
             <div className="bg-gray-900 rounded-xl p-6 text-white">
               <div className="grid grid-cols-4 gap-4 text-center">
@@ -133,7 +104,7 @@ const Success: React.FC = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="bg-gray-50 rounded-lg p-4 space-y-3">
             <div className="flex justify-between text-sm">

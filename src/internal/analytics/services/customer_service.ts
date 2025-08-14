@@ -7,7 +7,6 @@ const CUSTOMER_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/analytics`;
 type ClientRateRes = {
     message:string
     month_client_rate: ClientRate[]
-
 }
 
 
