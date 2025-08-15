@@ -33,9 +33,6 @@ const ReservationPage: React.FC = () => {
         setDialogOpen(false)
     }
 
-
-
-
     return (
         <div className="min-h-screen bg-gray-50">
 

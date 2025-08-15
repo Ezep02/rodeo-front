@@ -6,6 +6,7 @@ export type Preference = {
     products: number[]
     slotID: number
     payment_percentage: number
+    coupon_code?: string
 }
 
 

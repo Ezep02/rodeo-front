@@ -1,5 +1,3 @@
-// /components/reservations/MakeReservation.tsx
-
 import {
     Dialog,
     DialogContent,
@@ -22,8 +20,6 @@ import { Button } from '@/components/ui/button'
 import { Product } from '../../model/Product'
 import { FaArrowLeft } from 'react-icons/fa6'
 
-
-
 import {
     Select,
     SelectContent,
@@ -33,8 +29,10 @@ import {
 } from '@/components/ui/select'
 import ScheduleSlider from '@/components/common/ScheduleSlider'
 import { useSlots } from '@/hooks/useSlots'
+import useCoupon from '../../hooks/useCoupon'
+import { Coupon } from '../../model/Coupon'
+import SelectCoupon from './SelectCoupon'
 
-// Define the steps of the reservation process
 type ReservationStep = 'date_time_selection' | 'confirmation';
 
 type MakeReservationProps = {
@@ -48,20 +46,20 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
     closeBooking,
     selectedService,
 }) => {
-    // State for the current step
     const [step, setStep] = useState<ReservationStep>('date_time_selection');
-
     const { slotDate, filteredSlots, setSlotDate, MoveSlotOffset } = useSlots();
     const { user } = useUser();
+    const { activeCoupon } = useCoupon();
+
     const [selectedTime, setSelectedTime] = useState<Slot | null>(null);
     const [loadingSlots, setLoadingSlots] = useState(false);
     const [paymentPercentage, setPaymentPercentage] = useState("100");
- 
+    const [selectedCoupon, setSelectedCoupon] = useState<Coupon | undefined>();
+
     useEffect(() => {
         setSelectedTime(null);
     }, [slotDate]);
 
-    // Handle closing the dialog and resetting the step
     const handleClose = () => {
         setStep('date_time_selection');
         closeBooking();
@@ -74,6 +72,32 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
     const CalculatePaymentPercentage = (percentage: string, price: number): number => {
         const percent = parseFloat(percentage);
         return isNaN(percent) ? price : (percent / 100) * price;
+    };
+
+    // 🔹 Calcula precio final y ahorro
+    const getPriceDetails = () => {
+        const originalPrice = selectedService.price;
+        let finalPrice = originalPrice;
+        let totalDiscountPercent = 0;
+
+        if (selectedService.promotion_discount && selectedService.promotion_discount > 0) {
+            finalPrice = finalPrice * (1 - selectedService.promotion_discount / 100);
+            totalDiscountPercent += selectedService.promotion_discount;
+        }
+
+        if (selectedCoupon?.discount_percentage && selectedCoupon.discount_percentage > 0) {
+            finalPrice = finalPrice * (1 - selectedCoupon.discount_percentage / 100);
+            totalDiscountPercent += selectedCoupon.discount_percentage;
+        }
+
+        const totalSaved = originalPrice - finalPrice;
+
+        return {
+            originalPrice,
+            finalPrice,
+            totalDiscountPercent,
+            totalSaved
+        };
     };
 
     const HandlePayment = async () => {
@@ -89,7 +113,8 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
             payment_percentage: Number(paymentPercentage),
             products: [selectedService.id],
             slotID: selectedTime.id,
-            time: slot?.time ?? ""
+            time: slot?.time ?? "",
+            coupon_code: selectedCoupon?.code
         };
 
         try {
@@ -103,15 +128,15 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
         }
     };
 
-    const isDisabled = selectedService.promotion_discount && selectedService.promotion_discount > 0;
+    const isDisabled = selectedService.promotion_discount && selectedService.promotion_discount > 0 || selectedCoupon;
 
-    // Helper function to render a specific step
     const renderStep = () => {
+        const { originalPrice, finalPrice, totalDiscountPercent, totalSaved } = getPriceDetails();
+
         switch (step) {
             case 'date_time_selection':
                 return (
                     <div className="flex flex-col gap-6">
-                        {/* HEADER */}
                         <DialogHeader className="pb-4 border-b">
                             <div className="flex items-center gap-3 mt-4">
                                 <button
@@ -131,9 +156,7 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                             </div>
                         </DialogHeader>
 
-                        {/* BODY */}
                         <div className="grid grid-cols-1 gap-8">
-                            {/* DATE SELECTION (CALENDAR) */}
                             <div className="col-span-1">
                                 <ScheduleSlider
                                     selectedDate={slotDate}
@@ -144,7 +167,6 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                                 />
                             </div>
 
-                            {/* TIME SELECTION */}
                             <div className="col-span-1 space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h4 className="text-base font-medium">Horarios disponibles</h4>
@@ -178,7 +200,6 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                             </div>
                         </div>
 
-                        {/* FOOTER for Step 1 */}
                         <DialogFooter className="mt-6 border-t pt-4">
                             <Button variant="outline" onClick={handleClose}>Cancelar</Button>
                             <Button
@@ -194,7 +215,6 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
             case 'confirmation':
                 return (
                     <div className="flex flex-col gap-6">
-                        {/* HEADER */}
                         <DialogHeader className="pb-4 border-b">
                             <div className="flex items-center gap-3 mt-4">
                                 <button
@@ -214,9 +234,7 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                             </div>
                         </DialogHeader>
 
-                        {/* BODY */}
                         <div className="grid grid-cols-1 gap-8">
-                            {/* RESERVATION SUMMARY */}
                             <div className="p-6">
                                 <h2 className="text-base font-semibold mb-4">
                                     Resumen de la reserva
@@ -246,7 +264,7 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                                             <SelectTrigger className="w-[100px]">
                                                 <SelectValue />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent defaultValue={isDisabled && 100}>
                                                 <SelectItem value="100">No</SelectItem>
                                                 <SelectItem value="50" disabled={!!isDisabled}>
                                                     Sí
@@ -254,75 +272,75 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                    <div>
+                                        {Array.isArray(activeCoupon) && activeCoupon.length > 0 && (
+                                            <div className="space-y-2">
+                                                {selectedCoupon ? (
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-500">Código seleccionado:</span>
+                                                        <span className="font-medium text-zinc-800">
+                                                            {selectedCoupon.code}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <span className="block text-zinc-700">
+                                                            {user?.name}, al parecer tienes cupones disponibles para usar.
+                                                        </span>
+                                                        <SelectCoupon
+                                                            couponList={activeCoupon}
+                                                            selectCoupon={setSelectedCoupon}
+                                                        />
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <br className="my-4" />
                                 <div className="flex justify-between items-center text-base">
                                     <span className="font-semibold">Total:</span>
                                     <div className="text-right">
-                                        {paymentPercentage === "50" && selectedService ? (
+                                        {paymentPercentage === "50" ? (
                                             <>
                                                 <span className="line-through text-gray-400 text-sm block">
-                                                    ${selectedService.price}
+                                                    ${originalPrice.toFixed(2)}
                                                 </span>
                                                 <span className="text-green-600 font-semibold">
-                                                    ${CalculatePaymentPercentage(paymentPercentage, selectedService.price)}
+                                                    ${CalculatePaymentPercentage(paymentPercentage, finalPrice).toFixed(2)}
                                                 </span>
+                                                {((selectedService.promotion_discount ?? 0) > 0 || selectedCoupon) && (
+                                                    <p className="text-xs text-emerald-600 font-semibold mt-1">
+                                                        Ahorra ${totalSaved.toFixed(2)} ({totalDiscountPercent}%)
+                                                    </p>
+                                                )}
                                             </>
                                         ) : (
-                                            <span className="text-green-600 font-semibold">
-                                                {selectedService.promotion_discount && selectedService.promotion_discount > 0 ? (
-                                                    <>
-                                                        <div className="flex items-center gap-3">
-                                                            <span className="text-gray-400 line-through flex items-center font-semibold gap-0.5">
-                                                                $
-                                                                {selectedService.price}
-                                                            </span>
-                                                            <span className="flex items-center text-green-600 font-semibold text-lg gap-1">
-                                                                $
-                                                                {(selectedService.price * (1 - selectedService.promotion_discount / 100)).toFixed(2)}
-                                                            </span>
-                                                        </div>
-
-                                                        <p className="text-xs text-emerald-600 font-semibold mt-1">
-                                                            Ahorra un {selectedService.promotion_discount}%
-                                                        </p>
-                                                    </>
-                                                ) : (
-                                                    <span className="flex items-center gap-1 text-lg">
-                                                        $
-                                                        {selectedService.price}
+                                            <>
+                                                {((selectedService.promotion_discount ?? 0) > 0 || selectedCoupon) && (
+                                                    <span className="text-gray-400 line-through block">
+                                                        ${originalPrice.toFixed(2)}
                                                     </span>
                                                 )}
-                                            </span>
+                                                <span className="text-green-600 font-semibold text-lg">
+                                                    ${finalPrice.toFixed(2)}
+                                                </span>
+                                                {((selectedService.promotion_discount ?? 0) > 0 || selectedCoupon) && (
+                                                    <p className="text-xs text-emerald-600 font-semibold mt-1">
+                                                        Ahorra ${totalSaved} ({totalDiscountPercent}%)
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
                             </div>
-
-                            {/* CUSTOMER DETAILS */}
-                            {/* <Card className="p-6">
-                                <CardTitle className="text-base font-semibold mb-4">
-                                    Tus datos
-                                </CardTitle>
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">Nombre</Label>
-                                        <Input id="name" defaultValue={`${user?.name} ${user?.surname}`} readOnly />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="phone">Teléfono</Label>
-                                        <Input id="phone" placeholder="Tu número de teléfono" />
-                                    </div>
-                                </div>
-                            </Card> */}
                         </div>
 
-                        {/* FOOTER for Step 2 */}
                         <DialogFooter className="mt-6 border-t pt-4">
                             <Button variant="outline" onClick={() => setStep('date_time_selection')}>
                                 Volver
                             </Button>
-
                             <Button
                                 onClick={HandlePayment}
                                 disabled={loadingSlots || !selectedTime}
@@ -348,8 +366,6 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                 className="
                     xl:max-w-2xl xl:max-h-[90vh] xl:min-h-[90vh]
                     md:max-w-xl max-w-sm min-h-[80vh] p-6 rounded-3xl shadow-2xl bg-white
-                    
-                     
                     overflow-y-auto 
                     px-6 py-4
                 "
