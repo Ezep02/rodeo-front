@@ -114,11 +114,9 @@ const ScheduleSection: React.FC = () => {
     setOpenSlotPanelDate(date)
   }
 
-  // 
-
 
   return (
-    <div className="flex flex-col min-h-[60vh] w-full bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden flex-grow">
+    <div className="flex flex-col min-h-[60vh] w-full bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden flex-grow h-screen">
       <div className="p-4 flex flex-col h-full flex-grow">
         {/* Header */}
         <div className="mb-6 flex gap-2 justify-between flex-wrap ">
@@ -156,7 +154,7 @@ const ScheduleSection: React.FC = () => {
             return (
               <div
                 key={dateKey}
-                className="border rounded-lg p-5 shadow-sm flex flex-col flex-grow"
+                className={`${date <= today ? 'opacity-50' : ''} bg-white h-full relative border rounded-lg p-5 shadow-sm flex flex-col flex-grow`}
               >
 
                 <div className="flex flex-col gap-1 mb-2">
@@ -170,7 +168,13 @@ const ScheduleSection: React.FC = () => {
                     </div>
 
                     <button
-                      onClick={() => openSlotPanelForDate(date)}
+                      onClick={
+                        () => {
+                          if (date <= today) return 
+                          openSlotPanelForDate(date)
+                        }
+                      }
+                      disabled={date <= today}
                       className="flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-800 hover:bg-zinc-100 px-3 py-2 rounded-full transition"
                       aria-label="Expandir día"
                     >

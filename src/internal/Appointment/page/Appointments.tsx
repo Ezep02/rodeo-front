@@ -37,7 +37,7 @@ const Appointments: React.FC = () => {
 
 
           {/* Contenido scrollable */}
-          <div className='overflow-y-auto grow scroll-abrir-tarjeta'>
+          <div className='overflow-y-auto grow scroll-abrir-tarjeta min-h-[80vh]'>
             <Suspense fallback={
               <div className="min-h-[80vh] col-span-1 flex justify-center items-center rounded-md">
                 <Loader2 className="w-6 h-6 animate-spin text-gray-400" />

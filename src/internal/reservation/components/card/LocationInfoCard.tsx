@@ -20,10 +20,14 @@ const LocationInfoCard = () => {
                     </h2>
                 </div>
                 <div className="flex items-center text-gray-700 mb-4">
-                    <span className="text-2xl font-bold mr-2">{info?.promedy}</span>
+                    <span className="text-2xl font-bold mr-2">
+                        {info?.promedy && info.promedy > 0 
+                            ? info.promedy.toFixed(1)
+                            : 'N/A'}
+                    </span>
                     {/* Un conjunto de iconos de estrella para la calificación */}
                     {
-                        info?.promedy && (
+                        info?.promedy && info.promedy > 0 ? (
                             <>
 
                                 {Array.from({ length: 5 }, (_, i) => (
@@ -33,7 +37,7 @@ const LocationInfoCard = () => {
                                     />
                                 ))}
                             </>
-                        )
+                        ) : <span className="text-gray-500">Sin calificación</span>
                     }
                 </div>
                 {/* Botón de acción principal */}

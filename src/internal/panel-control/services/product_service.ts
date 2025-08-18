@@ -16,7 +16,7 @@ type UpdateProductReq = {
 }
 
 export const GetProductList = async (offset: number) => {
-    const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/${offset}`);
+    const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/page/${offset}`);
     return response.data;
 };
 

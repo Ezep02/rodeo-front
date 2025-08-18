@@ -36,7 +36,6 @@ const LoginDialog: React.FC<Props> = ({ setIsUserAuthenticated, setUser }) => {
                 }
                 return null;
             } catch (error: any) {
-                console.log(error)
                 setShowError(true)
                 return error?.response?.data?.error || "Error de autenticación";
             }

@@ -4,6 +4,7 @@ import {
 } from "../internal/panel-control/models/ServicesModels";
 import { MonthlyHaircuts } from "@/internal/barber/models/ChartModel";
 import { Category } from "@/internal/panel-control/models/Category";
+import { Post } from "@/internal/panel-control/models/Post";
 
 interface AuthContextProps {
 
@@ -23,6 +24,8 @@ interface AuthContextProps {
   // Categorias
   categories: Category[] | []
   setCategories: React.Dispatch<React.SetStateAction<Category[] | []>>;
+
+
 }
 
 export const PanelControlContext = React.createContext<AuthContextProps | undefined>(undefined);
@@ -47,6 +50,7 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
   const [categories, setCategories] = useState<Category[]>([])
 
 
+ 
   return (
     <PanelControlContext.Provider
       value={{
@@ -61,7 +65,7 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({ ch
         selectedServiceToDelete,
         setSelectedServiceToDelete,
         categories,
-        setCategories
+        setCategories,
       }}
     >
       {children}

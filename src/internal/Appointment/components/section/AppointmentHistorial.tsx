@@ -10,7 +10,7 @@ const AppointmentHistorial: React.FC = () => {
     } = useAppointment()
 
     return (
-        <section className='flex  border-gray-200 grow'>
+        <section className='flex  border-gray-200 grow '>
             <div className="flex flex-col flex-grow">
                 <div className="space-y-4">
                     {

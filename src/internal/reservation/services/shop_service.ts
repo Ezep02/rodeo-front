@@ -10,8 +10,8 @@ type GetProducListReq = {
   total: number
 }
 
-export const ProductList = async () => {
-  const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/`);
+export const ProductList = async (offset: number) => {
+  const response = await AuthenticationInstance.get<GetProducListReq>(`${PRODUCT_BASE_URL}/page/${offset}`);
   return response.data;
 };
 

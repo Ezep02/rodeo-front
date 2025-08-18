@@ -1,8 +1,10 @@
-import React from 'react';
 import usePost from '@/hooks/usePost';
+import React from 'react';
 
 const PostSection: React.FC = () => {
-    const { post } = usePost();
+    const { 
+        post
+    } = usePost();
 
     
     return (

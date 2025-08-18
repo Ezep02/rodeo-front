@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Post } from "../internal/panel-control/models/Post"
 import { Delete, List, Update } from "../internal/panel-control/services/post"
+
+import { DashboardContext } from "@/context/DashboardContext"
 
 
 const usePost = () => {
 
-  const [post, setPost] = useState<Post[] | []>([])
+  const { 
+    post,
+    setPost,
+  } = useContext(DashboardContext)!
+
+ 
   const [postOffset, setPostOffset] = useState<number>(0)
 
 
@@ -93,7 +100,8 @@ const usePost = () => {
     isOnErrAlert,
     setShowPostAlert,
     setOnErrAlert,
-    UpdatePost
+    UpdatePost,
+    
   }
 }
 

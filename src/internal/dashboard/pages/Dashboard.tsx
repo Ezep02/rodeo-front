@@ -11,7 +11,6 @@ import FooterSection from "../components/sections/FooterSection";
 import { Loader2 } from "lucide-react";
 
 
-
 const StatsSection = React.lazy(() => import("../components/sections/StatsSection"))
 const PopularServices = React.lazy(() => import("../components/sections/PopularServices"))
 const ReviewSection = React.lazy(() => import("../components/sections/ReviewSection"))
