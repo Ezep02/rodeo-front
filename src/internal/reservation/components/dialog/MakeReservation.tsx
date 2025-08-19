@@ -6,7 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import React, { startTransition, useActionState, useEffect, useState } from "react";
+import React, {
+  startTransition,
+  useActionState,
+  useEffect,
+  useState,
+} from "react";
 
 import { Preference } from "@/internal/reservation/model/Preference_mp";
 import { useUser } from "@/hooks/useUser";
@@ -33,7 +38,6 @@ import useCoupon from "../../hooks/useCoupon";
 import { Coupon } from "../../model/Coupon";
 import SelectCoupon from "./SelectCoupon";
 import ErrorAlert from "@/components/alerts/ErrorAlert";
-import { c } from "node_modules/framer-motion/dist/types.d-Cjd591yU";
 
 type ReservationStep = "date_time_selection" | "confirmation";
 
@@ -79,7 +83,7 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
     return isNaN(percent) ? price : (percent / 100) * price;
   };
 
-  // 🔹 Calcula precio final y ahorro
+  // Calcula precio final y ahorro
   const getPriceDetails = () => {
     const originalPrice = selectedService.price;
     let finalPrice = originalPrice;
@@ -120,10 +124,9 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
         setLoadingSlots(true);
         const response = await CreatePreference(req);
         window.location.href = response.init_point;
-        
       } catch (error: any) {
         console.error("Error creating payment link:", error);
-        setShowError(true)
+        setShowError(true);
         setLoadingSlots(false);
         return error?.response?.data?.error || "Error creando link de pago";
       }
@@ -137,26 +140,30 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
     const slot = filteredSlots.find((s) => s.id === selectedTime.id);
 
     startTransition(() => {
-        createPrefAction({
+      createPrefAction({
         customer_name: user.name,
         customer_surname: user.surname,
         date:
-            selectedTime.date instanceof Date
+          selectedTime.date instanceof Date
             ? selectedTime.date.toISOString()
             : String(selectedTime.date),
-        payment_percentage: Number(paymentPercentage),
+        payment_percentage: Number(paymentPercentage), // seña
         products: [selectedService.id],
         slotID: selectedTime.id,
         time: slot?.time ?? "",
-        coupon_code: selectedCoupon?.code,
-        })
-    })
-  }
+        coupon_code: selectedCoupon?.code, // cupón
+      });
+    });
+  };
 
+  const isDisabled =
+    (selectedService.promotion_discount &&
+      selectedService.promotion_discount > 0) ||
+    selectedCoupon;
 
-  const isDisabled = (selectedService.promotion_discount && selectedService.promotion_discount > 0) || selectedCoupon;
-
-  const renderStep = () => { const { originalPrice, finalPrice, totalDiscountPercent, totalSaved } = getPriceDetails();
+  const renderStep = () => {
+    const { originalPrice, finalPrice, totalDiscountPercent, totalSaved } =
+      getPriceDetails();
 
     switch (step) {
       case "date_time_selection":
@@ -419,7 +426,11 @@ const MakeReservation: React.FC<MakeReservationProps> = ({
                     px-6 py-4
                 "
       >
-        <ErrorAlert message={prefErr} show={showError} onClose={() => setShowError(false)} />
+        <ErrorAlert
+          message={prefErr}
+          show={showError}
+          onClose={() => setShowError(false)}
+        />
         {renderStep()}
       </DialogContent>
     </Dialog>

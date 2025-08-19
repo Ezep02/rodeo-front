@@ -16,10 +16,12 @@ export const GetAppoinments = async (user_id: number) => {
 }
 
 // Cancelar una orden 
-export const DeleteAppointment = async (appt_id: number, recharge: number) => {
+export const DeleteAppointment = async (appt_id: number, recharge: number, expireAt: Date) => {
     const response = await AuthenticationInstance.post(`${APPOINTMENT_URL}/cancel/${appt_id}`, {
-        data: { recharge }
-    })
-    return response.data
+        recharge,
+        expire_at: expireAt.toISOString()
+    });
+    return response.data;
 }
+
 
