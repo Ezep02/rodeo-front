@@ -15,6 +15,7 @@ import { LogoutUser } from "@/service/AuthService";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { ChevronDown, User } from "lucide-react";
+import Configuration from "../dialogs/Configuration";
 
 const Header: React.FC = () => {
   const {
@@ -32,7 +33,6 @@ const Header: React.FC = () => {
     }
   };
 
- 
 
   return (
     <div
@@ -78,6 +78,12 @@ const Header: React.FC = () => {
                         Inicio
                       </Link>
                     </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <Configuration />
+                    </DropdownMenuItem>
+
+                    
 
                     <DropdownMenuItem asChild>
                       <Link to={"/appointment"} className="cursor-pointer">
