@@ -7,11 +7,13 @@ import { DashboardContextProvider } from "@/context/DashboardContext";
 import PaymentLayout from "@/layouts/PaymentLayout";
 import { useSession } from "@/hooks/useSession";
 import ClientRoutes from "./ClientRoutes";
+
 const PaymentRoutes = React.lazy(() => import("./PaymentRoutes"));
 
-const PublicRoutes = () => {
+const ForumPage = React.lazy(() => import("@/internal/forum/pages/ForumPage"));
 
-  const { user } = useSession()
+const PublicRoutes = () => {
+  const { user } = useSession();
 
   return (
     <Routes>
@@ -25,21 +27,35 @@ const PublicRoutes = () => {
       />
 
       <Route
-        path="/auth/*"
+        path="/forum/*"
         element={
-          <AuthRoutes />
+          <MainLayout>
+            <Suspense
+              fallback={
+                <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+                  <p className="loader"></p>
+                </div>
+              }
+            >
+              <ForumPage />
+            </Suspense>
+          </MainLayout>
         }
       />
+
+      <Route path="/auth/*" element={<AuthRoutes />} />
 
       <Route
         path="/payment/*"
         element={
           <PaymentLayout>
-            <Suspense fallback={
-              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-                <p className="loader"></p>
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+                  <p className="loader"></p>
+                </div>
+              }
+            >
               <PaymentRoutes />
             </Suspense>
           </PaymentLayout>
@@ -50,11 +66,13 @@ const PublicRoutes = () => {
         path={`/dashboard/barber/*`}
         element={
           user?.is_barber ? (
-            <Suspense fallback={
-              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-                <p className="loader"></p>
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
+                  <p className="loader"></p>
+                </div>
+              }
+            >
               <MainLayout>
                 <PrivateRoutes />
               </MainLayout>
@@ -62,7 +80,9 @@ const PublicRoutes = () => {
           ) : (
             <div className="h-screen w-full flex justify-center items-center flex-col gap-1 bg-black">
               <p className="loader"></p>
-              <a href="/" className="">Volver</a>
+              <a href="/" className="">
+                Volver
+              </a>
             </div>
           )
         }

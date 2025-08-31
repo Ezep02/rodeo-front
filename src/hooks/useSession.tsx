@@ -4,6 +4,7 @@
 import { AuthContext } from '@/context/AuthContext';
 import { User } from '@/models/AuthModels';
 import { VerifyToken } from '@/service/AuthService';
+import { GetUserInfo } from '@/service/user_info';
 import { useContext, useEffect, useState } from 'react'
 
 
@@ -14,8 +15,9 @@ export const useSession = () => {
 
     const HandleIsLoading = () => {
         setSessionIsLoading((prev) => !prev)
-    }
+    }   
 
+    // Verificar sesion
     useEffect(() => {
 
         const VerifySession = async () => {
@@ -24,7 +26,6 @@ export const useSession = () => {
                 setAuthLoader(true);
                 const session: User = await VerifyToken();
                 if (session) {
-                    setUser(session);
                     setIsUserAuthenticated(true);
                 }
             } catch (error: any) {
@@ -37,6 +38,28 @@ export const useSession = () => {
         VerifySession()
     }, []);
 
+
+    // Extraer informacion basica del usuario
+    useEffect(() => {
+
+        const FetchUserInfo = async () => {
+            
+            try {
+               
+                const userInfo = await GetUserInfo();
+                if (userInfo) {
+                    setUser(userInfo.user);
+                    setIsUserAuthenticated(true);
+                }
+            } catch (error: any) {
+                setSignInErrors(["Error de autenticacion"]);
+            }
+            setAuthLoader(false);
+           
+        };
+
+        FetchUserInfo()
+    }, []);
 
     return {
         isUserAuthenticated,

@@ -20,7 +20,6 @@ export const GetCloudImg = async (next_cursor?: string) => {
     return res.data
 }
 
-
 export const UploadImg = async (formData: FormData) => {
     const res = await MultipartInstance.post(`${CLOUDINARY_BASE_URL}/upload`, formData)
     return res.data

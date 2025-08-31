@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,18 +10,21 @@ import {
 import { FaArrowLeft } from "react-icons/fa6";
 import { Button } from "../ui/button";
 
-import { Settings, User, Shield, Bell } from "lucide-react";
+import { User, Shield, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ProfileConfiguration from "../sections/ProfileConfiguration";
-import GeneralConfiguration from "../sections/GeneralConfiguration";
 import SecurityConfiguracion from "../sections/SecurityConfiguracion";
 
 const Configuration: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<
+    "Perfil" | "Seguridad" | "Notificaciones"
+  >("Perfil");
 
-  const [activeTab, setActiveTab] = useState<"Perfil" | "General" | "Seguridad" | "Notificaciones">("General");
-
-  const menuItems: { id: "Perfil" | "General" | "Seguridad" | "Notificaciones"; label: string; icon: React.ElementType }[] = [
-    { id: "General", label: "General", icon: Settings },
+  const menuItems: {
+    id: "Perfil" | "Seguridad" | "Notificaciones";
+    label: string;
+    icon: React.ElementType;
+  }[] = [
     { id: "Perfil", label: "Perfil", icon: User },
     { id: "Seguridad", label: "Seguridad", icon: Shield },
     { id: "Notificaciones", label: "Notificaciones", icon: Bell },
@@ -30,17 +33,37 @@ const Configuration: React.FC = () => {
   // Funcion render de configuraciones
   function RenderConfiguration(): React.ReactNode {
     switch (activeTab) {
-      case "General":
-        return <GeneralConfiguration />
       case "Perfil":
         return <ProfileConfiguration />;
       case "Seguridad":
-        return <SecurityConfiguracion/>
-  
+        return <SecurityConfiguracion />;
+
       default:
-        return <p>Contenido de {activeTab} - En desarrollo</p>
+        return <p>Contenido de {activeTab} - En desarrollo</p>;
     }
   }
+
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (sliderRef.current?.offsetLeft || 0));
+    setScrollLeft(sliderRef.current?.scrollLeft || 0);
+  };
+
+  const onMouseLeave = () => setIsDragging(false);
+  const onMouseUp = () => setIsDragging(false);
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - (sliderRef.current?.offsetLeft || 0);
+    const walk = x - startX;
+    if (sliderRef.current) sliderRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   return (
     <Dialog>
@@ -59,7 +82,7 @@ const Configuration: React.FC = () => {
           max-w-full max-h-full
           w-full h-full 
           p-6 flex flex-col bg-zinc-50 z-50 md:rounded-3xl
-          shadow-2xl overflow-hidden overflow-y-scroll"
+          shadow-2xl overflow-hidden overflow-y-scroll "
       >
         <DialogHeader>
           <div className="flex items-start flex-col gap-3">
@@ -83,29 +106,34 @@ const Configuration: React.FC = () => {
           </div>
         </DialogHeader>
 
-        <div className="flex h-full">
-          {/* Sidebar */}
-          <div className="w-80 bg-gray-50 p-6 border-r border-gray-200">
-            <nav className="space-y-2">
-              {menuItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-full text-left transition-colors",
-                      activeTab === item.id
-                        ? "bg-zinc-900 shadow-md text-zinc-50 transition-all ease-linear delay-100 hover:bg-zinc-800"
-                        : "text-gray-600 hover:bg-white/50"
-                    )}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="font-medium">{item.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
+        <div className="h-full grid grid-cols-1 lg:grid-cols-2">
+          <div
+            ref={sliderRef}
+            className="flex overflow-x-hidden max-h-10 lg:flex-col md:overflow-visible space-x-4 md:space-x-0 md:space-y-2 scrollbar-hide"
+            onMouseDown={onMouseDown}
+            onMouseLeave={onMouseLeave}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+          >
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-full text-left flex-shrink-0 cursor-grab active:cursor-grabbing",
+                    activeTab === item.id
+                      ? "bg-zinc-900 shadow-md text-zinc-50 hover:bg-zinc-800"
+                      : "text-gray-600 hover:bg-white/50"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Main Content */}

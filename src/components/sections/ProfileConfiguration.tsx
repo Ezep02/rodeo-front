@@ -1,68 +1,113 @@
-import React, { useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import React, { useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Edit3 } from "lucide-react";
+import { AuthContext } from "@/context/AuthContext";
+import { Camera, Mail, Phone, ShieldCheck } from "lucide-react";
+import ChangeUserName from "../dialogs/ChangeUserName";
+import { Badge } from "../ui/badge";
+import PersonalInformation from "./PersonalInformation";
+import { UpdateAvatar } from "@/service/user_info";
 
 const ProfileConfiguration: React.FC = () => {
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [portfolioLink, setPortfolioLink] = useState("brainwave.app/@username");
-  const [displayName, setDisplayName] = useState("Sophie Bennett ®");
+  const { user, setUser } = useContext(AuthContext)!;
+ 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+     
+      const formData = new FormData();
+      formData.append("file", file);
+      // Aquí podrías disparar la subida de imagen a tu backend
+      try {
+        let updateAvatarRes = await UpdateAvatar(formData);
+        if(updateAvatarRes){
+          setUser((prev) => {
+            if (!prev) return prev
+
+            return {
+              ...prev,
+              avatar: updateAvatarRes.avatar
+            }
+          })
+        }
+      } catch (error:any) {
+        console.warn("Algo no fue bien actualizando el avatar", error?.response?.data)
+      }
+    }
+  };
 
   return (
-    <div className="flex flex-col space-y-8">
-      {/* Private Profile Toggle */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-base font-medium text-gray-900">
-            Private profile
-          </h3>
-        </div>
-      </div>
-
-      {/* Avatar Section */}
-      <div className="space-y-4">
-        <h3 className="text-base font-medium text-gray-900">Avatar</h3>
-        <div className="flex items-center gap-4">
-          <Avatar className="w-16 h-16">
+    <div className="flex flex-col gap-6">
+      {/* Sección de perfil */}
+      <div className="flex items-center gap-6 ">
+        {/* Avatar */}
+        <div className="relative group">
+          <Avatar className="w-20 h-20 border-2 rounded-full overflow-hidden">
             <AvatarImage
-              src="/professional-woman-dark-hair.png"
+              src={user?.avatar || undefined}
               alt="Profile avatar"
             />
-            <AvatarFallback>SB</AvatarFallback>
+            <AvatarFallback className="uppercase bg-zinc-950 text-zinc-50 font-semibold">
+              {user?.name?.charAt(0)}
+              {user?.surname?.charAt(0)}
+            </AvatarFallback>
           </Avatar>
-          <div className="text-sm text-gray-500">Use 800X800 px (PNG/JPG)</div>
-        </div>
-      </div>
 
-      {/* Portfolio Link */}
-      <div className="space-y-3">
-        <h3 className="text-base font-medium text-gray-900">Portfolio link</h3>
-        <div className="relative">
-          <Input
-            value={portfolioLink}
-            onChange={(e) => setPortfolioLink(e.target.value)}
-            className="pr-10 bg-gray-50 border-gray-200"
-          />
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+          {/* Botón para cambiar avatar */}
+          <label
+            htmlFor="avatarUpload"
+            className="absolute bottom-0 right-0 p-2 bg-gray-900 rounded-full shadow-md cursor-pointer hover:bg-gray-700 transition-opacity opacity-80 hover:opacity-100"
           >
-            <Edit3 className="w-4 h-4" />
-          </Button>
+            <Camera size={16} className="text-white" />
+          </label>
+          <input
+            id="avatarUpload"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
+        </div>
+
+        {/* Datos principales */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-semibold text-gray-900">
+              {user?.username}
+            </span>
+            {user && <ChangeUserName initUserData={user} />}
+          </div>
+
+          <div className="flex items-center gap-2 text-gray-600">
+            <Mail size={18} className="text-gray-400" />
+            <span className="text-sm">{user?.email}</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-gray-600">
+            <Phone size={18} className="text-gray-400" />
+            <span className="text-sm">
+              {user?.phone_number || "No registrado"}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Display Name */}
-      <div className="space-y-3">
-        <h3 className="text-base font-medium text-gray-900">Display name</h3>
-        <Input
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          className="bg-gray-50 border-gray-200"
-        />
+      {/* Rol del usuario */}
+      <div className="flex items-center gap-3">
+        <Badge
+          variant="secondary"
+          className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm font-medium"
+        >
+          <ShieldCheck size={16} className="text-emerald-500" />
+          {user?.is_admin
+            ? "Administrador"
+            : user?.is_barber
+            ? "Barbero"
+            : "Cliente"}
+        </Badge>
       </div>
+
+      {/* Información personal */}
+      {user && <PersonalInformation initUserData={user} />}
     </div>
   );
 };

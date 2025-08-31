@@ -52,7 +52,7 @@ const CategoryDialog: React.FC<Props> = ({
         handleSubmit,
         reset,
         watch,
-        setValue, // <-- ¡Esto faltaba!
+        setValue,
     } = useForm<CategoryForm>()
 
 

@@ -48,7 +48,7 @@ const ClientRoutes: React.FC = () => {
         }
       />
 
-      {user?.ID ? (
+      {user?.id ? (
         <>  
           <Route
             path="/appointment"

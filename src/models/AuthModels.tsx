@@ -1,5 +1,5 @@
 export interface User {
-  ID: number,
+  id: number,
   name: string;
   email: string;
   password: string;
@@ -7,6 +7,9 @@ export interface User {
   is_barber?:boolean;
   surname: string;
   phone_number: string;
+  last_name_change?: Date
+  username:string
+  avatar:string
 }
 
 export interface RegisterUserReq {
