@@ -1,52 +1,94 @@
-import { useContext, useEffect, useState } from "react"
-import { GetCustomerReviewList } from "../services/reviews_service"
-import { AuthContext } from "@/context/AuthContext"
-import { Appointment } from "../models/Appointment"
-
+import { useContext, useEffect, useRef, useState } from "react";
+import { GetCustomerReviewList } from "../services/reviews_service";
+import { AuthContext } from "@/context/AuthContext";
+import { ReviewDetail } from "../models/Review";
 
 const useUserReview = () => {
-    const {
-        user
-    } = useContext(AuthContext)!
+  const { user } = useContext(AuthContext)!;
 
-    // Reviews
-    const [reviews, setReviews] = useState<Appointment[] | []>([])
-    const [reviewOffset, setReviewOffset] = useState<number>(0)
+  const [reviews, setReviews] = useState<ReviewDetail[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // Activar loader
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
-    // Cargar reviews de los usuarios
-    const MoveReviewOffset = () => {
-        setReviewOffset((prev) => prev + 1)
-    }
+  /**
+   * 🔹 1. Obtener reseñas de una página específica
+   */
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!user?.id || isLoading || !hasMore) return;
 
-    useEffect(() => {
+      try {
+        setIsLoading(true);
+        const response = await GetCustomerReviewList(user.id, 0);
 
-        const FetchUserReview = async () => {
-            if (!user?.ID) return null
-
-            try {
-                let userReview = await GetCustomerReviewList(user.ID, reviewOffset)
-                if (userReview) {
-                    setReviews(userReview.reviews)
-                }
-
-            } catch (error) {
-                console.warn("Error obteniendo reviews")
-            }
+        if (response?.reviews?.length > 0) {
+          setReviews(response.reviews);
         }
+      } catch (error) {
+        console.warn("Error cargando reseñas:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-        FetchUserReview()
-    }, [])
+    fetchReviews();
+  }, []);
 
+  /**
+   * 🔹 4. Intersection Observer → aumenta el `page` cuando llegamos al final
+   */
 
-    return {
-        reviews,
-        isLoading,
-        MoveReviewOffset,
-        setIsLoading
+  const SearchMoreReviews = async () => {
+    if (!user?.id || isLoading || !hasMore) return;
+
+    try {
+      setIsLoading(true);
+      const nextPage = page + 10;
+      const response = await GetCustomerReviewList(user.id, nextPage);
+
+      if (response?.reviews?.length > 0) {
+        setReviews((prev) => [...prev, ...response.reviews]);
+        setPage(nextPage);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.warn("Error cargando más reseñas:", error);
+    } finally {
+      setIsLoading(false);
     }
-}
+  };
 
-export default useUserReview
+  useEffect(() => {
+    const loader = loaderRef.current;
+    if (!loader) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore && !isLoading) {
+          SearchMoreReviews(); // Esto imprimirá "hay" en la consola
+        }
+      },
+      { root: null, rootMargin: "0px", threshold: 0.1 }
+    );
+
+    observer.observe(loader);
+
+    return () => {
+      if (loader) observer.unobserve(loader);
+    };
+  }, [loaderRef.current, hasMore, isLoading]);
+
+  return {
+    reviews,
+    isLoading,
+    hasMore,
+    loaderRef,
+  };
+};
+
+export default useUserReview;

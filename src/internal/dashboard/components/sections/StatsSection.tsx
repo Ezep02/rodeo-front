@@ -12,16 +12,16 @@ const StatsSection = () => {
     const totalStars = 5; 
 
     return (
-        <div className="py-16 bg-white">
+        <div className="py-16 bg-zinc-950">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                     <div>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">{info?.total_appointment}+</div>
-                        <div className="text-gray-600">Citas Realizadas</div>
+                        <div className="text-4xl font-bold text-gray-300 mb-2">{info?.total_appointment}+</div>
+                        <div className="text-gray-400">Citas Realizadas</div>
                     </div>
                     <div>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">{info?.promedy}</div>
-                        <div className="text-gray-600">Puntuación Promedio</div>
+                        <div className="text-4xl font-bold text-gray-300 mb-2">{info?.promedy}</div>
+                        <div className="text-gray-400">Puntuación Promedio</div>
                         <div className="flex justify-center mt-1">
                             <>
                                 {[...Array(fullStars)].map((_, i) => (
@@ -37,12 +37,12 @@ const StatsSection = () => {
                         </div>
                     </div>
                     <div>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">8</div>
-                        <div className="text-gray-600">Años de Experiencia</div>
+                        <div className="text-4xl font-bold text-gray-300 mb-2">8</div>
+                        <div className="text-gray-400">Años de Experiencia</div>
                     </div>
                     <div>
-                        <div className="text-4xl font-bold text-gray-900 mb-2">{info?.member}</div>
-                        <div className="text-gray-600">Miembros</div>
+                        <div className="text-4xl font-bold text-gray-300 mb-2">{info?.member}</div>
+                        <div className="text-gray-400">Miembros</div>
                     </div>
                 </div>
             </div>

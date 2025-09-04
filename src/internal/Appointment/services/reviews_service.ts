@@ -1,6 +1,6 @@
 import { AuthenticationInstance } from "../../../configs/AxiosConfigs";
 import { Appointment } from "../models/Appointment";
-import {  } from "../models/Review";
+import { ReviewDetail } from "../models/Review";
 
 
 const REVIEW_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/reviews`;
@@ -11,7 +11,6 @@ type Review = {
     comment: string
     rating: number
 }
-
 
 
 type ReviewResponse = {
@@ -34,7 +33,7 @@ export const GetReviewList = async (offset: number) => {
 // # Reviews del usuario
 type CustomerReviewsRes = {
     message: string
-    reviews: Appointment[]
+    reviews: ReviewDetail[]
 }
 
 export const GetCustomerReviewList = async (userID: number, page_offset: number) => {

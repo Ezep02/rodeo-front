@@ -13,14 +13,14 @@ const HeroSection: React.FC = () => {
   } = useContext(AuthContext)!;
 
   return (
-    <div className="bg-white p-8 md:p-16 flex flex-col justify-between">
+    <div className="bg-zinc-950 p-8 md:p-16 flex flex-col justify-between">
 
-      <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+      <h1 className="text-5xl md:text-6xl font-bold text-gray-200 mb-6 leading-tight">
         Encontra un lugar
         <br />
         Donde prevalece la excelencia.
       </h1>
-      <p className="text-xl text-gray-600 mb-8 max-w-2xl ">
+      <p className="text-xl text-gray-300 mb-8 max-w-2xl ">
         Tu próxima cita en la barbería a solo un toque de distancia — Reserva un turno en segundos, sin llamadas ni esperas
       </p>
 
@@ -28,7 +28,7 @@ const HeroSection: React.FC = () => {
 
         {
           isUserAuthenticated ? (
-            <Link to={"/reservation"} className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm flex items-center font-semibold">
+            <Link to={"/reservation"} className="bg-rose-600 active:scale-95  hover:bg-rose-500 text-white px-6 py-2 rounded-full text-sm flex items-center font-semibold">
               Reserva Ya - Es Facil
             </Link>
           ) : (
@@ -47,11 +47,6 @@ const HeroSection: React.FC = () => {
             </>
           )
         }
-
-
-
-
-
       </div>
     </div>
   )

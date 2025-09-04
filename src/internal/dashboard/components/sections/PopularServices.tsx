@@ -1,77 +1,76 @@
-import { Badge } from '@/components/ui/badge'
-import { Scissors } from 'lucide-react'
-import React from 'react'
-import usePopular from '../../hooks/usePopular'
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
+import React from "react";
+import usePopular from "../../hooks/usePopular";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react"; // icono de flecha
 
 const PopularServices: React.FC = () => {
+  const { popularProduct } = usePopular();
 
-    const {
-        popularProduct
-    } = usePopular()
-
-
-    const Icons = [
-        <Scissors className="w-6 h-6 text-white" />,
-        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-            />
-        </svg>,
-        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-            />
-        </svg>,
-    ]
-
-    return (
-        <div className="py-16 bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">Servicios Populares</h2>
-                    <p className="text-xl text-gray-600">Los cortes y servicios más solicitados por nuestros clientes</p>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-8 mb-11">
-                    {
-                        popularProduct.map((pop, indx) => (
-                            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow" key={indx}>
-                                <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center mb-4">
-                                    {Icons[indx]}
-                                </div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-2">{pop.name}</h3>
-                                <p className="text-gray-600 mb-4">{pop.description}</p>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-2xl font-bold text-gray-900">${pop.price}</span>
-                                    <Badge className="bg-green-100 text-green-800">{pop.category}</Badge>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
-
-                <div className="">
-                    <Link to="/reservation">
-                        <Button
-                            variant="outline"
-                            className="text-sm border-gray-300 text-gray-700 hover:bg-gray-100 px-5 py-1.5 rounded-full"
-                        >
-                            Ver todos los servicios
-                        </Button>
-                    </Link>
-                </div>
-
-            </div>
+  return (
+    <section className="py-20 bg-zinc-950 min-h-[50vh]">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        {/* Encabezado */}
+        <div className="mb-12 text-center">
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold tracking-tight text-white"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Servicios más <span className="text-gray-300">populares</span>
+          </motion.h2>
+          <motion.p
+            className="mt-3 text-lg md:text-xl text-gray-400 max-w-xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            Los cortes y tratamientos favoritos de nuestros clientes.
+          </motion.p>
         </div>
-    )
-}
 
-export default PopularServices
+        {/* Lista minimalista */}
+        <div className="flex flex-col gap-6 mb-8">
+          {popularProduct.map((pop, indx) => (
+            <motion.div
+              key={indx}
+              className="flex items-center justify-between border-b border-zinc-800 pb-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: indx * 0.15 }}
+            >
+              <div className="flex items-center gap-4">
+                <span className="text-lg font-semibold text-gray-500 w-6 text-center">
+                  {indx + 1}
+                </span>
+                <h3 className="text-lg md:text-xl font-medium text-white">
+                  {pop.name}
+                </h3>
+              </div>
+
+              <span className="text-lg font-semibold text-gray-200">
+                ${pop.price}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Link "ver más" minimalista */}
+        <div className="text-right">
+          <a
+            href="/reservation"
+            className="inline-flex items-center gap-2 text-white font-medium group relative after:absolute after:-bottom-0.5 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:group-hover:w-full"
+          >
+            Ver más
+            <ArrowUpRight
+              className="w-4 h-4 transform transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+            />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default PopularServices;
+

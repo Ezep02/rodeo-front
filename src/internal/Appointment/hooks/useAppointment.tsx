@@ -19,9 +19,9 @@ export const useAppointment = () => {
     useEffect(() => {
 
         const fetchUserAppointment = async () => {
-            if (user?.ID !== undefined) {
+            if (user?.id !== undefined) {
                 try {
-                    const res = await GetAppoinments(user.ID)
+                    const res = await GetAppoinments(user.id)
                     if (res.length > 0) {
                         setCustomerAppointment(res)
                     }

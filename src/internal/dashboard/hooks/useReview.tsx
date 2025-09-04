@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import { Appointment } from "../models/Review"
+import { ReviewDetail } from "../models/Review"
 import { GetAppointmentReview } from "../services/review_service"
 
 const useReview = () => {
 
-    const [review, setReview] = useState<Appointment[]>([])
+    const [review, setReview] = useState<ReviewDetail[]>([])
 
     useEffect(() => {
 
@@ -13,6 +13,7 @@ const useReview = () => {
             try {
                 let res = await GetAppointmentReview()
                 if (res) {
+                    console.info("[REVIEWS]", res)
                     setReview(res.review)
                 }
             } catch (error) {

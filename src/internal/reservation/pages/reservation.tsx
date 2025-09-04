@@ -12,7 +12,7 @@ import { CiWavePulse1 } from "react-icons/ci"
 
 const ProductSection = React.lazy(() => import("../components/section/Product"))
 const PromotionSection = React.lazy(() => import("../components/section/Promotion"))
-const LocationInfoCard = React.lazy(() => import("../components/card/LocationInfoCard"))
+const LocationInfoCard = React.lazy(() => import("@/components/cards/LocationInfoCard"))
 
 
 const ReservationPage: React.FC = () => {

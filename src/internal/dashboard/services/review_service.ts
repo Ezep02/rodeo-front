@@ -1,12 +1,12 @@
 
 import { AuthenticationInstance } from "@/configs/AxiosConfigs";
-import { Appointment } from "../models/Review";
+import { ReviewDetail } from "../models/Review";
 
 const REVIEW_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/reviews`;
 
 type ReviewRes = {
     message: string
-    review: Appointment[]
+    review: ReviewDetail[]
 }
 
 
