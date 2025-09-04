@@ -1,9 +1,6 @@
 import React, { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
-import { TbHistory } from "react-icons/tb";
-import { IoIosStarOutline } from "react-icons/io";
-
 const AppointmentHistorial = React.lazy(
   () => import("../components/section/AppointmentHistorial")
 );
@@ -18,6 +15,7 @@ const Appointments: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        
         {/* Historial */}
         <div className="lg:col-span-2 bg-white border border-slate-200 shadow-md rounded-2xl max-h-[80vh] p-4 flex flex-col">
           {/* Encabezado fijo */}
@@ -31,7 +29,7 @@ const Appointments: React.FC = () => {
           </div>
 
           {/* Contenido scrollable */}
-          <div className="overflow-y-auto grow scroll-abrir-tarjeta min-h-[80vh]">
+          <div className="overflow-y-auto grow scroll-abrir-tarjeta">
             <Suspense
               fallback={
                 <div className="min-h-[80vh] col-span-1 flex justify-center items-center rounded-md">

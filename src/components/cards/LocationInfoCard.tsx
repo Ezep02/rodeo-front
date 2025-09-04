@@ -1,5 +1,5 @@
 import useInformation from '@/hooks/useInformation';
-import { MapPin, Navigation, Star } from 'lucide-react';
+import { Navigation, Star } from 'lucide-react';
 
 
 const LocationInfoCard = () => {
@@ -56,13 +56,11 @@ const LocationInfoCard = () => {
 
             {/* Sección de Dirección y Horario */}
             <div className='flex items-start gap-3 mb-4 shrink-0'>
-                <div className="p-2 bg-zinc-900 rounded-lg shadow-sm">
-                    <MapPin size={24} className="text-white" />
-                </div>
+              
                 <div className="p-4 bg-gray-50 rounded-lg">
                     <h5 className="text-sm font-semibold mb-1">¿Dónde encontrarnos?</h5>
                     <p className="text-sm text-gray-700 mb-2">
-                        Nuestra ubicación exacta la podés ver en el mapa, o seguir el enlace para llegar fácilmente.
+                        Nuestra ubicación exacta la podés encontrar haciendo click en el boton <strong>Ir a Google Maps</strong>.
                     </p>
                     <span className="text-xs text-gray-500">Disponible en Google Maps</span>
                 </div>

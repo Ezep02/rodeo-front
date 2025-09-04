@@ -10,8 +10,8 @@ type GetAppoinmentsReq = {
 }
 
 // Obtener ordenes pendientes
-export const GetAppoinments = async (user_id: number) => {
-    const response = await AuthenticationInstance.get<GetAppoinmentsReq>(`${APPOINTMENT_URL}/user/${user_id}`)
+export const GetAppoinments = async (user_id: number, appt_offset: number) => {
+    const response = await AuthenticationInstance.get<GetAppoinmentsReq>(`${APPOINTMENT_URL}/user/${user_id}/page/${appt_offset}`)
     return response.data.appointments
 }
 

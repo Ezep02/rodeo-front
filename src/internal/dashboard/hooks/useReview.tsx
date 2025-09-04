@@ -1,31 +1,49 @@
-import { useEffect, useState } from "react"
-import { ReviewDetail } from "../models/Review"
-import { GetAppointmentReview } from "../services/review_service"
+import { useEffect, useState } from "react";
+import { RatingStats, ReviewDetail } from "../models/Review";
+import {
+  GetAppointmentReview,
+  GetRatingStats,
+} from "../services/review_service";
 
 const useReview = () => {
+  const [review, setReview] = useState<ReviewDetail[]>([]);
 
-    const [review, setReview] = useState<ReviewDetail[]>([])
-
-    useEffect(() => {
-
-        const fetchReview = async () => {
-
-            try {
-                let res = await GetAppointmentReview()
-                if (res) {
-                    console.info("[REVIEWS]", res)
-                    setReview(res.review)
-                }
-            } catch (error) {
-                console.warn("Algo no fue bien recuperando las reviews")
-            }
+  useEffect(() => {
+    const fetchReview = async () => {
+      try {
+        let res = await GetAppointmentReview();
+        if (res) {
+          console.info("[REVIEWS]", res);
+          setReview(res.review);
         }
-        fetchReview()
-    }, [])
+      } catch (error) {
+        console.warn("Algo no fue bien recuperando las reviews");
+      }
+    };
+    fetchReview();
+  }, []);
 
-    return {
-        review
-    }
-}
+  // Estadisticas
+  const [reviewStats, setReviewStats] = useState<RatingStats>()
+  useEffect(() => {
+    const fetchReviewStats = async () => {
+      try {
+        let res = await GetRatingStats();
+        if (res) {
+          console.info("[REVIEWS]", res);
+          setReviewStats(res.stats)
+        }
+      } catch (error) {
+        console.warn("Algo no fue bien recuperando las reviews");
+      }
+    };
+    fetchReviewStats();
+  }, []);
 
-export default useReview
+  return {
+    review,
+    reviewStats
+  };
+};
+
+export default useReview;
