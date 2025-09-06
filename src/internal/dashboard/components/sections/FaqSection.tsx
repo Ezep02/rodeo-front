@@ -3,9 +3,9 @@ import React from 'react'
 const FaqSection: React.FC = () => {
     return (
         <div className="py-16 bg-white">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Preguntas Frecuentes</h2>
+            <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-12">
+                    <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">Preguntas Frecuentes</h2>
                     <p className="text-xl text-gray-600">Resolvemos las dudas más comunes de nuestros clientes</p>
                 </div>
 

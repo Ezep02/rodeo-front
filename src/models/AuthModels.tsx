@@ -28,12 +28,6 @@ export interface RegisterPaymentReq {
   phone_number: string;
 }
 
-
-
-export interface SendEmailForData {
-  email: string
-}
-
 export interface LoginUserReq {
   email: string;
   password: string;

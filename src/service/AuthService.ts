@@ -1,5 +1,5 @@
 import { AuthenticationInstance } from "../configs/AxiosConfigs";
-import { LoginUserReq, RegisterUserReq, SendEmailForData, User } from "../models/AuthModels";
+import { LoginUserReq, RegisterUserReq, User } from "../models/AuthModels";
 
 const BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/auth`;
 
@@ -18,12 +18,6 @@ export const UserLogin = async (user: LoginUserReq) => {
     const response = await AuthenticationInstance.post<AuthenticationRes>(`${BASE_URL}/login`, user);
     return response.data;
 };
-
-export const SendResetPasswordEmail = async (email: SendEmailForData) => {
-
-    const response = await AuthenticationInstance.post<SendEmailForData>(`${BASE_URL}/send-email`, email)
-    return response.data
-}
 
 
 export const ResetUserPassowrd = async (newPassword: string, token: string): Promise<any> => {

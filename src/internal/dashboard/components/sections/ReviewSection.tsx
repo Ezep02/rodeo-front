@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import useReview from "../../hooks/useReview";
 import ReviewCard from "../card/ReviewCard";
 import RatingDistributionCard from "../card/RatingDistributionCard";
 import TotalReviewCard from "../card/TotalReviewCard";
 import AvgRatingCard from "../card/AvgRatingCard";
+import Reviews from "../dialog/Reviews";
 
 
 // Uso en un componente
 
 const ReviewSection: React.FC = () => {
-  const [open, setOpen] = useState(false);
 
   const { review, reviewStats } = useReview();
 
@@ -27,7 +19,7 @@ const ReviewSection: React.FC = () => {
         <div>
           {/* Encabezado */}
           <div className="mb-12 ">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1">
               Reseñas
             </h2>
             <p className="text-lg md:text-xl text-gray-600">
@@ -53,29 +45,8 @@ const ReviewSection: React.FC = () => {
           </div>
 
           {/* Botón Ver más */}
-          <div className="flex justify-center mt-10">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="px-6 py-2 rounded-full font-medium text-gray-900 border-gray-300 hover:bg-gray-100 transition"
-                >
-                  Ver todas las reseñas
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold">
-                    Todas las reseñas
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                  {review.map((review) => (
-                    <ReviewCard key={review.review_id} review={review} />
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
+          <div className="justify-center flex pt-4">
+            <Reviews/>
           </div>
         </div>
       </div>

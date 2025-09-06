@@ -50,8 +50,8 @@ export const UpdateAvatar = async (formData:FormData) => {
 }
 
 // Actualizar la contraseña de usuario
-export const SendResetInstruction = async (user_id:number, email:string) => {
-    let res = await AuthenticationInstance.post(`${AUTH_BASE_URL}/send-email/${user_id}`, {
+export const SendResetInstruction = async (email:string) => {
+    let res = await AuthenticationInstance.post(`${AUTH_BASE_URL}/send-email`, {
         email:email
     })
 

@@ -11,7 +11,7 @@ const RevenueTrendSection: React.FC = () => {
     const { revenueByMonth } = useRevenue()
   
     return (
-        <section className="grid lg:grid-cols-2 gap-8 mb-8 grid-cols-1 lg:h-[60vh] h-screen">
+        <section className="grid md:grid-cols-3 gap-8 mb-8 grid-cols-1 max-h-[50vh] lg:h-[60vh] h-screen">
 
             <Suspense
                 fallback={

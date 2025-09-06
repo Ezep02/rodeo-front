@@ -43,7 +43,6 @@ const HeroSection: React.FC = () => {
                 setIsUserAuthenticated={setIsUserAuthenticated}
                 setUser={setUser}
               />
-
             </>
           )
         }

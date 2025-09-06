@@ -6,14 +6,14 @@ import { ReviewDetail } from "../models/Review";
 const REVIEW_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/reviews`;
 
 type ReviewRes = {
-    message: string
-    review: ReviewDetail[]
+  message: string
+  review: ReviewDetail[]
 }
 
-
-export const GetAppointmentReview = async () => {
-    const res = await AuthenticationInstance.get<ReviewRes>(`${REVIEW_URL}/`)
-    return res.data
+// Extre todas las reviews 
+export const GetReviews = async (review_offset:number) => {
+  const res = await AuthenticationInstance.get<ReviewRes>(`${REVIEW_URL}/page/${review_offset}`)
+  return res.data
 }
 
 // Extraer estadisticas de las reviews
