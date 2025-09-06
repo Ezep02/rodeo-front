@@ -42,8 +42,6 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
     const currentStatus = getCurrentStatus(order.status)
 
-
-
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
 

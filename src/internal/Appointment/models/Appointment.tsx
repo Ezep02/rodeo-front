@@ -13,7 +13,15 @@ export type AppointmentSlot = {
     id: number
     is_booked: true
     time: string
+    barber: SlotBarber
 }
+
+export type SlotBarber = {
+    id: number
+    name: string
+    surname: string
+}
+
 
 export type AppointmentProduct = {
     id: number

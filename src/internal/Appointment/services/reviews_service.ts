@@ -40,3 +40,10 @@ export const GetCustomerReviewList = async (userID: number, page_offset: number)
     const response = await AuthenticationInstance.get<CustomerReviewsRes>(`${REVIEW_URL}/user/${userID}/page/${page_offset}`)
     return response.data
 }
+
+// Eliminar review del usuario
+
+export const DeleteReview = async (id:number) => {
+    const response = await AuthenticationInstance.delete(`${REVIEW_URL}/${id}`)
+    return response.data
+}

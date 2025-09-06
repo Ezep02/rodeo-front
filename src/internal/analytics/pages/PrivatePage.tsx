@@ -8,8 +8,7 @@ const PrivatePage: React.FC = () => {
   return (
     <>
       <div className="container mx-auto pt-10 pb-16 ">
-        {/* HEADER */}
-     
+        
         {/* REVENUE SECTION */}
         <Suspense
           fallback={

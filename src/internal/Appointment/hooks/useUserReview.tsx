@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { GetCustomerReviewList } from "../services/reviews_service";
+import { DeleteReview, GetCustomerReviewList } from "../services/reviews_service";
 import { AuthContext } from "@/context/AuthContext";
 import { ReviewDetail } from "../models/Review";
 
@@ -12,7 +12,8 @@ const useUserReview = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
-
+  const [deleteErr, setDeleteErr] = useState<string>("")
+  const [showErr, setShowErr] = useState<boolean>(false)
   /**
    * 🔹 1. Obtener reseñas de una página específica
    */
@@ -83,11 +84,30 @@ const useUserReview = () => {
     };
   }, [loaderRef.current, hasMore, isLoading]);
 
+
+  const HandleDeleteReview = async (id:number) => {
+    if(!id) return
+    
+    try {
+      let res = await DeleteReview(id)  
+      if (res){
+        setReviews((prev) => prev.filter((curr) => curr.review_id !== id))
+      }
+    } catch (error:any) {
+      setShowErr(true)
+      setDeleteErr("algo no fue bien eliminando la reseña") 
+    }
+  }
+
   return {
     reviews,
     isLoading,
     hasMore,
     loaderRef,
+    HandleDeleteReview,
+    deleteErr,
+    showErr,
+    setShowErr
   };
 };
 

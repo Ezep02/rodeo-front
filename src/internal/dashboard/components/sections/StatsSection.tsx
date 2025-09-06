@@ -20,7 +20,7 @@ const StatsSection = () => {
                         <div className="text-gray-400">Citas Realizadas</div>
                     </div>
                     <div>
-                        <div className="text-4xl font-bold text-gray-300 mb-2">{info?.promedy}</div>
+                        <div className="text-4xl font-bold text-gray-300 mb-2">{info?.promedy?.toFixed(1)}</div>
                         <div className="text-gray-400">Puntuación Promedio</div>
                         <div className="flex justify-center mt-1">
                             <>

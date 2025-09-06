@@ -1,9 +1,6 @@
-
-
 import { Loader2 } from "lucide-react"
 import useRevenue from "../../hooks/useRevenue"
 import React, { Suspense } from "react"
-
 
 const RevenueByMonthChart = React.lazy(() => import("../charts/RevenueByMonth"))
 

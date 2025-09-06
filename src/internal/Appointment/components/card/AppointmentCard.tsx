@@ -18,6 +18,7 @@ import RescheduleDialog from '../dialog/RescheduleDialog'
 import CancelDialog from '../dialog/CancelDialog'
 import { getPaymentStatus } from '@/utils/getAppointmentStatus'
 import { formatTime } from '@/internal/analytics/utils/TimeFormater'
+import ShowDetailDialog from '../dialog/ShowDetailDialog'
 
 type CardProps = {
   appointment: Appointment
@@ -142,7 +143,7 @@ const AppointmentCard: React.FC<CardProps> = ({ appointment }) => {
       </div>
 
       {/* Review */}
-      {new Date() > slotDate && !appointment.review && (
+      {new Date() > slotDate && !appointment.review && appointment.status !== 'cancelled' && (
         <section className="bg-zinc-50 p-3 rounded-lg flex flex-col gap-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <p className="text-sm text-zinc-700">¿Qué te pareció el servicio?</p>
@@ -153,12 +154,13 @@ const AppointmentCard: React.FC<CardProps> = ({ appointment }) => {
 
       {/* Ver detalles */}
       <div className="pt-2">
-        <button
+       <ShowDetailDialog order={appointment}/>
+        {/* <button
           className="text-sm text-primary underline underline-offset-4 hover:text-primary/80 transition"
           onClick={() => console.log('Ver más detalles de', appointment.id)}
         >
           Ver detalles
-        </button>
+        </button> */}
       </div>
     </Card>
 

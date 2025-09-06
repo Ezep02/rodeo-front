@@ -6,7 +6,7 @@ import { GetInformation } from "../internal/dashboard/services/information_servi
 const useInformation = () => {
 
     const [info, setInfo] = useState<Stats>()
-
+    
     useEffect(() => {
 
         const fetchInformation = async () => {

@@ -1,26 +1,45 @@
 import React from "react";
 import useUserReview from "../../hooks/useUserReview";
 import { Button } from "@/components/ui/button";
-import { Loader2, Pencil, Star, Trash } from "lucide-react";
+import { Loader2, Pencil, Star, Trash, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import ErrorAlert from "@/components/alerts/ErrorAlert";
 
 const MyReviews: React.FC = () => {
-  const { reviews, loaderRef, hasMore } = useUserReview();
+  const { 
+    reviews, 
+    loaderRef, 
+    hasMore, 
+    HandleDeleteReview,
+    deleteErr,
+    setShowErr,
+    showErr
+  } = useUserReview();
 
   const handleEdit = (id: number) => {
     console.log(`Editando reseña ${id}`);
-  };
-
-  const handleRemove = (id: number) => {
-    if (confirm("¿Seguro que querés eliminar esta reseña?")) {
-      console.log(`Eliminando reseña ${id}`);
-    }
   };
 
   return (
     <div className="space-y-6 pb-8 px-4 pt-3 md:px-6">
       {Array.isArray(reviews) && reviews.length > 0 ? (
         <>
-          {/* Ajuste: Usamos 'gap-6' para separar mejor las tarjetas */}
+
+          <ErrorAlert
+            message={deleteErr}
+            show={showErr}
+            onClose={()=> setShowErr(false)}
+          />
           <ul className="grid gap-6">
             {reviews.map((review) => (
               <li
@@ -60,15 +79,33 @@ const MyReviews: React.FC = () => {
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost" // Ajuste: Ambos botones son ghost para mantener minimalismo
-                        size="icon"
-                        onClick={() => handleRemove(review.review_id)}
-                        className="text-red-600 hover:bg-red-100"
-                        title="Eliminar reseña"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                        
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button size="sm" variant="ghost">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Eliminar reseña</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Estas segudo de querer eliminar tu reseña?. <br />
+                              <strong>Esta accion no se puede deshacer.</strong>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                HandleDeleteReview(review.review_id)
+                              }
+                            >
+                              Eliminar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
