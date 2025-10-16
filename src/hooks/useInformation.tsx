@@ -1,6 +1,6 @@
+import { Stats } from "@/internal/landing/models/Information"
+import { GetInformation } from "@/internal/landing/services/information_service"
 import { useEffect, useState } from "react"
-import { Stats } from "../internal/dashboard/models/Information"
-import { GetInformation } from "../internal/dashboard/services/information_service"
 
 
 const useInformation = () => {

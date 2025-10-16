@@ -1,65 +1,22 @@
-import React, { Suspense, useContext } from "react";
+import { Navigate } from "react-router-dom";
+import useSession from "@/hooks/useSession";
+import { Loader2 } from "lucide-react";
 
-import { Navigate, Route, Routes } from "react-router-dom";
-import { AuthContext } from "@/context/AuthContext";
-import { AdminContextProvider } from "@/context/AdminContext";
-import { PanelControlContextProvider } from "@/context/PanelControlContext";
-import PanelControlPage from "@/internal/panel-control/pages/PanelControlPage";
+import { ReactNode } from "react";
 
+const PageLoader = () => (
+  <div className="flex flex-1 justify-center items-center h-screen">
+    <Loader2 size={24} className="animate-spin" />
+  </div>
+);
 
-const CronogramaPage = React.lazy(() => import("@/internal/barber/pages/CronogramaPage"));
-const PrivatePage = React.lazy(() => import("@/internal/analytics/pages/PrivatePage"));
+// Rutas privadas → si NO hay usuario, redirige al landing
+const PrivateRoute = ({ children }: { children: ReactNode }) => {
+  const { isUserAuthenticated, sessionIsLoading } = useSession();
 
+  if (sessionIsLoading) return <PageLoader />;
 
-const PrivateRoutes: React.FC = () => {
-  const { user } = useContext(AuthContext)!;
-
-  return (
-    <Routes>
-      <Route path="/cronograma" element={
-        <Suspense fallback={
-          <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-            <p className="loader"></p>
-          </div>
-        }>
-          <PanelControlContextProvider>
-            <CronogramaPage />
-          </PanelControlContextProvider>
-        </Suspense>
-      } />
-
-      <Route path="/panel-control" element={
-        <Suspense fallback={
-          <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-            <p className="loader"></p>
-          </div>
-        }>
-          <PanelControlContextProvider>
-            <PanelControlPage />
-          </PanelControlContextProvider>
-        </Suspense>
-      } />
-
-
-      {user?.is_admin && (
-        <>
-          <Route path="/admin" element={
-            <Suspense fallback={
-              <div className="h-screen w-full flex justify-center items-center flex-col gap-1">
-                <p className="loader"></p>
-              </div>
-            }>
-              <AdminContextProvider>
-                <PrivatePage />
-              </AdminContextProvider>
-            </Suspense>
-          } />
-        </>
-      )}
-
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
+  return isUserAuthenticated ? children : <Navigate to="/home" replace />;
 };
 
-export default PrivateRoutes;
+export default PrivateRoute;

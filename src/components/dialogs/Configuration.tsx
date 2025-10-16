@@ -37,7 +37,6 @@ const Configuration: React.FC = () => {
         return <ProfileConfiguration />;
       case "Seguridad":
         return <SecurityConfiguracion />;
-
       default:
         return <p>Contenido de {activeTab} - En desarrollo</p>;
     }
@@ -82,7 +81,7 @@ const Configuration: React.FC = () => {
           max-w-full max-h-full
           w-full h-full 
           p-6 flex flex-col bg-zinc-50 z-50 md:rounded-3xl
-          shadow-2xl overflow-hidden overflow-y-scroll "
+          shadow-2xl overflow-hidden overflow-y-scroll"
       >
         <DialogHeader>
           <div className="flex items-start flex-col gap-3">

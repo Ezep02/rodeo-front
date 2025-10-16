@@ -6,11 +6,8 @@ const USER_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/users`;
 const AUTH_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/auth`;
 
 // Informacion del usuario
-type UserInfoRes = {
-    user: User
-}
 export const GetUserInfo = async () => {
-    let res = await AuthenticationInstance.get<UserInfoRes>(`${USER_BASE_URL}/info`)
+    let res = await AuthenticationInstance.get<User>(`${USER_BASE_URL}/info`)
     return res.data
 }
 

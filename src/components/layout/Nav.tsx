@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { LogoutUser } from "@/service/AuthService";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { ChevronDown, User } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Configuration from "../dialogs/Configuration";
 
 const Header: React.FC = () => {
@@ -67,13 +67,6 @@ const Header: React.FC = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-white text-black border border-gray-200">
                     <DropdownMenuItem asChild>
-                      <Link to={"/mi-cuenta"} className="flex items-center space-x-2 cursor-pointer">
-                        <User className="h-4 w-4" />
-                        <span>Mi cuenta</span>
-                      </Link>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
                       <Link to={"/"} className="cursor-pointer">
                         Inicio
                       </Link>
@@ -82,8 +75,6 @@ const Header: React.FC = () => {
                     <DropdownMenuItem asChild>
                       <Configuration />
                     </DropdownMenuItem>
-
-                    
 
                     <DropdownMenuItem asChild>
                       <Link to={"/appointment"} className="cursor-pointer">

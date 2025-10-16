@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 
-import { Appointment } from "@/internal/Appointment/models/Appointment";
+import { Appointment } from "@/internal/appointment/models/Appointment";
 import { Product } from "@/internal/reservation/model/Product";
 import { Post } from "@/internal/panel-control/models/Post";
 
@@ -47,6 +47,8 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
 
   // POSTS
   const [post, setPost] = useState<Post[] | []>([]);
+
+  // 
 
   return (
     <DashboardContext.Provider

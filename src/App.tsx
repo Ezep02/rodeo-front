@@ -1,14 +1,11 @@
 import React from "react";
 import { AuthContextProvider } from "./context/AuthContext";
-import IndexRoute from "./routes/IndexRoutes";
-import { DashboardContextProvider } from "./context/DashboardContext";
+import { AppRoutes } from "./routes/AppRoutes";
 
 const App: React.FC = () => {
   return (
     <AuthContextProvider>
-      <DashboardContextProvider>
-        <IndexRoute />
-      </DashboardContextProvider>
+      <AppRoutes />
     </AuthContextProvider>
   );
 };

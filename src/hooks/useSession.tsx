@@ -1,71 +1,40 @@
+import { AuthContext } from "@/context/AuthContext";
+import { VerifyToken } from "@/service/AuthService";
+import { useContext, useEffect, useState } from "react";
 
+const useSession = () => {
+  const {
+    setIsUserAuthenticated,
+    setSignInErrors,
+    isUserAuthenticated,
+    setUser
+  } = useContext(AuthContext)!;
 
+  const [sessionIsLoading, setSessionIsLoading] = useState<boolean>(true);
 
-import { AuthContext } from '@/context/AuthContext';
-import { User } from '@/models/AuthModels';
-import { VerifyToken } from '@/service/AuthService';
-import { GetUserInfo } from '@/service/user_info';
-import { useContext, useEffect, useState } from 'react'
+  // Verificar sesion
+  useEffect(() => {
+    const VerifySession = async () => {
+      try {
+        const session = await VerifyToken();
+        if (session) {
+          setUser(session)
+          setIsUserAuthenticated(true);
+        }
+      } catch (error: any) {
+        setSignInErrors(["Error de autenticacion"]);
+      } finally {
+        setSessionIsLoading(false);
+      }
+    };
 
+    VerifySession();
+  }, []);
 
-export const useSession = () => {
+  return {
+    isUserAuthenticated,
+    sessionIsLoading,
+  };
+};
 
-    const [sessionIsLoading, setSessionIsLoading] = useState<boolean>(false)
-    const { setAuthLoader, setUser, setIsUserAuthenticated, setSignInErrors, isUserAuthenticated, user } = useContext(AuthContext)!
-
-    const HandleIsLoading = () => {
-        setSessionIsLoading((prev) => !prev)
-    }   
-
-    // Verificar sesion
-    useEffect(() => {
-
-        const VerifySession = async () => {
-            HandleIsLoading()
-            try {
-                setAuthLoader(true);
-                const session: User = await VerifyToken();
-                if (session) {
-                    setIsUserAuthenticated(true);
-                }
-            } catch (error: any) {
-                setSignInErrors(["Error de autenticacion"]);
-            }
-            setAuthLoader(false);
-            HandleIsLoading()
-        };
-
-        VerifySession()
-    }, []);
-
-
-    // Extraer informacion basica del usuario
-    useEffect(() => {
-
-        const FetchUserInfo = async () => {
-            
-            try {
-               
-                const userInfo = await GetUserInfo();
-                if (userInfo) {
-                    setUser(userInfo.user);
-                    setIsUserAuthenticated(true);
-                }
-            } catch (error: any) {
-                setSignInErrors(["Error de autenticacion"]);
-            }
-            setAuthLoader(false);
-           
-        };
-
-        FetchUserInfo()
-    }, []);
-
-    return {
-        isUserAuthenticated,
-        user,
-        sessionIsLoading
-    }
-}
-
-
+export default useSession;

@@ -34,14 +34,10 @@ export const LogoutUser = async (): Promise<void> => {
     return AuthenticationInstance.get(`${BASE_URL}/logout`)
 }
 
-type SessionResponse = {
-    message: string
-    user: User
-}
 
 export const VerifyToken = async (): Promise<User> => {
-    const response = await AuthenticationInstance.get<SessionResponse>(`${BASE_URL}/verify`);
-    return response.data.user
+    const response = await AuthenticationInstance.get<User>(`${BASE_URL}/verify`);
+    return response.data
 }
 
 export const GoogleOauth = async (): Promise<void> => {

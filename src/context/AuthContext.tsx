@@ -7,8 +7,6 @@ interface AuthContextProps {
   isUserAuthenticated: boolean;
   setIsUserAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   GoogleLogIn: () => void;
-  authLoader: boolean;
-  setAuthLoader: React.Dispatch<React.SetStateAction<boolean>>;
 
   signInErrors: string[];
   setSignInErrors: React.Dispatch<React.SetStateAction<string[] | []>>;
@@ -20,7 +18,9 @@ interface AuthContextProps {
   OpenNavHandler: () => void;
 }
 
-export const AuthContext = React.createContext<AuthContextProps | undefined>(undefined);
+export const AuthContext = React.createContext<AuthContextProps | undefined>(
+  undefined
+);
 
 interface ChildrenProviderProp {
   children: ReactNode;
@@ -31,7 +31,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
 }) => {
   const [user, setUser] = useState<User>();
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-  const [authLoader, setAuthLoader] = useState<boolean>(true);
 
 
   const [authIsLoading, setAuthIsLoading] = useState<boolean>(false);
@@ -40,7 +39,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   };
 
   const [signInErrors, setSignInErrors] = useState<string[]>([]);
-
 
   const GoogleLogIn = async () => {
     try {
@@ -56,6 +54,7 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
     setOpenNav((prev) => !prev);
   };
 
+
   return (
     <AuthContext.Provider
       value={{
@@ -64,8 +63,6 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
         isUserAuthenticated,
         setIsUserAuthenticated,
         GoogleLogIn,
-        authLoader,
-        setAuthLoader,
         signInErrors,
         setSignInErrors,
         authIsLoading,
