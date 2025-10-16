@@ -22,17 +22,17 @@ const BarberSelector: React.FC<Props> = ({
       {Array.isArray(availableBarbers) && availableBarbers.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {availableBarbers.map((barber) => {
-            const fullName = `${barber?.user?.name || ""} ${
-              barber?.user?.surname || ""
+            const fullName = `${barber?.name || ""} ${
+              barber?.surname || ""
             }`.trim();
-            const initials = `${barber?.user?.name?.charAt(0) || ""}${
-              barber?.user?.surname?.charAt(0) || ""
+            const initials = `${barber?.name?.charAt(0) || ""}${
+              barber?.surname?.charAt(0) || ""
             }`;
             const isSelected = selectedBarber?.id === barber.id;
 
             return (
               <div
-                key={barber.id || barber.user?.id || fullName}
+                key={barber.id|| fullName}
                 onClick={() => onSelectBarber(barber)}
                 className={`flex flex-col gap-1 items-center shadow px-4 py-6 rounded-3xl cursor-pointer transition-all duration-200
                   ${
@@ -48,9 +48,9 @@ const BarberSelector: React.FC<Props> = ({
                     isSelected ? "border-white" : ""
                   }`}
                 >
-                  {barber?.user?.avatar ? (
+                  {barber?.avatar ? (
                     <AvatarImage
-                      src={barber.user.avatar}
+                      src={barber.avatar}
                       alt={fullName || "Avatar"}
                     />
                   ) : (
@@ -60,8 +60,8 @@ const BarberSelector: React.FC<Props> = ({
                   )}
                 </Avatar>
                 <div className="text-center">
-                  <span>{barber?.user?.name || "Nombre"}</span>{" "}
-                  <span>{barber?.user?.surname || ""}</span>
+                  <span>{barber?.name || "Nombre"}</span>{" "}
+                  <span>{barber?.surname || ""}</span>
                 </div>
                 <Badge>Barbero</Badge>
               </div>

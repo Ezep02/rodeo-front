@@ -10,13 +10,13 @@ const useCalendar = () => {
   // Cargar los slots de la semana actual
   useEffect(() => {
     const fetchSlotRange = async () => {
-      if (!selectedBarber?.user.id) return;
+      if (!selectedBarber?.id) return;
 
       // Carga los slots de la semana actual
       const { end_week, start_week } = getCurrentWeek();
 
       try {
-        let slotRange = await GetListByDateRange(selectedBarber.user_id, start_week, end_week);
+        let slotRange = await GetListByDateRange(selectedBarber.id, start_week, end_week);
 
         if (slotRange) {
           const dateKey = createCacheKey(start_week, end_week);
@@ -41,7 +41,7 @@ const useCalendar = () => {
     };
 
     fetchSlotRange();
-  }, [selectedBarber?.user_id]);
+  }, [selectedBarber?.id]);
 
   return {};
 };

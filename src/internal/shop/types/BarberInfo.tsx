@@ -1,9 +1,10 @@
-import { User } from "@/models/AuthModels"
 
 export type BarberInfo = {
-	id: number
-	user_id:number
-	calendar_id: string 
-
-    user: User
-}
+  id: number;
+  name: string;
+  surname?: string;
+  email: string;
+  phone_number: string;
+  username: string;
+  avatar?: string;
+};

@@ -16,11 +16,11 @@ const useCalendarAction = () => {
   } = useContext(ShopContext)!;
 
   const fetchSlot = async (start_week: string, end_week: string) => {
-    if (!selectedBarber?.user_id) return;
+    if (!selectedBarber?.id) return;
 
     try {
       let res = await GetListByDateRange(
-        selectedBarber?.user_id,
+        selectedBarber?.id,
         start_week,
         end_week
       );
