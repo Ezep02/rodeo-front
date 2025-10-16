@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AppointmentContext } from "../context/AppointmentContext";
 import { Button } from "@/components/ui/button";
+import { FaCheck } from "react-icons/fa6";
 
 const PendingApptSlot = () => {
   const { upcomingAppointment } = useContext(AppointmentContext)!;
@@ -11,32 +12,33 @@ const PendingApptSlot = () => {
         <ul className="flex flex-col gap-1">
           {upcomingAppointment.map((sch, i) => (
             <li
-              className="flex flex-col gap-2 p-3 bg-zinc-200/45 hover:bg-zinc-200 rounded-2xl"
+              className="flex flex-col gap-2 p-3 bg-zinc-200/25 hover:bg-zinc-200/35 rounded-2xl"
               key={i}
             >
-              <div className="flex ga">
+              <div className="flex gap-1">
                 <span className="text-sm text-zinc-800 uppercase">
                   {new Date(sch.slot.start).toLocaleTimeString("es-AR", {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
-                  })}
+                  })},
                 </span>
                 <span className="text-zinc-800 font-medium leading-tight">
                   {sch.client.name} {sch.client.surname}
                 </span>
               </div>
               <div>
-                <Button className="rounded-full">
-                    Marcar como completado
-                </Button>
+                <button className="items-center rounded-full px-3 py-1.5 flex gap-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer active:scale-95">
+                  <FaCheck size={13} />
+                  Completado y pagado
+                </button>
               </div>
             </li>
           ))}
         </ul>
       ) : (
         <div className="px-3 items-center flex-1 flex justify-center pt-10">
-            <p>Tu cronograma para el dia de hoy esta vacio</p>
+          <p>Tu cronograma para el dia de hoy esta vacio</p>
         </div>
       )}
     </div>

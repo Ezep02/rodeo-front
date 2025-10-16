@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useAppointment } from "../../hooks/useAppointment";
-import useApptAction from "../../hooks/useApptAction";
 import { ViewMode } from "../../types/VIewMode";
-import StatusBadge from "../common/StatusBadge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Selector } from "../common/Selector";
 import PendingApptSlot from "../PendingApptSlot";
 
