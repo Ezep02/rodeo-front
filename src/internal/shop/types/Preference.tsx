@@ -4,3 +4,6 @@ export type CreatePreferenceRequest = {
   payment_percentage: number;
   coupon_code?: string;
 };
+
+
+export type PaymentOption = "mercado_pago" | "transferencia";

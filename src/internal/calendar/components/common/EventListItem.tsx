@@ -17,7 +17,7 @@ const EventListItem: React.FC<Props> = ({ slot, isSelected, onToggle }) => {
 
   return (
     <li
-      className="px-4 py-5 group bg-zinc-100/50 hover:bg-zinc-200/40 rounded-3xl border border-gray-100 flex items-center gap-2 active:scale-[1.01]"
+      className="px-4 py-5 group bg-zinc-200/50 hover:bg-zinc-200/40 rounded-3xl border border-gray-100 flex items-center gap-2 active:scale-[1.01]"
       onClick={handleToggle}
     >
       {/* Checkbox */}
@@ -46,20 +46,12 @@ const EventListItem: React.FC<Props> = ({ slot, isSelected, onToggle }) => {
 
       {/* Info del slot */}
       <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <span className="text-gray-700 font-medium">
-            {slot.start.toLocaleDateString("es-AR")}
-          </span>
-        </div>
-        <span className="text-gray-800 font-medium">
-          {slot.start.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} -{" "}
+        
+        <span className="text-gray-800 font-medium uppercase">
+          {slot.start.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} - {" "}
           {slot.end.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}
         </span>
-        <div className="flex mt-2 gap-2">
-          <span className="flex items-center justify-center bg-zinc-900 text-zinc-50 px-3 py-1 rounded-2xl text-sm">
-            Pendiente
-          </span>
-        </div>
+        
       </div>
     </li>
   );

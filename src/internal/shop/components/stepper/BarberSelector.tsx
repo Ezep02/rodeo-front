@@ -1,7 +1,7 @@
-import useBarbers from "../hooks/useBarbers";
+import useBarbers from "../../hooks/useBarbers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { BarberInfo } from "../types/BarberInfo";
+import { BarberInfo } from "../../types/BarberInfo";
 import React from "react";
 
 type Props = {
@@ -20,7 +20,7 @@ const BarberSelector: React.FC<Props> = ({
       <h2 className="text-xl font-semibold">Barberos disponibles</h2>
 
       {Array.isArray(availableBarbers) && availableBarbers.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {availableBarbers.map((barber) => {
             const fullName = `${barber?.name || ""} ${
               barber?.surname || ""

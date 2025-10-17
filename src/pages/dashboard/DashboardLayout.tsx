@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 const DashboardLayout = () => {
 
   return (
-    <div className="h-screen flex flex-col md:flex-row bg-zinc-100">
+    <div className="h-screen flex flex-col md:flex-row bg-zinc-50">
       
       {/* SIDEBAR → Desktop */}
       <div className="hidden md:flex">

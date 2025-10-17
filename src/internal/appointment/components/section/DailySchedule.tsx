@@ -25,7 +25,7 @@ const DailySchedule = () => {
   }
 
   return (
-    <section className="border border-gray-200 px-3 pt-5 rounded-3xl flex flex-col gap-1.5">
+    <section className="border border-gray-200 px-3 py-5 rounded-3xl flex flex-col gap-1.5">
       
       <div className="flex flex-col gap-1.5 px-3">
         <h2 className="text-zinc-900 text-lg">Citas de hoy</h2>

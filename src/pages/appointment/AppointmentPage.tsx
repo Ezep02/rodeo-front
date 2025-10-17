@@ -10,7 +10,7 @@ const AppointmentPage = () => {
     <div className="p-5 md:p-10 flex flex-col gap-2">
       <AppointmentHeader />
 
-      <main className="grid grid-cols-2 gap-5 pt-2">
+      <main className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
         
         <DailySchedule />
 

@@ -4,7 +4,7 @@ import { createPreference } from "../services/mp_preference";
 import { CreatePreferenceRequest } from "../types/Preference";
 
 const usePreference = (service_id?: number) => {
-  const { selectedSlot } = useContext(ShopContext)!;
+  const { selectedSlot, setPaymentMethod, selectedPaymentMethod } = useContext(ShopContext)!;
 
   // Crear preferencia
   const CreatePreferente = async () => {
@@ -26,6 +26,10 @@ const usePreference = (service_id?: number) => {
       console.warn("error creando preferencia", error);
     }
   };
+
+
+  // Crear preferencia para transferir
+
 
   return {
     CreatePreferente,

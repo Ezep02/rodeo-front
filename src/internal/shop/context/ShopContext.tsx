@@ -2,6 +2,7 @@
 import { Slot, SlotWithStatus } from "@/types/Slot";
 import React, { useState } from "react";
 import { BarberInfo } from "../types/BarberInfo";
+import { PaymentOption } from "../types/Preference";
 
 interface ShopContextProps {
   // # Hash map para sincronizar los slots con el calendario
@@ -15,6 +16,9 @@ interface ShopContextProps {
   setSelectedBarber:  React.Dispatch<React.SetStateAction<BarberInfo | undefined>>;
   selectedSlot: Slot | undefined
   setSelectedSlot:  React.Dispatch<React.SetStateAction<Slot | undefined>>;
+  // Metodo de pago
+  selectedPaymentMethod: string
+  setPaymentMethod: React.Dispatch<React.SetStateAction<PaymentOption | "">>;
 }
 
 export const ShopContext = React.createContext<ShopContextProps | undefined>(undefined);
@@ -33,7 +37,10 @@ export const ShopContextProvider: React.FC<ChildrenProviderProp> = ({children}) 
   // # SELECCION DE BARBERO Y HORARIO
   const [selectedBarber, setSelectedBarber] = useState<BarberInfo>()
   const [selectedSlot, setSelectedSlot] = useState<Slot>()
-  
+
+  // # SELECCION DE METODO DE PAGO
+  const [selectedPaymentMethod, setPaymentMethod] = useState<PaymentOption | "">("")
+
   return (
     <ShopContext.Provider
       value={{
@@ -44,7 +51,9 @@ export const ShopContextProvider: React.FC<ChildrenProviderProp> = ({children}) 
         selectedBarber,
         setSelectedBarber,
         selectedSlot,
-        setSelectedSlot
+        setSelectedSlot,
+        selectedPaymentMethod,
+        setPaymentMethod
       }}    
     >
       {children}

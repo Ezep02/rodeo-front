@@ -13,7 +13,7 @@ const CatalogItem: React.FC<CatalogItemProps> = ({ item }) => {
   return (
     <div
       className={`relative rounded-3xl hover:shadow-lg hover:cursor-pointer transition overflow-hidden h-80 ${
-        hasPreview ? "" : "bg-white flex flex-col"
+        hasPreview ? "" : "bg-zinc-200/45 flex flex-col"
       }`}
       onClick={() => navigate(`/shop/${item.id}`)}
     >

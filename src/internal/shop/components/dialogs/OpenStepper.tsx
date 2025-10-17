@@ -10,17 +10,20 @@ import { useContext, useState } from "react";
 import { LuCalendarPlus } from "react-icons/lu";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { motion } from "framer-motion";
-import BarberSelector from "../BarberSelector";
-import BookingDateSelector from "../BookingDateSelector";
+import BarberSelector from "../stepper/BarberSelector";
+import BookingDateSelector from "../stepper/BookingDateSelector";
 import { ShopContext } from "../../context/ShopContext";
+import PaymentMethod from "../stepper/PaymentMethod";
 
 const steps = [
   { id: 1, title: "Barbero" },
   { id: 2, title: "Horario" },
+  { id: 3, title: "Metodo de pago" },
+  { id: 4, title: "Confirmacion" },
 ];
 
 const OpenStepper = () => {
-  const { selectedBarber, selectedSlot, setSelectedBarber } =
+  const { selectedBarber, selectedSlot, setSelectedBarber, selectedPaymentMethod } =
     useContext(ShopContext)!;
 
   const [stepperIsOpen, setStepperOpen] = useState(false);
@@ -34,11 +37,40 @@ const OpenStepper = () => {
   const nextStep = () => {
     if (activeStep === 0 && !selectedBarber) return; // no avanzar si no hay barbero
     if (activeStep === 1 && !selectedSlot) return; // no avanzar si no hay horario
+    if (activeStep === 2 && !selectedPaymentMethod) return; // no avanzar si no hay horario
     if (activeStep < steps.length - 1) setActiveStep((prev) => prev + 1);
   };
 
   const prevStep = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
+  };
+
+  const renderStepContent = () => {
+    switch (activeStep) {
+      case 0:
+        return (
+          <BarberSelector
+            onSelectBarber={setSelectedBarber}
+            selectedBarber={selectedBarber}
+          />
+        );
+
+      case 1:
+        return <BookingDateSelector />;
+      
+      case 2: 
+        return <PaymentMethod/>
+      case 3:
+        return (
+          <div className="text-center text-zinc-700">
+            <p>Revisa tu cita antes de confirmar.</p>
+            {/* Aquí podrías mostrar un resumen del barbero y horario */}
+          </div>
+        );
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -128,13 +160,7 @@ const OpenStepper = () => {
               transition={{ duration: 0.3 }}
               className="text-lg font-medium text-zinc-700"
             >
-              {activeStep === 0 && (
-                <BarberSelector
-                  onSelectBarber={setSelectedBarber}
-                  selectedBarber={selectedBarber}
-                />
-              )}
-              {activeStep === 1 && <BookingDateSelector />}
+              {renderStepContent()}
             </motion.div>
           </div>
         </div>
@@ -155,7 +181,8 @@ const OpenStepper = () => {
               onClick={nextStep}
               disabled={
                 (activeStep === 0 && !selectedBarber) ||
-                (activeStep === 1 && !selectedSlot)
+                (activeStep === 1 && !selectedSlot) || 
+                (activeStep === 2) && !selectedPaymentMethod
               }
             >
               Siguiente

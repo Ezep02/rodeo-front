@@ -35,7 +35,7 @@ const EventAdder: React.FC<EventAdderProps> = ({ onBack, calendarDayDate }) => {
         <div className="flex gap-4 mb-3 items-center">
           <button
             onClick={onBack}
-            className="p-2 rounded-full bg-stone-100 hover:bg-stone-200 transition cursor-pointer"
+            className="p-2 rounded-full bg-stone-200 hover:bg-stone-200 transition cursor-pointer"
           >
             <MdOutlineKeyboardArrowLeft size={24} className="text-zinc-700" />
           </button>
