@@ -20,6 +20,8 @@ import { CatalogContextProvider } from "@/context/CatalogContext";
 import { ShopContextProvider } from "@/internal/shop/context/ShopContext";
 import AppointmentPage from "@/pages/appointment/AppointmentPage";
 import { AppointmentContextProvider } from "@/internal/appointment/context/AppointmentContext";
+import PanelControl from "@/pages/panel-control/PanelControl";
+import { PanelControlContextProvider } from "@/internal/panel-control/context/PanelControlContext";
 
 // Lazy load
 const DashboardLayout = lazy(() => import("@/pages/dashboard/DashboardLayout"));
@@ -96,7 +98,9 @@ export const AppRoutes = () => (
           path="admin"
           element={
             <Suspense fallback={<PageLoader />}>
-              <div>Elemento</div>
+              <PanelControlContextProvider>
+                <PanelControl/>
+              </PanelControlContextProvider>
             </Suspense>
           }
         />

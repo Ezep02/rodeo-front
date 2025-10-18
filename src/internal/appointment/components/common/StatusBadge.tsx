@@ -1,5 +1,5 @@
 import React from "react";
-import { AppointmentStatus } from "../../types/ApptFilter";
+import { AppointmentStatus } from "../../../../types/ApptFilter";
 import { FaCheck } from "react-icons/fa6";
 import { FaRegCircle } from "react-icons/fa";
 

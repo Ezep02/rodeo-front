@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button';
 
 import { Loader2 } from 'lucide-react';
-import { Appointment } from '../../models/Appointment';
+import { Appointment } from '../../../../models/Appointment';
 import { useRescheduling } from '@/internal/appointment/hooks/useRescheduling';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';

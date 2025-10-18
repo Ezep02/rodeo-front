@@ -8,7 +8,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { Appointment } from '../../models/Appointment'
+import { Appointment } from '../../../../models/Appointment'
 import useCancel from '../../hooks/useCancel'
 import { getCancellationPolicy } from '../../utils/GetCancellationPolicy'
 

@@ -6,7 +6,6 @@ import {
   Calendar,
   LogOut,
   LayoutDashboard,
-  BarChart,
 } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
 import { GiBullHorns } from "react-icons/gi";
@@ -48,7 +47,6 @@ const Sidebar = () => {
             <div className="mt-6 mb-2 text-xs text-zinc-500 tracking-wide">Administrador</div>
             <nav className="space-y-2">
               <SidebarItem icon={LayoutDashboard} label="Panel de control" to="/admin" />
-              <SidebarItem icon={BarChart} label="Analytics" to="/analytics" />
               <SidebarItem icon={CiCircleList} label="Productos y servicios" to="/catalog" />
             </nav>
           </>

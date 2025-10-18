@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Appointment } from "../../models/Appointment";
+import { Appointment } from "../../../../models/Appointment";
 import { getCurrentStatus } from "@/utils/getAppointmentStatus";
 import {
   Dialog,

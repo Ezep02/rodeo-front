@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AppointmentContext } from "../context/AppointmentContext";
-import { Booking } from "../models/Appointment";
+import { Booking } from "../../../models/Appointment";
 
 const useApptAction = () => {
 

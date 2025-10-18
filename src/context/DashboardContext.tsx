@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 
-import { Appointment } from "@/internal/appointment/models/Appointment";
+import { Appointment } from "@/models/Appointment";
 import { Product } from "@/internal/reservation/model/Product";
 import { Post } from "@/internal/panel-control/models/Post";
 

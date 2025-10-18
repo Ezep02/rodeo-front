@@ -1,5 +1,5 @@
 import { startTransition, useActionState, useContext, useState } from "react";
-import { Appointment } from "../models/Appointment";
+import { Appointment } from "../../../models/Appointment";
 import { DeleteAppointment } from "../services/user_appointment_service";
 import { DashboardContext } from "@/context/DashboardContext";
 

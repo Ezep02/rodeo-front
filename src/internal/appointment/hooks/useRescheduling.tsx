@@ -1,6 +1,6 @@
 import { useState, startTransition, useActionState, useContext } from "react";
 import { Slot } from "../models/Slot";
-import { Appointment } from "../models/Appointment";
+import { Appointment } from "../../../models/Appointment";
 import { Reschedule, ReschedulingWithSurcharge } from "../services/reschedule_service";
 import { useSlots } from "@/hooks/useSlots";
 import { DashboardContext } from "@/context/DashboardContext";

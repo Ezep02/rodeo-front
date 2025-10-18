@@ -1,7 +1,5 @@
 import AppointmentHeader from "@/internal/appointment/components/section/AppointmentHeader";
 
-import AppointmentStats from "@/internal/appointment/components/section/AppointmentStats";
-
 import DailySchedule from "@/internal/appointment/components/section/DailySchedule";
 import DayPanel from "@/internal/appointment/components/section/DayPanel";
 

@@ -1,6 +1,6 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs"
 import { UpcomingApptStats } from "../types/Appointment"
-import { Booking } from "../models/Appointment"
+import { Booking } from "../../../models/Appointment"
 
 
 const APPOINTMENT_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/appointment`

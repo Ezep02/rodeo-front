@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { UpcomingApptStats } from "../types/Appointment";
-import { Booking } from "../models/Appointment";
-import { AppointmentFilterStatus } from "../types/ApptFilter";
+import { Booking } from "../../../models/Appointment";
+import { AppointmentFilterStatus } from "../../../types/ApptFilter";
 
 interface AppointmentContextProps {
   // # Estadisticas
