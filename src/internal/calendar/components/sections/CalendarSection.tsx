@@ -41,7 +41,7 @@ const CalendarSection = () => {
   return (
     <div>
       <div className="flex justify-between pb-3.5 pt-8 gap-2.5">
-        <div className="flex items-center gap-1 p-1 bg-gray-200 rounded-full">
+        <div className="flex items-center gap-1 p-1 bg-zinc-50 shadow-sm border border-gray-200 rounded-full">
           {views.map(({ key, label }) => (
             <button
               key={key}

@@ -2,18 +2,18 @@ import useBarbers from "../../hooks/useBarbers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { BarberInfo } from "../../types/BarberInfo";
-import React from "react";
+import React, { useContext } from "react";
+import { ShopContext } from "../../context/ShopContext";
 
-type Props = {
-  onSelectBarber: (barber: BarberInfo) => void;
-  selectedBarber?: BarberInfo | null;
-};
-
-const BarberSelector: React.FC<Props> = ({
-  onSelectBarber,
-  selectedBarber,
-}) => {
+const BarberSelector: React.FC = () => {
   const { availableBarbers } = useBarbers();
+  const { selectedBarber, setSelectedBarber } = useContext(ShopContext)!;
+
+  const onSelectBarber = (barber: BarberInfo) => {
+    if (barber) {
+      setSelectedBarber(barber);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -32,7 +32,7 @@ const BarberSelector: React.FC<Props> = ({
 
             return (
               <div
-                key={barber.id|| fullName}
+                key={barber.id || fullName}
                 onClick={() => onSelectBarber(barber)}
                 className={`flex flex-col gap-1 items-center shadow px-4 py-6 rounded-3xl cursor-pointer transition-all duration-200
                   ${

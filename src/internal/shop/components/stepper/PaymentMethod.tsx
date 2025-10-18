@@ -1,93 +1,90 @@
 import React, { useContext } from "react";
-import { CheckCircle2, CreditCard, Banknote } from "lucide-react";
+import { Check, Circle } from "lucide-react";
 import { PaymentOption } from "../../types/Preference";
 import { ShopContext } from "../../context/ShopContext";
-
-// Tipado de los métodos de pago disponibles
-
-interface PaymentOptionData {
-  label: string;
-  description: string;
-  icon: React.ReactNode;
-  color: string;
-}
+import { BsBank } from "react-icons/bs";
+import { SiMercadopago } from "react-icons/si";
 
 const PaymentMethod: React.FC = () => {
   const { selectedPaymentMethod, setPaymentMethod } = useContext(ShopContext)!;
 
-  const handleSelect = (method: PaymentOption) => {
-    setPaymentMethod(method)
-  }
+  const handleSelect = (method: PaymentOption) => setPaymentMethod(method);
 
-  // Datos de cada opción
-  const getOptionData = (method: PaymentOption): PaymentOptionData => {
+  const getOptionData = (method: PaymentOption) => {
     switch (method) {
       case "mercado_pago":
         return {
           label: "Mercado Pago",
           description: "Pago inmediato con tarjeta o saldo",
-          icon: (
-            <div className="bg-blue-500 text-white p-2 rounded-lg">
-              <CreditCard size={20} />
-            </div>
-          ),
-          color: "blue",
+          icon: <SiMercadopago size={20} />,
         };
       case "transferencia":
         return {
           label: "Transferencia bancaria",
           description: "Paga con alias o CBU y envía comprobante",
-          icon: (
-            <div className="bg-green-500 text-white p-2 rounded-lg">
-              <Banknote size={20} />
-            </div>
-          ),
-          color: "green",
+          icon: <BsBank size={20} />,
         };
     }
   };
 
-  // Renderizado de una tarjeta de método de pago
   const renderOption = (method: PaymentOption) => {
-    const data = getOptionData(method);
+    const data = getOptionData(method)!;
     const isSelected = selectedPaymentMethod === method;
 
     return (
-      <div
+      <li
         key={method}
         onClick={() => handleSelect(method)}
-        className={`flex items-center justify-between border rounded-xl p-4 cursor-pointer transition
+        className={`px-4 py-5 flex items-center gap-4 rounded-4xl border transition-all duration-200
           ${
             isSelected
-              ? `border-${data.color}-500 bg-${data.color}-50`
-              : "border-gray-200 hover:border-blue-300"
+              ? "bg-zinc-100 text-zinc-900 border-zinc-700 cursor-pointer"
+              : "bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border-zinc-700 cursor-pointer"
           }`}
       >
-        <div className="flex items-center gap-3">
-          {data.icon}
-          <div>
-            <p className="text-gray-800 font-medium">{data.label}</p>
-            <p className="text-sm text-gray-500">{data.description}</p>
+        {/* Check */}
+        <label className="relative flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            readOnly
+            className="
+              peer appearance-none w-6 h-6 border-2 border-zinc-500 rounded-full
+              checked:bg-zinc-900 checked:border-zinc-900
+              transition-colors duration-200
+              focus:outline-none
+            "
+          />
+          <Check
+            size={16}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+              text-white transform opacity-0 scale-50
+              transition-all duration-200 ease-out
+              peer-checked:opacity-100 peer-checked:scale-100"
+          />
+        </label>
+
+        {/* Icono y textos */}
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col">
+            <span className="font-medium">{data.label}</span>
+            <span className="text-sm">{data.description}</span>
           </div>
         </div>
-        {isSelected && (
-          <CheckCircle2 className={`text-${data.color}-500`} size={22} />
-        )}
-      </div>
+      </li>
     );
   };
 
   return (
-    <div className="">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
+    <div>
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">
         Métodos de pago
       </h2>
-
-      <div className="flex flex-col gap-4">
+      <ul className="flex flex-col gap-3">
         {(["mercado_pago", "transferencia"] as PaymentOption[]).map(
           renderOption
         )}
-      </div>
+      </ul>
     </div>
   );
 };

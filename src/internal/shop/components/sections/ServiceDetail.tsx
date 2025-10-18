@@ -1,21 +1,11 @@
-import { Service } from "@/types/ServiceTypes";
 import OpenStepper from "../dialogs/OpenStepper";
 import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
-import { Button } from "@/components/ui/button";
-import { GoArrowUpRight } from "react-icons/go";
-import usePreference from "../../hooks/usePreference";
 
-type Props = {
-  serviceInfo: Service;
-};
 
-const ServiceDetail: React.FC<Props> = ({ serviceInfo }) => {
-  const { selectedBarber, selectedSlot } = useContext(ShopContext)!;
+const ServiceDetail = () => {
+  const { selectedSlot, serviceInfo } = useContext(ShopContext)!;
 
-  const {
-    CreatePreferente
-  } = usePreference(serviceInfo?.id)
 
   return (
     <div>
@@ -64,19 +54,6 @@ const ServiceDetail: React.FC<Props> = ({ serviceInfo }) => {
             </span>
           </div>
         </div>
-
-        {selectedBarber && selectedSlot && (
-          <div>
-            <Button
-              className="rounded-full active:scale-95 cursor-pointer"
-              variant={"secondary"}
-              onClick={CreatePreferente}
-            >
-              Confirmar reserva
-              <GoArrowUpRight />
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );

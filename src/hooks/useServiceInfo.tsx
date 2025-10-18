@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
-import { Service } from "@/types/ServiceTypes";
 import { GetServiceInfo } from "@/service/services";
+import { ShopContext } from "@/internal/shop/context/ShopContext";
 
-const useServiceInfo = (serviceId: number) => {
-  const [serviceInfo, setServiceInfo] = useState<Service>();
+const useServiceInfo = (serviceId?: number) => {
 
+  const {
+    setServiceInfo,
+    serviceInfo
+  } = useContext(ShopContext)!
+ 
   // Recuperar la informacion del servicio
   useEffect(() => {
     const fetchServiceInfo = async () => {

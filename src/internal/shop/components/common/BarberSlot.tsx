@@ -16,7 +16,7 @@ const BarberSlot: React.FC<Props> = ({ item, onClickAction, isSelected }) => {
       onClick={() => {
         if (!isBooked) onClickAction();
       }}
-      className={`px-3 py-3 flex items-center justify-between gap-2 rounded-3xl border transition-all duration-200
+      className={`px-3 py-2.5 flex items-center justify-between gap-2 rounded-3xl border transition-all duration-200
         ${
           isBooked
             ? "bg-zinc-200 text-zinc-800 border-zinc-400 cursor-not-allowed"

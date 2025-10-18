@@ -8,7 +8,7 @@ type Props = {
 
 const SlotItem: React.FC<Props> = ({ item }) => {
   return (
-    <li className="px-4 py-5 group bg-zinc-200/50 hover:bg-zinc-200/40 rounded-3xl border border-gray-100 gap-2">
+    <li className="px-4 py-5 group bg-gray-300/25 hover:bg-zinc-200/40 rounded-3xl border border-gray-100 gap-2">
       {/* Info del evento */}
       <div className="flex ">
         <div className="px-2">

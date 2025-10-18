@@ -1,6 +1,7 @@
 import useServiceInfo from "@/hooks/useServiceInfo";
 import ServiceAbout from "@/internal/shop/components/sections/ServiceAbout";
 import ServiceDetail from "@/internal/shop/components/sections/ServiceDetail";
+import ServiceImgCarrousel from "@/internal/shop/components/sections/ServiceImgCarrousel";
 import ServiceMediaSection from "@/internal/shop/components/sections/ServiceMediaSection";
 import ServiceReviews from "@/internal/shop/components/sections/ServiceReviews";
 import { useParams } from "react-router-dom";
@@ -8,7 +9,9 @@ import { useParams } from "react-router-dom";
 const ServiceDetailPage = () => {
   const { id } = useParams();
 
-  const { serviceInfo } = useServiceInfo(id);
+  // Convert route param (string | undefined) to number | undefined before passing to hook
+  const numericId = id ? Number(id) : undefined;
+  const { serviceInfo } = useServiceInfo(numericId);
 
   return (
     <div className="relative p-5 md:p-10">
@@ -18,8 +21,9 @@ const ServiceDetailPage = () => {
 
         {/* Columna derecha: contenido scrolleable */}
         <div className="flex flex-col gap-10 sticky top-10 h-fit self-start">
-          <ServiceDetail serviceInfo={serviceInfo} />
+          <ServiceDetail />
           <ServiceAbout description={serviceInfo?.description} />
+          <ServiceImgCarrousel medias={serviceInfo?.medias ?? []}/>
           <ServiceReviews />
         </div>
       </div>

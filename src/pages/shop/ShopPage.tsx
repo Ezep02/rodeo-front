@@ -1,4 +1,3 @@
-import CategorieSection from "@/internal/shop/components/sections/CategorieSection";
 import CatalogSection from "@/internal/shop/components/sections/CatalogSection";
 
 const ShopPage = () => {
