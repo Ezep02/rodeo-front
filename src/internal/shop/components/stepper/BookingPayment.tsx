@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 import WhatsAppButton from "../common/WhatsAppButton";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -104,14 +104,26 @@ const BookingPayment = () => {
 
       case "mercado_pago":
         return (
-          <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-            <CheckCircle className="text-green-500 w-10 h-10" />
-            <p className="text-lg font-semibold text-gray-900">
-              Redirigiéndote a Mercado Pago...
-            </p>
-            <p className="text-sm text-gray-600">
-              Por favor, no cierres esta ventana.
-            </p>
+          <div className="flex flex-col items-center gap-3 text-center">
+            {/* --- Encabezado --- */}
+            <div className="flex flex-col gap-1">
+              <p className="font-medium text-gray-800 text-base">
+                ¡Estupendo! Solo unos pasos más
+              </p>
+              <p className="text-gray-600 text-sm">
+                Estamos redirigiéndote a{" "}
+                <span className="font-medium text-sky-600">Mercado Pago</span>
+                ...
+              </p>
+            </div>
+
+            {/* --- Loader --- */}
+            <div className="flex flex-col items-center mt-2">
+              <div className="w-8 h-8 border-3 border-gray-200 border-t-sky-500 rounded-full animate-spin" />
+              <p className="text-xs text-gray-500 mt-2">
+                Esto tomará solo un momento
+              </p>
+            </div>
           </div>
         );
 

@@ -28,13 +28,15 @@ const BookingConfirmation = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               <span className="text-gray-600 mb-1 sm:mb-0">Fecha y hora:</span>
               <span className="font-medium text-gray-900">
-                {new Date(selectedSlot?.start).toLocaleDateString("es", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "long",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {selectedSlot?.start
+                  ? new Date(selectedSlot.start).toLocaleDateString("es", {
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "long",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "No disponible"}
               </span>
             </div>
 

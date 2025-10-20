@@ -9,3 +9,15 @@ export const allPendingPayment = async () => {
     let res = await AuthenticationInstance.get<Booking[]>(`${BOOKING_BASE_URL}/all/pending-payment`)
     return res.data
 }
+
+// Aceptar cita del cliente
+export const markAsPaid = async (id: number) => {
+    let res = await AuthenticationInstance.put(`${BOOKING_BASE_URL}/mark-as-paid/${id}`)
+    return res.data
+}
+
+// Rechazar cita del cliente
+export const markAsRejected = async (id: number) => {
+    let res = await AuthenticationInstance.put(`${BOOKING_BASE_URL}/mark-as-rejected/${id}`)
+    return res.data
+}

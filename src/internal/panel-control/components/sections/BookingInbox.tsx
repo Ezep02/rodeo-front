@@ -1,30 +1,47 @@
-import { FaCheck } from "react-icons/fa6";
+import { MdCheck } from "react-icons/md";
 import useBookingInbox from "../../hooks/useBookingInbox";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ConfirmDialog from "../dialogs/ConfirmDialog";
+import useInboxAction from "../../hooks/useInboxAction";
+import ErrorAlert from "@/components/alerts/ErrorAlert";
 
 const BookingInbox = () => {
   const { inboxAppointment } = useBookingInbox();
 
+  const { handleApprove, handleReject, error, isErrorOpen, setErrorOpen } = useInboxAction();
+
   return (
     <section className="rounded-4xl bg-zinc-50 shadow-sm border border-gray-100 p-6 min-h-[90vh]">
       <div className="flex flex-col gap-1.5 px-3 pb-2.5">
-        <h2 className="text-zinc-900 text-lg">Solicitudes</h2>
+        <h2 className="text-zinc-900 text-lg">Solicitudes pendiente de pago</h2>
       </div>
+
+      <ErrorAlert
+        message={error}
+        show={isErrorOpen}
+        onClose={()=> setErrorOpen(false)}
+      />
 
       <div>
         {Array.isArray(inboxAppointment) && inboxAppointment.length > 0 ? (
           <ul className="flex flex-col gap-1">
             {inboxAppointment.map((sch, i) => {
-              const time = new Date(sch.slot.start).toLocaleTimeString("es-AR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              });
-              const date = new Date(sch.slot.start).toLocaleDateString("es-AR", {
-                day: "numeric",
-                month: "long",
-              });
+              const time = new Date(sch.slot.start).toLocaleTimeString(
+                "es-AR",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                }
+              );
+              const date = new Date(sch.slot.start).toLocaleDateString(
+                "es-AR",
+                {
+                  day: "numeric",
+                  month: "long",
+                }
+              );
 
               return (
                 <li
@@ -69,17 +86,28 @@ const BookingInbox = () => {
 
                   {/* --- Acciones --- */}
                   <div className="flex gap-1.5 pt-1">
-                    <Button
-                      variant={"default"}
-                      className="rounded-full active:scale-95 cursor-pointer"
-                    >
-                      <FaCheck size={13} />
-                      Aceptar cita
-                    </Button>
-
-                    <button className="items-center rounded-full px-3 py-1.5 flex gap-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer active:scale-95">
-                      Rechazar
-                    </button>
+                    <ConfirmDialog
+                      action="accept"
+                      onConfirm={() => handleApprove(sch.id)} // tu lógica para aceptar
+                      trigger={
+                        <Button
+                          variant="default"
+                          className="rounded-full active:scale-95 cursor-pointer"
+                        >
+                          <MdCheck size={20} />
+                          Aceptar turno
+                        </Button>
+                      }
+                    />
+                    <ConfirmDialog
+                      action="reject"
+                      onConfirm={() => handleReject(sch.id)} // tu lógica para rechazar
+                      trigger={
+                        <button className="items-center rounded-full px-3 py-1.5 flex gap-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-300 transition cursor-pointer active:scale-95 font-semibold text-sm">
+                          Rechazar solicitud
+                        </button>
+                      }
+                    />
                   </div>
                 </li>
               );

@@ -8,7 +8,7 @@ const useStepper = () => {
   const [stepperIsOpen, setStepperOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
-  const { onAliasPrefAction, onCreatePrefAction } =usePreference();
+  const { onAliasPrefAction, onCreatePrefAction } = usePreference();
 
   // Abrir / Cerrar Stepper
   const toggleDialogStatus = () => {

@@ -84,7 +84,7 @@ const useCalendarAction = () => {
     setCurrentDate(prevWeek);
   };
 
-    //
+  //
   const getSlotByDate = (date: Date): SlotWithStatus[] | [] => {
     if (!date) return [];
 
