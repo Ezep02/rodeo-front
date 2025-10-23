@@ -15,6 +15,7 @@ const ServiceDetailPage = () => {
 
   return (
     <div className="relative p-5 md:p-10">
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Columna izquierda: imágenes fijas */}
         <ServiceMediaSection medias={serviceInfo?.medias ?? []} />
@@ -27,6 +28,7 @@ const ServiceDetailPage = () => {
           <ServiceReviews />
         </div>
       </div>
+      
     </div>
   );
 };

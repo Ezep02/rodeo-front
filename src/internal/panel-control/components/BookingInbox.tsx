@@ -1,9 +1,9 @@
 import { MdCheck } from "react-icons/md";
-import useBookingInbox from "../../hooks/useBookingInbox";
+import useBookingInbox from "../hooks/useBookingInbox";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ConfirmDialog from "../dialogs/ConfirmDialog";
-import useInboxAction from "../../hooks/useInboxAction";
+import ConfirmDialog from "./dialogs/ConfirmDialog";
+import useInboxAction from "../hooks/useInboxAction";
 import ErrorAlert from "@/components/alerts/ErrorAlert";
 
 const BookingInbox = () => {
@@ -12,11 +12,7 @@ const BookingInbox = () => {
   const { handleApprove, handleReject, error, isErrorOpen, setErrorOpen } = useInboxAction();
 
   return (
-    <section className="rounded-4xl bg-zinc-50 shadow-sm border border-gray-100 p-6 min-h-[90vh]">
-      <div className="flex flex-col gap-1.5 px-3 pb-2.5">
-        <h2 className="text-zinc-900 text-lg">Solicitudes pendiente de pago</h2>
-      </div>
-
+    <div className="pt-3">
       <ErrorAlert
         message={error}
         show={isErrorOpen}
@@ -119,7 +115,7 @@ const BookingInbox = () => {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 
