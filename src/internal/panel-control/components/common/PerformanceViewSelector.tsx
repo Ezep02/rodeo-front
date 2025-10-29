@@ -15,7 +15,7 @@ const views: { key: SwitchViewMode; label: string }[] = [
 const PerformanceViewSelector: React.FC<SelectorProps> = ({ onChange, view }) => {
   return (
     <div className="flex items-center gap-1 rounded-full
-      pt-1 md:p-3 lg:px-3 lg:pt-3
+      py-3 px-5
     ">
       {views.map(({ key, label }) => (
         <button

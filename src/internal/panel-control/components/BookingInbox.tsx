@@ -111,7 +111,7 @@ const BookingInbox = () => {
           </ul>
         ) : (
           <div className="px-3 items-center flex-1 flex justify-center pt-10">
-            <p>Tu cronograma para el día de hoy está vacío</p>
+            <p>No hay solicitudes pendientes</p>
           </div>
         )}
       </div>

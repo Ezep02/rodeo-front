@@ -11,8 +11,7 @@ type Props = {
 const ViewOption: React.FC<Props> = ({ title, subtitle, label, value }) => {
   return (
     <motion.div
-      whileTap={{ scale: 0.98 }}
-      className="flex flex-col justify-between gap-3 text-left transition-all duration-300 focus:outline-none w-full p-1 md:p-3 lg:px-6"
+      className="flex flex-col justify-between gap-3 text-left transition-all duration-300 focus:outline-none w-full px-6"
     >
       {/* Encabezado */}
       <div className="flex flex-col">

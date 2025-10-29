@@ -8,15 +8,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { MonthData, RevenueMonthData } from "../../models/Rates";
 
-type PerformanceData = {
-  month: string;
-  users?: number;
-  income?: number;
-};
 
 type PerformanceChartProps = {
-  data: PerformanceData[];
+  data: MonthData[] | RevenueMonthData[];
   title?: string;
   showUsers?: boolean;
   showIncome?: boolean;
@@ -30,13 +26,13 @@ export const PerformanceChart = ({
 }: PerformanceChartProps) => {
   return (
     <motion.div
-      className="p-1 md:p-3 lg:p-6 flex flex-col"
+      className="flex flex-col"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <motion.h3
-        className="text-lg font-semibold text-gray-100 mb-4"
+        className="text-lg font-semibold text-gray-100 py-4 px-6 "
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
@@ -44,7 +40,7 @@ export const PerformanceChart = ({
         {title}
       </motion.h3>
 
-      <ResponsiveContainer width="100%" height={260}>
+      <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data} barGap={6}>
           <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
           <XAxis
@@ -70,7 +66,7 @@ export const PerformanceChart = ({
           {/* Animación de barras usando props nativos de recharts */}
           {showUsers && (
             <Bar
-              dataKey="users"
+              dataKey="new_clients"
               name="Usuarios"
               fill="#8b5cf6"
               radius={[6, 6, 0, 0]}
@@ -82,7 +78,7 @@ export const PerformanceChart = ({
           )}
           {showIncome && (
             <Bar
-              dataKey="income"
+              dataKey="total_revenue"
               name="Ingresos"
               fill="#22d3ee"
               radius={[6, 6, 0, 0]}
