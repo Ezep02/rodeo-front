@@ -4,9 +4,12 @@ import ReqAndBarberViewSelector, {
 } from "../common/ReqAndBarberViewSelector";
 import BookingInbox from "../BookingInbox";
 import BarbersManager from "../BarbersManager";
+import useBarbers from "../../hooks/useBarbers";
 
 const RequestsAndBarbers = () => {
   const [view, setView] = React.useState<SwitchReqViewMode>("client_requests");
+
+  const { barberList } = useBarbers();
 
   function ViewModeRender() {
     switch (view) {
@@ -14,7 +17,7 @@ const RequestsAndBarbers = () => {
         return <BookingInbox />;
 
       case "barber_list":
-        return <BarbersManager />;
+        return <BarbersManager barber_list={barberList ?? []} />;
       default:
         return;
     }
