@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Label } from "../ui/label";
+import { Label } from "../../../../components/ui/label";
 import { AuthContext } from "@/context/AuthContext";
 import UpdatePassword from "../dialogs/UpdatePassword";
 

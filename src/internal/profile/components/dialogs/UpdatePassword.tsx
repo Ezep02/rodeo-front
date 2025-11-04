@@ -12,12 +12,12 @@ import {
   DialogDescription,
   DialogTrigger,
   DialogClose,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "../../../../components/ui/dialog";
+import { Button } from "../../../../components/ui/button";
 import { RiMailSendLine } from "react-icons/ri";
 import { SendResetInstruction } from "@/service/user_info";
 import { useForm } from "react-hook-form";
-import { Input } from "../ui/input";
+import { Input } from "../../../../components/ui/input";
 
 type DialogProps = {
   email?: string;

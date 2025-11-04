@@ -1,34 +1,31 @@
 import React, { useContext, useState, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useActionState } from "react";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Label } from "../../../../components/ui/label";
+import { Button } from "../../../../components/ui/button";
 import { Edit2 } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
 import { User } from "@/models/AuthModels";
 import { UpdateUser } from "@/service/user_info";
-import ErrorAlert from "../alerts/ErrorAlert";
+import ErrorAlert from "../../../../components/alerts/ErrorAlert";
 
-type PersonalInformationProps = {
-  initUserData: User;
-};
 
-const PersonalInformation: React.FC<PersonalInformationProps> = ({
-  initUserData,
-}) => {
-  const { setUser } = useContext(AuthContext)!;
+const PersonalInformation: React.FC = () => {
+  const { setUser, userInfo } = useContext(AuthContext)!;
   const [isEditing, setIsEditing] = useState(false);
 
   const [showErr, setShowErr] = useState<boolean>(false)
 
   const { register, handleSubmit, reset } = useForm<User>({
-    defaultValues: initUserData,
+    defaultValues: userInfo,
   });
 
   const [updateErrMsg, submitAction, isPending] = useActionState(
     async (_: void | null, data: User) => {
       try {
-        const updateResult = await UpdateUser(initUserData.id, data);
+        if (!userInfo?.id) return
+
+        const updateResult = await UpdateUser(userInfo?.id, data);
 
         if (updateResult.user) {
           setUser((prev) => {
@@ -65,7 +62,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
     <div className="space-y-6">
       <div>
         {/* Encabezado */}
-        <div className="flex justify-between items-start flex-wrap gap-3">
+        <div className="flex justify-between items-start flex-col gap-3">
           <div>
             <h2 className="text-xl font-semibold text-gray-700">
               Información Personal
@@ -106,10 +103,10 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               <input
                 {...register("name", { required: true })}
                 className="w-full p-3 border border-zinc-300 rounded-2xl"
-                defaultValue={initUserData.name}
+                defaultValue={userInfo?.name}
               />
             ) : (
-              <span className="text-gray-500">{initUserData.name}</span>
+              <span className="text-gray-500">{userInfo?.name}</span>
             )}
           </div>
 
@@ -125,10 +122,10 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               <input
                 {...register("surname", { required: true })}
                 className="w-full p-3 border border-zinc-300 rounded-2xl"
-                defaultValue={initUserData.surname}
+                defaultValue={userInfo?.surname}
               />
             ) : (
-              <span className="text-gray-500">{initUserData.surname}</span>
+              <span className="text-gray-500">{userInfo?.surname}</span>
             )}
           </div>
 
@@ -144,10 +141,10 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               <input
                 {...register("email", { required: true })}
                 className="w-full p-3 border border-zinc-300 rounded-2xl"
-                defaultValue={initUserData.email}
+                defaultValue={userInfo?.email}
               />
             ) : (
-              <span className="text-gray-500">{initUserData.email}</span>
+              <span className="text-gray-500">{userInfo?.email}</span>
             )}
           </div>
 
@@ -163,11 +160,11 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               <input
                 {...register("phone_number", { required: true })}
                 className="w-full p-3 border border-zinc-300 rounded-2xl"
-                defaultValue={initUserData.phone_number}
+                defaultValue={userInfo?.phone_number}
               />
             ) : (
               <span className="text-gray-500">
-                {initUserData.phone_number || "No registrado"}
+                {userInfo?.phone_number || "No registrado"}
               </span>
             )}
           </div>
@@ -193,7 +190,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 variant="ghost"
                 className=""
                 onClick={() => {
-                  reset(initUserData);
+                  reset(userInfo);
                   setIsEditing(false);
                 }}
                 disabled={isPending}

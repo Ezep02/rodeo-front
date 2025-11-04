@@ -15,7 +15,6 @@ import { LogoutUser } from "@/service/AuthService";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import Configuration from "../dialogs/Configuration";
 
 const Header: React.FC = () => {
   const {
@@ -73,7 +72,7 @@ const Header: React.FC = () => {
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>
-                      <Configuration />
+                  
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>

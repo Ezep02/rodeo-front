@@ -22,6 +22,7 @@ import AppointmentPage from "@/pages/appointment/AppointmentPage";
 import { AppointmentContextProvider } from "@/internal/appointment/context/AppointmentContext";
 import PanelControl from "@/pages/panel-control/PanelControl";
 import { PanelControlContextProvider } from "@/internal/panel-control/context/PanelControlContext";
+import ProfilePage from "@/pages/profile/ProfilePage";
 
 // Lazy load
 const DashboardLayout = lazy(() => import("@/pages/dashboard/DashboardLayout"));
@@ -73,6 +74,15 @@ export const AppRoutes = () => (
         <Route index element={<DashboardOverview />} />
 
         <Route
+          path=":name"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ProfilePage/>
+            </Suspense>
+          }
+        />
+
+        <Route
           path="calendar"
           element={
             <Suspense fallback={<PageLoader />}>
@@ -88,7 +98,7 @@ export const AppRoutes = () => (
           element={
             <Suspense fallback={<PageLoader />}>
               <AppointmentContextProvider>
-                <AppointmentPage/>
+                <AppointmentPage />
               </AppointmentContextProvider>
             </Suspense>
           }
@@ -99,7 +109,7 @@ export const AppRoutes = () => (
           element={
             <Suspense fallback={<PageLoader />}>
               <PanelControlContextProvider>
-                <PanelControl/>
+                <PanelControl />
               </PanelControlContextProvider>
             </Suspense>
           }

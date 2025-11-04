@@ -4,6 +4,10 @@ import { User } from "../models/AuthModels";
 interface AuthContextProps {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+
+  userInfo: User | undefined;
+  setUserInfo: React.Dispatch<React.SetStateAction<User | undefined>>;
+
   isUserAuthenticated: boolean;
   setIsUserAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   GoogleLogIn: () => void;
@@ -32,6 +36,8 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
   const [user, setUser] = useState<User>();
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
+
+  const [userInfo, setUserInfo] = useState<User>();
 
   const [authIsLoading, setAuthIsLoading] = useState<boolean>(false);
   const AuthLoaderHandler = () => {
@@ -71,6 +77,8 @@ export const AuthContextProvider: React.FC<ChildrenProviderProp> = ({
         openNav,
         setOpenNav,
         OpenNavHandler,
+        userInfo,
+        setUserInfo
       }}
     >
       {children}

@@ -11,9 +11,15 @@ import { AuthContext } from "@/context/AuthContext";
 import { GiBullHorns } from "react-icons/gi";
 import { IoTimeOutline } from "react-icons/io5";
 import { CiCircleList } from "react-icons/ci";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useUser } from "@/hooks/useUser";
 
 const Sidebar = () => {
   const { user } = useContext(AuthContext)!;
+
+  const { userInfo } = useUser();
+
+  console.info(userInfo);
 
   return (
     <aside className="h-screen w-64 bg-zinc-900 border-r text-zinc-200 flex flex-col justify-between p-5">
@@ -26,31 +32,68 @@ const Sidebar = () => {
 
         {/* Main navigation */}
         <nav className="space-y-2">
-          <SidebarItem icon={Home} label="Inicio" to="/" />
-          <SidebarItem icon={Scissors} label="Servicios" to="/shop" />
+          <SidebarItem icon={<Home size={18} />} label="Inicio" to="/" />
+          <SidebarItem
+            icon={<Scissors size={18} />}
+            label="Servicios"
+            to="/shop"
+          />
+
+          {/* Barber section */}
+          {user?.is_barber && (
+            <>
+              <div className="space-y-2">
+                <SidebarItem
+                  icon={<Calendar size={18} />}
+                  label="Calendario"
+                  to="/calendar"
+                />
+                <SidebarItem
+                  icon={<IoTimeOutline size={18} />}
+                  label="Citas"
+                  to="/appointment"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Admin section */}
+          {user?.is_admin && (
+            <>
+              <div className="space-y-2">
+                <SidebarItem
+                  icon={<LayoutDashboard size={18} />}
+                  label="Panel de control"
+                  to="/admin"
+                />
+                <SidebarItem
+                  icon={<CiCircleList size={18} />}
+                  label="Productos y servicios"
+                  to="/catalog"
+                />
+              </div>
+            </>
+          )}
+
+          {userInfo?.username && (
+            <SidebarItem
+              icon={
+                <Avatar className="w-8 h-8 border rounded-full overflow-hidden">
+                  <AvatarImage
+                    src={userInfo?.avatar || undefined}
+                    alt="Profile avatar"
+                  />
+                  <AvatarFallback className="uppercase bg-transparent text-zinc-50 text-sm">
+                    {user?.name?.charAt(0)}
+                    {user?.surname?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              }
+              label="Perfil"
+              to={`${userInfo?.username}/`}
+            />
+          )}
         </nav>
-
-        {/* Barber section */}
-        {user?.is_barber && (
-          <>
-            <div className="mt-6 mb-2 text-xs text-zinc-500 tracking-wide">Barbero</div>
-            <nav className="space-y-2">
-              <SidebarItem icon={Calendar} label="Calendario" to="/calendar" />
-              <SidebarItem icon={IoTimeOutline} label="Citas" to="/appointment" />
-            </nav>
-          </>
-        )}
-
-        {/* Admin section */}
-        {user?.is_admin && (
-          <>
-            <div className="mt-6 mb-2 text-xs text-zinc-500 tracking-wide">Administrador</div>
-            <nav className="space-y-2">
-              <SidebarItem icon={LayoutDashboard} label="Panel de control" to="/admin" />
-              <SidebarItem icon={CiCircleList} label="Productos y servicios" to="/catalog" />
-            </nav>
-          </>
-        )}
 
         {/* Action button */}
         <div className="mt-6">
@@ -62,18 +105,6 @@ const Sidebar = () => {
 
       {/* User info & logout */}
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-zinc-700 rounded-full flex items-center justify-center text-sm font-medium text-white">
-            {user?.username?.slice(0, 2).toUpperCase() || "US"}
-          </div>
-          <div>
-            <p className="text-sm font-medium text-white">{user?.username || "Usuario"}</p>
-            <p className="text-xs text-zinc-400">
-              {user?.is_admin ? "Administrador" : user?.is_barber ? "Barbero" : "Cliente"}
-            </p>
-          </div>
-        </div>
-
         <button className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition">
           <LogOut size={16} />
           Cerrar sesión
@@ -85,28 +116,27 @@ const Sidebar = () => {
 
 // SidebarItem ahora calcula si está activo usando location.pathname
 const SidebarItem = ({
-  icon: Icon,
+  icon,
   label,
   to,
 }: {
-  icon: React.ElementType;
+  icon: React.ReactElement;
   label: string;
   to: string;
 }) => {
   const location = useLocation();
-
-  const isActive = location.pathname === to; // Función que decide si está activo
+  const isActive = location.pathname === to;
 
   return (
     <Link
       to={to}
-      className={`flex items-center gap-3 px-3 py-2 rounded-full text-sm transition-all ${
+      className={`flex items-center gap-2 px-3 py-3 rounded-full text-sm transition-all ${
         isActive
           ? "bg-zinc-800 text-white rounded-full"
           : "hover:bg-zinc-800 hover:text-white text-zinc-400"
       }`}
     >
-      <Icon size={18} />
+      {icon}
       <span>{label}</span>
     </Link>
   );

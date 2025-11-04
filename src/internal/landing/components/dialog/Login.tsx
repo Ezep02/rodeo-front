@@ -1,6 +1,6 @@
 import ErrorAlert from "@/components/alerts/ErrorAlert";
 import { FormField } from "@/components/common/CustomInputForm";
-import SendPasswordReminder from "@/components/dialogs/UpdatePassword";
+import SendPasswordReminder from "@/internal/profile/components/dialogs/UpdatePassword";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

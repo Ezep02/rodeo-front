@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "../../../../components/ui/dialog";
+import { Button } from "../../../../components/ui/button";
 import { Edit2 } from "lucide-react";
 import { FaArrowLeft, FaRegUser } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
