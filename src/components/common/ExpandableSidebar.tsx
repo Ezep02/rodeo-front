@@ -19,8 +19,6 @@ const Sidebar = () => {
 
   const { userInfo } = useUser();
 
-  console.info(userInfo);
-
   return (
     <aside className="h-screen w-64 bg-zinc-900 border-r text-zinc-200 flex flex-col justify-between p-5">
       <div>

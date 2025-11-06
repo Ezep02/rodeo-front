@@ -1,4 +1,4 @@
-import { AuthenticationInstance, MultipartInstance } from "@/configs/AxiosConfigs";
+import { AuthenticationInstance } from "@/configs/AxiosConfigs";
 import { User } from "@/models/AuthModels";
 
 
@@ -25,26 +25,13 @@ export const UpdateUsername = async (user_id: number, new_username: string) => {
 }
 
 // Configuraciones generales
-type UpdateUserRes = {
-  message: string
-  user: User
-}
 
 export const UpdateUser = async (user_id: number, user:User) => {
-    let res = await AuthenticationInstance.put<UpdateUserRes>(`${USER_BASE_URL}/${user_id}`, user)
+    let res = await AuthenticationInstance.put<User>(`${USER_BASE_URL}/${user_id}`, user)
     return res.data
 }
 
-// Actualizar el avatar del usuario
-type UpdateAvatarRes = {
-    message: string
-    avatar:  string,
-}
 
-export const UpdateAvatar = async (formData:FormData) => {
-    let res = await MultipartInstance.post<UpdateAvatarRes>(`${USER_BASE_URL}/avatar`, formData)
-    return res.data
-}
 
 // Actualizar la contraseña de usuario
 export const SendResetInstruction = async (email:string) => {

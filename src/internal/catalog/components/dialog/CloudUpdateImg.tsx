@@ -151,4 +151,3 @@ const CloudUpdateImage: React.FC<Props> = ({
 };
 
 export default CloudUpdateImage
-;
