@@ -16,10 +16,11 @@ import { updateAvatar } from "../../services/user_information";
 import { AuthContext } from "@/context/AuthContext";
 
 type Props = {
+  trigger:React.ReactElement
   avatar: string;
 };
 
-const UpdateAvatar: React.FC<Props> = ({ avatar }) => {
+const UpdateAvatar: React.FC<Props> = ({ avatar, trigger }) => {
   const {setUserInfo} = useContext(AuthContext)!
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -71,9 +72,7 @@ const UpdateAvatar: React.FC<Props> = ({ avatar }) => {
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
-        <Button size={"icon"} variant={"default"} className="rounded-full">
-          <Camera />
-        </Button>
+        {trigger}
       </DialogTrigger>
 
       <DialogContent className="md:max-w-md max-w-sm p-6 rounded-4xl shadow-2xl bg-zinc-50">

@@ -68,7 +68,6 @@ const UpdateUserInfo: React.FC<Props> = ({ user, trigger }) => {
         reset(updateResult);
       } catch (err: any) {
         setShowErr(true);
-        console.warn("Error al actualizar:", err?.response?.data);
         return err?.response?.data?.error || "Error creando el post";
       }
     },

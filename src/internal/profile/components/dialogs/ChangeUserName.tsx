@@ -1,4 +1,9 @@
-import React, { startTransition, useActionState, useContext } from "react";
+import React, {
+  startTransition,
+  useActionState,
+  useContext,
+  useState,
+} from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,14 +14,16 @@ import {
 } from "../../../../components/ui/dialog";
 import { Button } from "../../../../components/ui/button";
 import { Edit2 } from "lucide-react";
-import { FaArrowLeft, FaRegUser } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import { User } from "@/models/AuthModels";
 import { UpdateUsername } from "@/service/user_info";
 import { AuthContext } from "@/context/AuthContext";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { Label } from "@/components/ui/label";
+import ErrorAlert from "@/components/alerts/ErrorAlert";
 
 type UpdateUserForm = {
-  username: string
+  username: string;
 };
 
 type DialogProps = {
@@ -25,10 +32,11 @@ type DialogProps = {
 
 const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
   const { setUser } = useContext(AuthContext)!;
+  const [showErr, setShowErr] = useState<boolean>(false);
 
   const { register, handleSubmit, reset } = useForm<UpdateUserForm>();
 
-  const [_, submitCategoryAction, isPending] = useActionState(
+  const [usernameErrMsg, submitUsernameAction, isPending] = useActionState(
     async (_: void | null, data: UpdateUserForm) => {
       try {
         // recuperar nombre y apellido
@@ -42,16 +50,18 @@ const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
 
             return {
               ...prev,
-              username: updateResult.username,
+              username: updateResult,
               last_name_change: new Date(),
             };
           });
-          console.log(updateResult.username);
         }
 
         reset();
-      } catch (err) {
-        console.error("Error realizar actualizacion:", err);
+      } catch (err: any) {
+        setShowErr(true);
+        return (
+          err?.response?.data?.error || "Error actualizando nombre de usuario"
+        );
       }
     },
     undefined
@@ -60,7 +70,7 @@ const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
   // Iniciar transaccion de actualizacion
   const startSubmitTransition = (formData: UpdateUserForm) => {
     startTransition(() => {
-      submitCategoryAction(formData);
+      submitUsernameAction(formData);
     });
   };
 
@@ -76,78 +86,87 @@ const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
     return limitDate > new Date();
   };
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
         <Button size={"icon"} variant={"ghost"} className="rounded-full">
           <Edit2 size={24} />
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="md:max-w-md max-w-sm p-6 rounded-3xl shadow-2xl bg-zinc-50">
-        <DialogHeader className="mb-6 pt-2">
-          <div className="flex flex-col gap-4">
-            {/* Botón de volver + Título principal */}
-            <div className="flex items-center gap-4">
-              <button className="p-2 rounded-full bg-stone-100 hover:bg-stone-200 transition">
-                <FaArrowLeft size={18} className="text-zinc-700" />{" "}
-              </button>
-              <h1 className="text-lg font-semibold text-zinc-700">
-                Actualizar nombre de usuario
-              </h1>
-            </div>
-
-            {/* Icono + Descripción */}
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-zinc-900 rounded-xl text-white">
-                <FaRegUser size={20} />
-              </div>
-              <div>
-                <DialogTitle className="text-lg font-semibold text-zinc-700">
-                  Personaliza tu identidad
-                </DialogTitle>
-                <DialogDescription className="text-sm text-zinc-500">
-                  Cambia tu nombre de usuario. Ten en cuenta que solo puedes
-                  hacerlo una vez cada <strong>14 días</strong>.
-                </DialogDescription>
-              </div>
-            </div>
+      <DialogContent className="md:max-w-md max-w-[90vw] p-6 rounded-4xl shadow-2xl bg-zinc-50">
+        <DialogHeader>
+          <div className="flex gap-4 mb-3 items-center">
+            <button
+              onClick={toggleOpen}
+              className="p-2 rounded-full bg-stone-100 hover:bg-stone-200 transition cursor-pointer"
+            >
+              <MdOutlineKeyboardArrowLeft size={24} className="text-zinc-700" />
+            </button>
           </div>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(startSubmitTransition)}
-          className="space-y-6 px-1"
-        >
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-2">
+        <div className="p-5 md:px-10 flex-1">
+          <div>
+            <DialogTitle className="text-lg font-semibold text-zinc-700">
+              Personaliza tu identidad
+            </DialogTitle>
+            <DialogDescription className="text-sm text-zinc-500">
+              Cambia tu nombre de usuario. Ten en cuenta que solo puedes hacerlo
+              una vez cada <strong>14 días</strong>.
+            </DialogDescription>
+          </div>
+
+          <form
+            onSubmit={handleSubmit(startSubmitTransition)}
+            className="space-y-6 mt-4"
+          >
+            {/* Nombre */}
+            <div className="flex flex-col justify-between gap-1">
+              <Label className="text-sm font-medium text-gray-400 w-40">
                 Nombre
-              </label>
+              </Label>
+
               <input
                 {...register("username", { required: true })}
                 className="w-full p-3 border border-zinc-300 rounded-2xl"
                 defaultValue={initUserData.username}
               />
             </div>
-          </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <DialogTrigger asChild>
-              <Button type="button" variant="ghost">
-                Cancelar
+            <ErrorAlert
+              message={usernameErrMsg}
+              show={showErr}
+              onClose={() => setShowErr(false)}
+            />
+
+            <div className="flex justify-end gap-3 pt-4">
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="rounded-full active:scale-95 cursor-pointer"
+                >
+                  Cancelar
+                </Button>
+              </DialogTrigger>
+
+              <Button
+                type="submit"
+                disabled={isPending || isLastNameChangeAfter()}
+                className="rounded-full active:scale-95 cursor-pointer"
+              >
+                Guardar cambios
               </Button>
-            </DialogTrigger>
-
-            <Button
-              type="submit"
-              disabled={isPending || isLastNameChangeAfter()}
-              className="rounded-full"
-            >
-              Guardar cambios
-            </Button>
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -11,14 +11,9 @@ export const GetUserInfo = async () => {
     return res.data
 }
 
-// Cambio de nombre de usuario
-type UpdateUsernameRes = {
-    message: string
-    username: string
-}
 
 export const UpdateUsername = async (user_id: number, new_username: string) => {
-    let res = await AuthenticationInstance.put<UpdateUsernameRes>(`${USER_BASE_URL}/username/${user_id}`, {
+    let res = await AuthenticationInstance.put<string>(`${USER_BASE_URL}/username/${user_id}`, {
         new_username: new_username
     })
     return res.data
