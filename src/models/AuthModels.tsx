@@ -10,6 +10,7 @@ export interface User {
   last_name_change?: Date
   username:string
   avatar:string
+  created_at: Date
 }
 
 export interface RegisterUserReq {

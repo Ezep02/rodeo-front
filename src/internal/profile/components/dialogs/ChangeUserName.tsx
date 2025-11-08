@@ -28,9 +28,10 @@ type UpdateUserForm = {
 
 type DialogProps = {
   initUserData: User;
+  trigger: React.ReactElement
 };
 
-const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
+const ChangeUserName: React.FC<DialogProps> = ({ initUserData, trigger }) => {
   const { setUser } = useContext(AuthContext)!;
   const [showErr, setShowErr] = useState<boolean>(false);
 
@@ -95,9 +96,7 @@ const ChangeUserName: React.FC<DialogProps> = ({ initUserData }) => {
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
-        <Button size={"icon"} variant={"ghost"} className="rounded-full">
-          <Edit2 size={24} />
-        </Button>
+        {trigger}
       </DialogTrigger>
 
       <DialogContent className="md:max-w-md max-w-[90vw] p-6 rounded-4xl shadow-2xl bg-zinc-50">

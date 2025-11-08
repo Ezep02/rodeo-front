@@ -1,18 +1,20 @@
-import { Camera } from "lucide-react";
+import { Camera, Edit2 } from "lucide-react";
 import { useContext, useState } from "react";
 import UpdateAvatar from "../dialogs/UpdateAvatar";
 import { AuthContext } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ChangeUserName from "../dialogs/ChangeUserName";
+import UpdateUserInfo from "../dialogs/UpdateUserInfo";
+import { Button } from "@/components/ui/button";
 
 const ProfileHeader = () => {
   const [avatarHover, setAvatarHover] = useState(false);
   const { userInfo } = useContext(AuthContext)!;
 
   return (
-    <div className="flex gap-6 items-start pb-8 border-b border-border">
+    <div className="flex gap-4 items-start pb-8 border-b border-border">
       <Avatar
-        className="relative w-24 h-24 rounded-2xl bg-secondary flex items-center justify-center cursor-pointer overflow-hidden"
+        className="relative w-24 h-24 rounded-full bg-secondary flex items-center justify-center cursor-pointer overflow-hidden"
         onMouseEnter={() => setAvatarHover(true)}
         onMouseLeave={() => setAvatarHover(false)}
       >
@@ -32,24 +34,41 @@ const ProfileHeader = () => {
 
       <div className="flex-1">
         <div className="flex gap-1.5 items-center">
-          <div>
-            <h2 className="text-xl font-bold text-foreground">
-              {userInfo?.username}
-            </h2>
-          </div>
-
-          {userInfo && <ChangeUserName initUserData={userInfo} />}
+          {userInfo && (
+            <ChangeUserName
+              initUserData={userInfo}
+              trigger={
+                <div className="cursor-pointer active:scale-95">
+                  <h2 className="font-semibold text-zinc-800 hover:text-zinc-700">
+                    {userInfo?.username}
+                  </h2>
+                </div>
+              }
+            />
+          )}
         </div>
-        <p className="text-sm text-muted-foreground mb-4">{userInfo?.email}</p>
+
+        <p className="text-sm text-muted-foreground mb-2">{userInfo?.email}</p>
+
+        <UpdateUserInfo
+          user={userInfo}
+          trigger={
+            <Button
+              type="button"
+              variant="default"
+              className="rounded-full active:scale-95 cursor-pointer"
+            >
+              <Edit2 size={16} />
+              Editar perfil
+            </Button>
+          }
+        />
+
         <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span className="text-muted-foreground">Plan:</span>
             <span className="font-medium text-foreground">Premium</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Miembro desde:</span>
-            <span className="font-medium text-foreground">Julio 2025</span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
