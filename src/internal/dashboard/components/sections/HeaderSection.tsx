@@ -4,11 +4,11 @@ import FollowingSchedule from "../ui/card/FollowingSchedule";
 import ActiveCoupons from "../ui/card/ActiveCoupons";
 
 const HeaderSection = () => {
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   return (
-    <div className="grid grid-cols-3 gap-2">
-      <GreetingCard userName={user?.username || ""} />
+    <div className="grid grid-cols-3 gap-2 pb-5">
+      <GreetingCard userName={userInfo?.username || ""} />
       <FollowingSchedule />
       <ActiveCoupons/>
     </div>

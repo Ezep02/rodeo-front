@@ -1,19 +1,9 @@
-import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/context/AuthContext";
 import {
   ChevronRight,
-  Cog,
-  Download,
   KeyRound,
-  Play,
-  Tv,
-  Users,
-  ListX as ListTv,
-  Edit2,
 } from "lucide-react";
 import { useContext } from "react";
-import UpdateUserInfo from "../dialogs/UpdateUserInfo";
-import { Button } from "@/components/ui/button";
 import PersonalInfoBox from "../common/PersonalInfoBox";
 
 const AccountSummary = () => {

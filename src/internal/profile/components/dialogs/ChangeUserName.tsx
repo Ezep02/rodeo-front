@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from "../../../../components/ui/dialog";
 import { Button } from "../../../../components/ui/button";
-import { Edit2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { User } from "@/models/AuthModels";
 import { UpdateUsername } from "@/service/user_info";

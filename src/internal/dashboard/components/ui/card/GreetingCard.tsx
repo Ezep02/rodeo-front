@@ -1,11 +1,10 @@
 import React from "react";
 
 type Props = {
-    userName:string
-}
+  userName: string;
+};
 
-
-const GreetingCard:React.FC<Props>  = ({userName}) => {
+const GreetingCard: React.FC<Props> = ({ userName }) => {
   const hours = new Date().getHours();
   const greeting =
     hours < 12
@@ -34,7 +33,9 @@ const GreetingCard:React.FC<Props>  = ({userName}) => {
       {/* Cantidad de citas */}
       <div className="flex flex-col ">
         <h4 className="text-gray-300 text-sm">Hoy tienes</h4>
-        <span className="text-zinc-50 font-extrabold text-2xl">No tienes citas</span>
+        <span className="text-zinc-50 font-extrabold text-2xl">
+          No tienes citas
+        </span>
       </div>
     </div>
   );
