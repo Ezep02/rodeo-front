@@ -1,5 +1,4 @@
-import { Slot } from "@/types/Slot";
-import { BarberInfo } from "@/internal/shop/types/BarberInfo";
+import { BarberInfo } from "@/types/BarberInfo";
 import { Categorie } from "@/types/Categorie";
 import { Media } from "@/types/MediaFile";
 import { Promotion } from "@/types/Promotions";
@@ -25,9 +24,7 @@ interface CatalogContextProps {
   serviceMedia: Media[] | []
   setServiceMedia: React.Dispatch<React.SetStateAction<Media[]>>;
 
-  // BARBEROS DISPONIBLES
-  availableBarbers: BarberInfo[];
-  setAvailableBarbers: React.Dispatch<React.SetStateAction<BarberInfo[]>>;
+
 }
 
 export const CatalogContext = React.createContext<CatalogContextProps | undefined>(undefined);
@@ -48,8 +45,6 @@ export const CatalogContextProvider: React.FC<ChildrenProviderProp> = ({ childre
   // # Contenido multimedia del servicio
   const [serviceMedia, setServiceMedia] = useState<Media[] | []>([])
 
-  // # BARBEROS DISPONIBLES
-  const [availableBarbers, setAvailableBarbers] = useState<BarberInfo[] | []>([])
 
 
   return (
@@ -62,10 +57,7 @@ export const CatalogContextProvider: React.FC<ChildrenProviderProp> = ({ childre
         categorieList,
         setCategorieList,
         serviceMedia,
-        setServiceMedia,
-        availableBarbers,
-        setAvailableBarbers,
-       
+        setServiceMedia,       
       }}
     >
       {children}

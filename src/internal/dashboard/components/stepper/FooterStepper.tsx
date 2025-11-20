@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { useContext } from "react";
-import { ShopContext } from "../../context/ShopContext";
+
 import useStepper from "../../hooks/useStepper";
+import { useContext } from "react";
 import { DashboardContext } from "@/context/DashboardContext";
 
 type StepperFooterProps = {
@@ -17,40 +17,31 @@ const StepperFooter = ({
   prevStep,
   activeStep,
 }: StepperFooterProps) => {
-  const { selectedPaymentMethod } = useContext(ShopContext)!;
-  const {selectedBarber, selectedSlot} = useContext(DashboardContext)! 
+  const { selectedAction, selectedBarber, selectedSlot } = useContext(DashboardContext)!;
 
-  const {stepConfig} = useStepper()
+  const { stepConfig } = useStepper();
 
   // Validación para habilitar/deshabilitar "Siguiente"
   const isNextDisabled = (() => {
     switch (currentStep.id) {
       case 1:
-        return !selectedBarber;
+        return !selectedAction;
       case 2:
-        return !selectedSlot;
+        return !selectedBarber
       case 3:
-        return !selectedPaymentMethod;
-      case 4:
-        return;
+        return !selectedSlot
       default:
         return false;
     }
   })();
 
   const prevTextMap: Record<number, string> = {
-    2: "Volver al barbero",
-    3: "Volver al horario",
-    4: "Método de pago",
-    5: "Volver a la confirmación",
+    2: "Volver a opciones",
+    3: "Volver al barbero",
+    4: "Volver al horario",
   };
 
-  const nextTextMap: Record<number, string> = {
-    1: "Elegir horario",
-    2: "Método de pago",
-    3: "Confirmar reserva",
-    4: "Generar pedido",
-  };
+  const nextTextMap: Record<number, string> = {};
 
   const handleNext = async () => {
     if (currentStep.footer?.action) {
@@ -61,16 +52,20 @@ const StepperFooter = ({
   };
 
   return (
-    <>
+    <footer className="flex sticky bottom-0 flex-row justify-end gap-2 p-4">
       <Button variant="ghost" onClick={prevStep} disabled={activeStep === 0}>
         {prevTextMap[currentStep.id] || "Anterior"}
       </Button>
       {activeStep < stepConfig.length - 1 && (
-        <Button onClick={handleNext} disabled={isNextDisabled} className="rounded-full active:scale-95 cursor-pointer">
+        <Button
+          onClick={handleNext}
+          disabled={isNextDisabled}
+          className="rounded-full active:scale-95 cursor-pointer"
+        >
           {nextTextMap[currentStep.id] || "Siguiente"}
         </Button>
       )}
-    </>
+    </footer>
   );
 };
 

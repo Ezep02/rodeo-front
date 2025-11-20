@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
+import { DashboardContext } from "@/context/DashboardContext";
 
 const BookingConfirmation = () => {
-  const { serviceInfo, selectedSlot, selectedBarber } =
-    useContext(ShopContext)!;
+  const { serviceInfo } = useContext(ShopContext)!;
+  const { selectedSlot, selectedBarber } = useContext(DashboardContext)!;
+
 
   return (
     <div className="">

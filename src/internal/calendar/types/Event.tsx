@@ -15,4 +15,4 @@ export interface Event {
   end: Date;
 }
 
-export type ViewMode = 'day' | 'week';
+

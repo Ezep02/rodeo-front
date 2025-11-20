@@ -16,10 +16,9 @@ const useStepper = () => {
     setActiveStep(0);
   };
 
-  // Navegación
-  const nextStep = () =>
-    setActiveStep((prev) => Math.min(prev + 1, stepConfig.length - 1));
-  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0)); // ✔ corregido
+  // Navegacion
+  const nextStep = () => setActiveStep((prev) => Math.min(prev + 1, stepConfig.length - 1));
+  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0)); // corregido
 
   const onGenerateOrder = async () => {
     startTransition(async () => {

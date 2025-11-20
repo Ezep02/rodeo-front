@@ -9,7 +9,7 @@ export const useAppointment = () => {
   const { setUpcomingAppointments, upcomingAppointment, status, currentDate } =
     useContext(AppointmentContext)!;
 
-  const { user } = useUser();
+  const { userInfo } = useUser();
 
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -18,13 +18,13 @@ export const useAppointment = () => {
   // Cargar historial inicial
   useEffect(() => {
     const fetchUserAppointment = async () => {
-      if (!user?.id || isLoading || !hasMore) return;
+      if (!userInfo?.id || isLoading || !hasMore) return;
 
       const { day } = getCurrentDay(currentDate);
 
       try {
         setIsLoading(true);
-        const res = await getUpcomingBookings(user.id, day, status);
+        const res = await getUpcomingBookings(userInfo.id, day, status);
         console.info(res);
         if (res) {
           setUpcomingAppointments(res);
@@ -41,7 +41,7 @@ export const useAppointment = () => {
 
   // Cargar mas citas al historial
   const SearchMoreAppts = async () => {
-    if (!user?.id || isLoading || !hasMore) return;
+    if (!userInfo?.id || isLoading || !hasMore) return;
 
     try {
       setIsLoading(true);

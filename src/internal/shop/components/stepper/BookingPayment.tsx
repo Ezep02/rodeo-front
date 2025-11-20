@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
-import { CheckCircle, Loader2 } from "lucide-react";
 import WhatsAppButton from "../common/WhatsAppButton";
 import { AuthContext } from "@/context/AuthContext";
 

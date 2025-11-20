@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useContext } from "react";
-import useCalendarAction from "../../../../hooks/useCalendarAction";
-import useCalendar from "../../hooks/useCalendar";
-import CalendarWeek from "../../../../components/common/CalendarWeek";
+import useCalendarAction from "@/hooks/useCalendarAction";
+
 import { DashboardContext } from "@/context/DashboardContext";
+import useCalendar from "@/hooks/useCalendar";
+import CalendarWeek from "@/components/common/CalendarWeek";
 
 const BookingDateSelector = () => {
   const { setCurrentDate, currentDate } = useContext(DashboardContext)!;

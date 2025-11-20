@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import useCalendar from "../../hooks/useCalendar";
-import useCalendarAction from "../../hooks/useCalendarAction";
+
 import { useContext } from "react";
-import { ViewMode } from "../../types/Event";
+
 import CalendarDay from "../common/CalendarDay";
 import CalendarWeek from "../common/CalendarWeek";
 import { CalendarContext } from "../../context/CalendarContext";
+import { ViewMode } from "@/types/CalendarViewMode";
+import useCalendarAction from "../../hooks/useCalendarAction";
+import useCalendar from "../../hooks/useCalendar";
 
 const views = [
   { key: "day", label: "Día" },
@@ -16,7 +18,7 @@ const views = [
 
 const CalendarSection = () => {
   const { currentDate, setCurrentDate } = useContext(CalendarContext)!;
-  const { view, setView} = useCalendar();
+  const { view, setView } = useCalendar();
 
   const { GoNextWeek, GoPrevWeek } = useCalendarAction();
 

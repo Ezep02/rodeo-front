@@ -1,24 +1,24 @@
 import { useContext } from "react";
-import { ViewMode } from "../types/Event";
+
 import { CalendarContext } from "../context/CalendarContext";
 import { createCacheKey, getCurrentWeek } from "../../../utils/getCurrentWeek";
 import { GetListByDateRange } from "../../../service/slot_service";
-import { useUser } from "@/hooks/useUser";
+import { ViewMode } from "@/types/CalendarViewMode";
+import { AuthContext } from "@/context/AuthContext";
 
 const useCalendarAction = () => {
-  const { currentDate, setCurrentDate, slotByDateMap, setSlotByDateMap } =
-    useContext(CalendarContext)!;
-  const { user } = useUser();
+  const { currentDate, setCurrentDate, slotByDateMap, setSlotByDateMap } = useContext(CalendarContext)!;
+  const { userInfo } = useContext(AuthContext)!
 
   const fetchSlot = async (start_week: string, end_week: string) => {
-    if (!user?.id) return;
-
+    if (!userInfo?.id) return;
+   
     try {
-      let res = await GetListByDateRange(user?.id, start_week, end_week);
+      let res = await GetListByDateRange(userInfo?.id, start_week, end_week);
       if (res) {
         setSlotByDateMap((prev) => {
           let newMap = new Map(prev);
-
+          
           const dateKey = createCacheKey(start_week, end_week);
 
           res.forEach((slot) => {

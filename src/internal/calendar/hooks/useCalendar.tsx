@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { CalendarContext } from "../context/CalendarContext";
-import { GetListByDateRange } from "../../../service/slot_service";
+
 import { AuthContext } from "@/context/AuthContext";
-import { createCacheKey, getCurrentWeek } from "../../../utils/getCurrentWeek";
-import { ViewMode } from "../types/Event";
+
+import { ViewMode } from "@/types/CalendarViewMode";
+import { CalendarContext } from "../context/CalendarContext";
+import { createCacheKey, getCurrentWeek } from "@/utils/getCurrentWeek";
+import { GetListByDateRange } from "@/service/slot_service";
 
 const useCalendar = () => {
   const { slotByDateMap, setSlotByDateMap, setCurrentDate } = useContext(CalendarContext)!;
@@ -57,7 +59,7 @@ const useCalendar = () => {
   return {
     slotByDateMap,
     view,
-    setView
+    setView,
   };
 };
 

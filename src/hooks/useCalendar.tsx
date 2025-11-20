@@ -1,22 +1,33 @@
-import { useContext, useEffect } from "react";
-import { createCacheKey, getCurrentWeek } from "@/utils/getCurrentWeek";
-import { GetListByDateRange } from "@/service/slot_service";
+import { useContext, useEffect, useState } from "react";
+import { GetListByDateRange } from "../service/slot_service";
+import { AuthContext } from "@/context/AuthContext";
+import { createCacheKey, getCurrentWeek } from "../utils/getCurrentWeek";
+import { ViewMode } from "@/types/CalendarViewMode";
 import { DashboardContext } from "@/context/DashboardContext";
 
 const useCalendar = () => {
+  const { slotByDateMap, setSlotByDateMap, setCurrentDate } = useContext(DashboardContext)!;
+  const { user } = useContext(AuthContext)!;
 
-  const { selectedBarber, setSlotByDateMap } = useContext(DashboardContext)!;
+  const [view, setView] = useState<ViewMode>("week");
+
+  useEffect(() => {
+    let onViewChange = () => {
+      setCurrentDate(new Date());
+    };
+    onViewChange();
+  }, [view]);
 
   // Cargar los slots de la semana actual
   useEffect(() => {
     const fetchSlotRange = async () => {
-      if (!selectedBarber?.id) return;
+      if (!user?.id) return;
 
       // Carga los slots de la semana actual
       const { end_week, start_week } = getCurrentWeek();
 
       try {
-        let slotRange = await GetListByDateRange(selectedBarber.id, start_week, end_week);
+        let slotRange = await GetListByDateRange(user.id, start_week, end_week);
 
         if (slotRange) {
           const dateKey = createCacheKey(start_week, end_week);
@@ -41,9 +52,13 @@ const useCalendar = () => {
     };
 
     fetchSlotRange();
-  }, [selectedBarber?.id]);
+  }, []);
 
-  return {};
+  return {
+    slotByDateMap,
+    view,
+    setView,
+  };
 };
 
 export default useCalendar;

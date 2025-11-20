@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { ShopContext } from "../context/ShopContext";
 import { createCacheKey, getCurrentWeek } from "@/utils/getCurrentWeek";
 import { GetListByDateRange } from "@/service/slot_service";
 import { SlotWithStatus } from "@/types/Slot";
+import { DashboardContext } from "@/context/DashboardContext";
 
 const useCalendarAction = () => {
   const {
@@ -13,7 +13,7 @@ const useCalendarAction = () => {
     selectedBarber,
     setSelectedSlot,
     selectedSlot
-  } = useContext(ShopContext)!;
+  } = useContext(DashboardContext)!;
 
   const fetchSlot = async (start_week: string, end_week: string) => {
     if (!selectedBarber?.id) return;

@@ -91,7 +91,7 @@ const useSlot = () => {
     distribution: "weekly" | "daily"
   ): SlotWithStatus[] | [] => {
     if (!date) return [];
-
+    
     const dateParsed = date.toISOString().split("T")[0];
 
     // recorremos todos los arrays en slotByDateMap

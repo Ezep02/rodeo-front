@@ -5,15 +5,19 @@ import {
   createPreferenceWithAlias,
 } from "../services/mp_preference";
 import { PreferenceRequest } from "../types/Preference";
+import { DashboardContext } from "@/context/DashboardContext";
 
 const usePreference = () => {
   const {
-    selectedSlot,
     serviceInfo,
     transactionErr,
     setTransactionErr,
     setPrefWithAliasPayment,
   } = useContext(ShopContext)!;
+
+  const {
+    selectedSlot
+  } = useContext(DashboardContext)!
 
   const [isPending, setIsPending] = useState(false);
 

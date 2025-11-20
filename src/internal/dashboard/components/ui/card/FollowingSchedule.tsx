@@ -28,7 +28,6 @@ const FollowingSchedule: React.FC = () => {
               Nueva reserva
            </Button>
         </Link>
-       
       </div>
     </div>
   );

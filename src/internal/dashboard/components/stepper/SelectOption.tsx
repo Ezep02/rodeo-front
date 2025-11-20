@@ -1,35 +1,35 @@
-import React, { useContext } from "react";
+import { DashboardContext } from "@/context/DashboardContext";
 import { Check } from "lucide-react";
-import { PaymentOption } from "../../types/Preference";
-import { ShopContext } from "../../context/ShopContext";
+import { useContext } from "react";
 import { BsBank } from "react-icons/bs";
 import { SiMercadopago } from "react-icons/si";
+import { selectedOption } from "../../types/Stepper";
 
-const PaymentMethod: React.FC = () => {
-  const { selectedPaymentMethod, setPaymentMethod } = useContext(ShopContext)!;
+const SelectOption = () => {
+  const { setActionOption, selectedAction } = useContext(DashboardContext)!;
 
-  const handleSelect = (method: PaymentOption) => setPaymentMethod(method);
+  const handleSelect = (method: selectedOption) => setActionOption(method);
 
-  const getOptionData = (method: PaymentOption) => {
+  const getOptionData = (method: selectedOption) => {
     switch (method) {
-      case "mercado_pago":
+      case "reprogramar":
         return {
-          label: "Mercado Pago",
+          label: "Reprogramar",
           description: "Pago inmediato con tarjeta o saldo",
           icon: <SiMercadopago size={20} />,
         };
-      case "transferencia":
+      case "cancelar":
         return {
-          label: "Transferencia bancaria",
+          label: "Cancelar",
           description: "Paga con alias o CBU y envía comprobante",
           icon: <BsBank size={20} />,
         };
     }
   };
 
-  const renderOption = (method: PaymentOption) => {
+  const renderOption = (method: selectedOption) => {
     const data = getOptionData(method)!;
-    const isSelected = selectedPaymentMethod === method;
+    const isSelected = selectedAction === method;
 
     return (
       <li
@@ -76,17 +76,10 @@ const PaymentMethod: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">
-        Métodos de pago
-      </h2>
-      <ul className="flex flex-col gap-3">
-        {(["mercado_pago", "transferencia"] as PaymentOption[]).map(
-          renderOption
-        )}
-      </ul>
-    </div>
+    <ul className="flex flex-col gap-3 flex-1">
+      {(["reprogramar", "cancelar"] as selectedOption[]).map(renderOption)}
+    </ul>
   );
 };
 
-export default PaymentMethod;
+export default SelectOption;

@@ -1,5 +1,5 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs"
-import { BarberInfo } from "../types/BarberInfo"
+import { BarberInfo } from "../../../types/BarberInfo"
 
 const BARBERS_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/barbers`
 
