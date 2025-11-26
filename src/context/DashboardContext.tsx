@@ -2,10 +2,11 @@ import React, { ReactNode, useState } from "react";
 
 
 import { Product } from "@/internal/reservation/model/Product";
-import { selectedOption } from "@/internal/dashboard/types/Stepper";
+
 import { Slot, SlotWithStatus } from "@/types/Slot";
 import { BarberInfo } from "@/types/BarberInfo";
 import { Booking } from "@/models/Appointment";
+import { selectedOption } from "@/internal/dashboard/types/Stepper";
 
 interface DashboardContextProps {
   // V1

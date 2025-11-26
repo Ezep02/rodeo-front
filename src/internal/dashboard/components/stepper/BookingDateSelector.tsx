@@ -8,7 +8,7 @@ import { DashboardContext } from "@/context/DashboardContext";
 import useCalendar from "@/hooks/useCalendar";
 import CalendarWeek from "@/components/common/CalendarWeek";
 
-const BookingDateSelector = () => {
+const BookingDateSelector:React.FC = () => {
   const { setCurrentDate, currentDate } = useContext(DashboardContext)!;
   const { GoNextWeek, GoPrevWeek } = useCalendarAction();
 

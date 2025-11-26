@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
 import WhatsAppButton from "../common/WhatsAppButton";
 import { AuthContext } from "@/context/AuthContext";
+import { DashboardContext } from "@/context/DashboardContext";
 
 const BookingPayment = () => {
   const {
@@ -9,9 +10,9 @@ const BookingPayment = () => {
     selectedPaymentMethod,
     serviceInfo,
     prefWithAliasPayment,
-    selectedBarber,
-    selectedSlot,
   } = useContext(ShopContext)!;
+
+  const { selectedBarber, selectedSlot } = useContext(DashboardContext)!;
 
   const { user } = useContext(AuthContext)!;
 

@@ -1,1 +1,2 @@
-export type selectedOption = "reprogramar" | "cancelar";
+export type selectedOption = "reschedule" | "cancel";
+

@@ -1,5 +1,6 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs"
 import { Booking } from "@/models/Appointment"
+import { CancelResponse } from "../types/Booking"
 
 const APPOINTMENTS_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/appointment`
 
@@ -10,25 +11,26 @@ export const getMyAppointment = async (id: number) => {
 }
 
 // Realizar reprogramacion de una cita
-type RescheduleResponse = {
-    requires_payment: boolean
-    amount: number
-    percentage: number
-    init_point: string
-    free: boolean
-    reprogrammed: boolean
-    message: string
-}
-
-
 export const setReschedule = async (booking_id: number, new_slot_id: number) => {
     if (!booking_id || !new_slot_id){
         return "algo no fue bien recuperando los ids"
     }
 
-    let response = await AuthenticationInstance.post<RescheduleResponse>(`${APPOINTMENTS_BASE_URL}/user/reschedule`, {
+    let response = await AuthenticationInstance.post(`${APPOINTMENTS_BASE_URL}/user/reschedule`, {
         booking_id: booking_id,
         new_slot_id: new_slot_id
     })
+    return response.data
+}
+
+// Obtener la informacion de las consecuencias de cancelar
+export const getCancelationPreview = async (booking_id: number) => {
+    let response = await AuthenticationInstance.get<CancelResponse>(`${APPOINTMENTS_BASE_URL}/user/cancel/verify/${booking_id}`)
+    return response.data
+}
+
+// Realizar cancelacion de la cita
+export const startCancelation = async (booking_id: number) => {
+    let response = await AuthenticationInstance.put<CancelResponse>(`${APPOINTMENTS_BASE_URL}/user/cancel/${booking_id}`)
     return response.data
 }

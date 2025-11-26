@@ -1,19 +1,23 @@
 import StepperFooter from "./FooterStepper";
-import useStepper from "../../hooks/useStepper";
+
 import { motion } from "framer-motion";
+import { useContext } from "react";
+import { DashboardContext } from "@/context/DashboardContext";
+import { useStepper } from "../../hooks/useStepper";
 
 const ActionStep: React.FC = () => {
+  const { selectedAction } = useContext(DashboardContext)!;
+
   const {
     StepComponent,
     activeStep,
     nextStep,
     prevStep,
     currentStep,
-  } = useStepper();
+  } = useStepper(selectedAction); 
 
   return (
     <div className="h-full flex flex-col justify-between">
-      {/* --- Contenido dinámico --- */}
       <motion.div
         key={activeStep}
         initial={{ opacity: 0, y: 10 }}

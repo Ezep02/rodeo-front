@@ -5,20 +5,20 @@ import { BsBank } from "react-icons/bs";
 import { SiMercadopago } from "react-icons/si";
 import { selectedOption } from "../../types/Stepper";
 
-const SelectOption = () => {
+const SelectOption:React.FC = () => {
   const { setActionOption, selectedAction } = useContext(DashboardContext)!;
 
   const handleSelect = (method: selectedOption) => setActionOption(method);
 
   const getOptionData = (method: selectedOption) => {
     switch (method) {
-      case "reprogramar":
+      case "reschedule":
         return {
           label: "Reprogramar",
           description: "Pago inmediato con tarjeta o saldo",
           icon: <SiMercadopago size={20} />,
         };
-      case "cancelar":
+      case "cancel":
         return {
           label: "Cancelar",
           description: "Paga con alias o CBU y envía comprobante",
@@ -77,7 +77,7 @@ const SelectOption = () => {
 
   return (
     <ul className="flex flex-col gap-3 flex-1">
-      {(["reprogramar", "cancelar"] as selectedOption[]).map(renderOption)}
+      {(["reschedule", "cancel"] as selectedOption[]).map(renderOption)}
     </ul>
   );
 };

@@ -1,25 +1,46 @@
 import { useState } from "react";
-import { getStepConfig } from "../types/StepperConfig";
+import { Step, STEP_REGISTRY, FLOWS } from "../types/StepperConfig";
+import { selectedOption } from "../types/Stepper";
 
-const useStepper = () => {
+export const useStepper = (selectedAction?: selectedOption | "") => {
   const [activeStep, setActiveStep] = useState(0);
 
-  // Navegacion
-  const nextStep = () => setActiveStep((prev) => Math.min(prev + 1, stepConfig.length - 1));
-  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0)); // corregido
+  const getSteps = (selectedAction?: selectedOption | ""): Step[] => {
+    if (!selectedAction) return [STEP_REGISTRY.options];
 
-  const stepConfig = getStepConfig();
-  const currentStep = stepConfig[activeStep];
+    switch (selectedAction) {
+      case "reschedule":
+        return [
+          STEP_REGISTRY.options,
+          ...FLOWS.reschedule.map((key) => STEP_REGISTRY[key]),
+        ];
+      case "cancel":
+        return [
+          STEP_REGISTRY.options,
+          ...FLOWS.cancel.map((key) => STEP_REGISTRY[key]),
+        ];
+      default:
+        return [STEP_REGISTRY.options];
+    }
+  };
+
+  // Luego:
+  const steps = getSteps(selectedAction);
+
+  const nextStep = () =>
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+
+  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0));
+
+  const currentStep = steps[activeStep];
   const StepComponent = currentStep.component;
 
   return {
-    stepConfig,
+    steps,
     activeStep,
+    currentStep,
+    StepComponent,
     nextStep,
     prevStep,
-    StepComponent,
-    currentStep,
   };
 };
-
-export default useStepper;

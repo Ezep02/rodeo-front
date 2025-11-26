@@ -19,9 +19,9 @@ const useCoupon = () => {
 
             try {
 
-                if (!user?.ID) return null
+                if (!user?.id) return null
 
-                let res = await GetByUserID(user?.ID)
+                let res = await GetByUserID(user?.id)
                 if (res.coupons) {
                     console.log("CUPONES ACTIVOS:", res.coupons)
                     setActiveCoupon(res.coupons)
