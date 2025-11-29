@@ -18,3 +18,17 @@ export type CancelResponse = {
   canceled: boolean;
   message: string;
 };
+
+// Informacion de pago
+export type PaymentInfoResponse = {
+  id: number;
+  booking_id: number;
+  amount: number;
+  type: "total" | "parcial";
+  method: "mercadopago" | "efectivo" | "rechazado" | "reembolsado";
+  mercado_pago_id: string;
+  payment_url: string;
+  paid_at: Date;
+  created_at: Date;
+  updated_at: Date;
+};

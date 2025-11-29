@@ -8,7 +8,7 @@ import { DashboardContext } from "@/context/DashboardContext";
 import useCalendar from "@/hooks/useCalendar";
 import CalendarWeek from "@/components/common/CalendarWeek";
 
-const BookingDateSelector:React.FC = () => {
+const BookingDateSelector: React.FC = () => {
   const { setCurrentDate, currentDate } = useContext(DashboardContext)!;
   const { GoNextWeek, GoPrevWeek } = useCalendarAction();
 
@@ -28,11 +28,10 @@ const BookingDateSelector:React.FC = () => {
             onClick={GoPrevWeek}
             variant="outline"
             size="icon"
-            // disabled={view === "day"}
             className="rounded-full w-10 h-10 border-border hover:bg-accent bg-transparent active:scale-95"
+            disabled={new Date() >= currentDate}
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="sr-only">Semana anterior</span>
           </Button>
 
           <Button
@@ -47,11 +46,9 @@ const BookingDateSelector:React.FC = () => {
             onClick={GoNextWeek}
             variant="outline"
             size="icon"
-            // disabled={view === "day"}
             className="rounded-full w-10 h-10 border-border hover:bg-accent bg-transparent active:scale-95"
           >
             <ChevronRight className="w-5 h-5" />
-            <span className="sr-only">Semana siguiente</span>
           </Button>
         </div>
       </div>

@@ -33,15 +33,15 @@ const StepperFooter = ({
 
   return (
     <footer className="flex sticky bottom-0 flex-row justify-end gap-2 p-4">
-      <Button
-        variant="ghost"
-        onClick={prevStep}
-        disabled={activeStep === 0}
-      >
+      <Button variant="ghost" onClick={prevStep} disabled={activeStep === 0}>
         {prevTextMap[currentStep.key] || "Anterior"}
       </Button>
 
-      <Button onClick={nextStep} disabled={isNextDisabled}>
+      <Button
+        onClick={nextStep}
+        disabled={isNextDisabled}
+        className="rounded-full active:scale-95 cursor-pointer"
+      >
         Siguiente
       </Button>
     </footer>
@@ -49,4 +49,3 @@ const StepperFooter = ({
 };
 
 export default StepperFooter;
-

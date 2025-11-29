@@ -79,7 +79,7 @@ const ViewDetails = (props: Props) => {
 
           {/* Tabs */}
           <div className="flex">
-            <Selector onChange={onViewModeChange} view={viewMode} />
+            <Selector onChange={onViewModeChange} view={viewMode} selectIsAvailable={Date.now() > new Date(props.details.slot.start).getTime()} />
           </div>
 
           {ViewModeRender()}

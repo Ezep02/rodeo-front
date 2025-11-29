@@ -120,8 +120,6 @@ const useCalendarAction = () => {
     setSelectedSlot(slot)
   }
 
-
-
   return {
     GoNextWeek,
     GoPrevWeek,

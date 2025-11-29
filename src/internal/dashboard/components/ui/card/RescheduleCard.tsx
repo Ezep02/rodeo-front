@@ -12,6 +12,9 @@ const RescheduleCard = () => {
   const [rescheduleInfo, setRescheduleInfo] = useState<RescheduleResponse>();
   const [redirecting, setRedirecting] = useState(false);
 
+  // Error alert
+  const [showErrAlert, setShowErrorAlert] = useState<boolean>(false)
+
   const [rescheduleErr, onRescheduleAction, isReschedulePending] =
     useActionState(async () => {
       if (!selectedBooking?.id || !selectedSlot?.id) {
@@ -23,6 +26,7 @@ const RescheduleCard = () => {
         setRescheduleInfo(res);
         return null;
       } catch (err: any) {
+        setShowErrorAlert(true)
         return err?.response?.data?.error || "Error inesperado";
       }
     }, null);
@@ -40,8 +44,8 @@ const RescheduleCard = () => {
     <div className="p-4 rounded-2xl bg-stone-200/45 space-y-4">
       <ErrorAlert
         message={rescheduleErr}
-        show={!!rescheduleErr}
-        onClose={() => {}}
+        show={showErrAlert}
+        onClose={() => setShowErrorAlert(false)}
       />
 
       {rescheduleInfo ? (

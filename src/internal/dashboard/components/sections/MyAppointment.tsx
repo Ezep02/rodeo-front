@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import useMyAppointments from "../../hooks/useMyAppointments";
+import { useMyAppointments } from "../../hooks/useBookings";
 import { GoArrowUpRight } from "react-icons/go";
 import { Ban } from "lucide-react";
 import { FaCheck } from "react-icons/fa6";
@@ -10,9 +10,10 @@ import { useContext } from "react";
 import { DashboardContext } from "@/context/DashboardContext";
 
 const MyAppointment = () => {
-
-  const {setSelectedBooking} = useContext(DashboardContext)!
+  const { setSelectedBooking } = useContext(DashboardContext)!;
   const { myAppointment } = useMyAppointments();
+
+
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -131,7 +132,7 @@ const MyAppointment = () => {
                       <Button
                         variant={"ghost"}
                         className="rounded-full cursor-pointer active:scale-95"
-                        onClick={()=> setSelectedBooking(sch)}
+                        onClick={() => setSelectedBooking(sch)}
                       >
                         <GoArrowUpRight size={16} />
                         Ver

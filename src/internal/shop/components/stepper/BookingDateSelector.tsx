@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useContext } from "react";
-import useCalendarAction from "../../../../hooks/useCalendarAction";
+import useCalendarAction from "@/hooks/useCalendarAction";
 import useCalendar from "../../hooks/useCalendar";
 import CalendarWeek from "../../../../components/common/CalendarWeek";
 import { DashboardContext } from "@/context/DashboardContext";
@@ -27,11 +27,10 @@ const BookingDateSelector = () => {
             onClick={GoPrevWeek}
             variant="outline"
             size="icon"
-            // disabled={view === "day"}
             className="rounded-full w-10 h-10 border-border hover:bg-accent bg-transparent active:scale-95"
+            disabled={new Date() >= currentDate}
           >
             <ChevronLeft className="w-5 h-5" />
-            <span className="sr-only">Semana anterior</span>
           </Button>
 
           <Button
@@ -46,11 +45,9 @@ const BookingDateSelector = () => {
             onClick={GoNextWeek}
             variant="outline"
             size="icon"
-            // disabled={view === "day"}
             className="rounded-full w-10 h-10 border-border hover:bg-accent bg-transparent active:scale-95"
           >
             <ChevronRight className="w-5 h-5" />
-            <span className="sr-only">Semana siguiente</span>
           </Button>
         </div>
       </div>

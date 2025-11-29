@@ -79,6 +79,8 @@ const useSlot = () => {
 
           return newMap;
         });
+
+        setSlotBatch([])
       }
     } catch (error) {
       console.error(error);

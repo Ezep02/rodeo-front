@@ -1,8 +1,4 @@
-
-import { Button } from "@/components/ui/button";
 import React from "react";
-import { LuCalendarPlus } from "react-icons/lu";
-import { Link } from "react-router-dom";
 
 const FollowingSchedule: React.FC = () => {
   return (
@@ -18,16 +14,6 @@ const FollowingSchedule: React.FC = () => {
             year: "numeric",
           })}
         </span>
-      </div>
-      {/* Cantidad de citas */}
-      <div className="flex">
-        
-        <Link to={"/calendar"}>
-           <Button className="rounded-full active:scale-95 cursor-pointer">
-             <LuCalendarPlus />
-              Nueva reserva
-           </Button>
-        </Link>
       </div>
     </div>
   );

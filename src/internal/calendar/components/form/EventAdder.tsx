@@ -125,6 +125,7 @@ const EventAdder: React.FC<EventAdderProps> = ({ onBack, calendarDayDate }) => {
         <Button
           onClick={HandleSave}
           className="rounded-full active:scale-95 cursor-pointer"
+          disabled={slotBatch.length === 0}
         >
           <IoCheckmarkSharp size={18} />
           Guardar

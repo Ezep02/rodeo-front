@@ -4,6 +4,7 @@ export type ViewMode = "details" | "actions";
 type SelectorProps = {
   view: ViewMode;
   onChange: (value: ViewMode) => void;
+  selectIsAvailable?: boolean
 };
 
 const views = [
@@ -11,7 +12,7 @@ const views = [
   { key: "actions", label: "Acciones" },
 ];
 
-export function Selector({ view, onChange }: SelectorProps) {
+export function Selector({ view, onChange, selectIsAvailable}: SelectorProps) {
   return (
     <div className="flex items-center gap-1 p-2 bg-stone-200/45 rounded-full">
       {views.map(({ key, label }) => (
@@ -23,6 +24,7 @@ export function Selector({ view, onChange }: SelectorProps) {
               ? "bg-zinc-900 text-gray-100 shadow-sm w-full"
               : "text-muted-foreground hover:text-foreground"
           }`}
+          disabled={selectIsAvailable}
         >
           {label}
         </button>

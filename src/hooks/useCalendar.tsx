@@ -1,13 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { GetListByDateRange } from "../service/slot_service";
-import { AuthContext } from "@/context/AuthContext";
 import { createCacheKey, getCurrentWeek } from "../utils/getCurrentWeek";
 import { ViewMode } from "@/types/CalendarViewMode";
 import { DashboardContext } from "@/context/DashboardContext";
 
 const useCalendar = () => {
-  const { slotByDateMap, setSlotByDateMap, setCurrentDate } = useContext(DashboardContext)!;
-  const { user } = useContext(AuthContext)!;
+  const { slotByDateMap, setSlotByDateMap, setCurrentDate, selectedBarber } = useContext(DashboardContext)!;
 
   const [view, setView] = useState<ViewMode>("week");
 
@@ -21,13 +19,13 @@ const useCalendar = () => {
   // Cargar los slots de la semana actual
   useEffect(() => {
     const fetchSlotRange = async () => {
-      if (!user?.id) return;
+      if (!selectedBarber?.id) return;
 
       // Carga los slots de la semana actual
       const { end_week, start_week } = getCurrentWeek();
 
       try {
-        let slotRange = await GetListByDateRange(user.id, start_week, end_week);
+        let slotRange = await GetListByDateRange(selectedBarber.id, start_week, end_week);
 
         if (slotRange) {
           const dateKey = createCacheKey(start_week, end_week);
