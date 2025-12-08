@@ -30,13 +30,14 @@ const RescheduleCard = () => {
         return err?.response?.data?.error || "Error inesperado";
       }
     }, null);
-
+  
+  // redireccion a mercado pago
   const handleRedirect = () => {
     if (!rescheduleInfo?.init_point) return;
     setRedirecting(true);
     window.location.href = rescheduleInfo.init_point;
   };
-
+  
   const isFree = rescheduleInfo?.free;
   const requiresPayment = rescheduleInfo?.requires_payment;
 

@@ -13,7 +13,7 @@ const ConfirmationStep: React.FC = () => {
 
       case "cancel":
         return <CancelCard/>;
-
+      
       default:
         return null;
     }

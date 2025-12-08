@@ -28,9 +28,6 @@ export type BookingService = {
   id: number;
   booking_id: number;
   service_id: number;
-  price: number;
-  quantity: number;
-  notes?: string;
   service: Service;
   created_at: string;
   updated_at: string;

@@ -4,7 +4,6 @@ import ConfirmationStep from "../components/stepper/ConfirmationStep";
 import SelectOption from "../components/stepper/SelectOption";
 
 export type StepKey =
-  | "options"
   | "barber"
   | "date"
   | "confirm";
@@ -20,13 +19,8 @@ export const FLOWS = {
   cancel: ["confirm"] as StepKey[],
 };
 
-
+// TODO: eliminar select option del stepper
 export const STEP_REGISTRY: Record<StepKey, Step> = {
-  options: {
-    title: "Opciones",
-    key: "options",
-    component: SelectOption,
-  },
   barber: {
     title: "Barbero",
     key: "barber",

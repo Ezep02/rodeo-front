@@ -6,21 +6,15 @@ export const useStepper = (selectedAction?: selectedOption | "") => {
   const [activeStep, setActiveStep] = useState(0);
 
   const getSteps = (selectedAction?: selectedOption | ""): Step[] => {
-    if (!selectedAction) return [STEP_REGISTRY.options];
+    if (!selectedAction) return [];
 
     switch (selectedAction) {
       case "reschedule":
-        return [
-          STEP_REGISTRY.options,
-          ...FLOWS.reschedule.map((key) => STEP_REGISTRY[key]),
-        ];
+        return [...FLOWS.reschedule.map((key) => STEP_REGISTRY[key])];
       case "cancel":
         return [
-          STEP_REGISTRY.options,
           ...FLOWS.cancel.map((key) => STEP_REGISTRY[key]),
         ];
-      default:
-        return [STEP_REGISTRY.options];
     }
   };
 

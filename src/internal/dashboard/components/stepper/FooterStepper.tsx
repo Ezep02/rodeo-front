@@ -26,7 +26,7 @@ const StepperFooter = ({
   })();
 
   const prevTextMap: Record<string, string> = {
-    barber: "Volver a opciones",
+    barber: "Volver",
     date: "Volver al barbero",
     confirm: "Volver al horario",
   };

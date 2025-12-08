@@ -8,6 +8,8 @@ import { LuCalendarCheck2, LuClock5 } from "react-icons/lu";
 import ViewDetails from "../dialogs/ViewDetails";
 import { useContext } from "react";
 import { DashboardContext } from "@/context/DashboardContext";
+import { AppointmentStatus } from "@/types/ApptFilter";
+import { TfiReload } from "react-icons/tfi";
 
 const MyAppointment = () => {
   const { setSelectedBooking } = useContext(DashboardContext)!;
@@ -15,7 +17,7 @@ const MyAppointment = () => {
 
 
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: AppointmentStatus) => {
     switch (status) {
       case "confirmado":
         return (
@@ -45,7 +47,12 @@ const MyAppointment = () => {
             <LuCalendarCheck2 size={15} />
           </span>
         );
-
+      case "reprogramado":
+        return (
+          <span className="flex items-center gap-1 bg-blue-400 text-zinc-50 p-2 rounded-full">
+            <TfiReload size={15} />
+          </span>
+        );
       default:
         return (
           <span className="flex items-center gap-1 bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
@@ -55,7 +62,7 @@ const MyAppointment = () => {
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status: AppointmentStatus) => {
     switch (status) {
       case "confirmado":
         return <span>su cita fue confirmada</span>;
@@ -66,7 +73,8 @@ const MyAppointment = () => {
       case "rechazado":
       case "cancelado":
         return <span>su cita fue cancelada</span>;
-
+      case "reprogramado":
+        return <span>su cita fue reprogramada</span>;
       case "completado":
         return <span>su cita fue completada</span>;
 

@@ -8,4 +8,5 @@ export type AppointmentStatus =
   | "confirmado"
   | "cancelado"
   | "rechazado"
-  | "completado";
+  | "completado"
+  | "reprogramado";

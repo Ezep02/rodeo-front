@@ -1,17 +1,15 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Booking } from "@/models/Appointment";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import ScheduleInfo from "../ScheduleInfo";
-import { Selector, ViewMode } from "../common/ViewSelector";
 import ActionStep from "../stepper/ActionStep";
+import { DashboardContext } from "@/context/DashboardContext";
+import BookDetails from "../ui/card/BookDetails";
 
 type Props = {
   trigger: React.ReactElement;
@@ -19,27 +17,25 @@ type Props = {
 };
 
 const ViewDetails = (props: Props) => {
+  const { selectedAction, setActionOption} = useContext(DashboardContext)!;
+  
+  
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggleIsOpen = () => {
+    if(selectedAction) return setActionOption("") 
+
     setIsOpen((prev) => !prev);
   };
 
-  const [viewMode, setViewMode] = useState<ViewMode>("details");
-
-  const onViewModeChange = (value: ViewMode) => {
-    setViewMode(value);
-  };
-
-  function ViewModeRender(): React.ReactNode {
-    switch (viewMode) {
-      case "details":
-        return <ScheduleInfo />;
-      case "actions":
-        return <ActionStep />;
+  // Permitir la seleccion de Reprogramar o cancelar
+  const onRenderOption = (): React.ReactNode => {
+    switch (selectedAction) {
+      case "":
+        return <BookDetails />;
       default:
-        return <p>Algo no fue bien</p>;
+        return <ActionStep />;
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggleIsOpen}>
@@ -68,21 +64,8 @@ const ViewDetails = (props: Props) => {
           </div>
         </DialogHeader>
 
-        {/* --- CONTENIDO REEMPLAZADO PARA COPIAR LA UI DERECHA --- */}
         <div className="px-3 md:px-10 flex flex-col gap-5 flex-1">
-          <div className="mt-3">
-            <DialogTitle className="text-gray-800 ">Detalles del turno</DialogTitle>
-            <DialogDescription>
-              Revisá la información y realizá los cambios que necesites.
-            </DialogDescription>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex">
-            <Selector onChange={onViewModeChange} view={viewMode} selectIsAvailable={Date.now() > new Date(props.details.slot.start).getTime()} />
-          </div>
-
-          {ViewModeRender()}
+          {onRenderOption()}
         </div>
       </DialogContent>
     </Dialog>
