@@ -6,6 +6,7 @@ import {
 } from "../services/my_appointments";
 import { AuthContext } from "@/context/AuthContext";
 import { PaymentInfoResponse } from "../types/Booking";
+import { DashboardContext } from "@/context/DashboardContext";
 
 export const useMyAppointments = () => {
   const { user } = useContext(AuthContext)!;
@@ -37,20 +38,38 @@ export const useMyAppointments = () => {
 };
 
 export const usePayment = (booking_id?: number) => {
+  const { setPaymentInfoMap, paymentInfoMap } = useContext(DashboardContext)!;
+
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfoResponse>();
 
   useEffect(() => {
     async function fetchPaymentInfo() {
       if (!booking_id) return;
 
-      let res = await getBookingPaymentInfo(booking_id);
+      // 1. Buscar en chache
+      const cached = paymentInfoMap.get(booking_id);
+      if (cached) {
+        setPaymentInfo(cached);
+        return;
+      }
+
+      const res = await getBookingPaymentInfo(booking_id);
+
       if (res) {
+        // guardar en el estado local
         setPaymentInfo(res);
+
+        // guardar en el cache
+        setPaymentInfoMap((prev) => {
+          const updated = new Map(prev);
+          updated.set(booking_id, res);
+          return updated;
+        });
       }
     }
 
     fetchPaymentInfo();
-  }, [booking_id]);
+  }, [booking_id, paymentInfoMap]);
 
   return {
     paymentInfo,

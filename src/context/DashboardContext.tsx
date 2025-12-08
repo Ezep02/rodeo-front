@@ -7,6 +7,7 @@ import { Slot, SlotWithStatus } from "@/types/Slot";
 import { BarberInfo } from "@/types/BarberInfo";
 import { Booking } from "@/models/Appointment";
 import { selectedOption } from "@/internal/dashboard/types/Stepper";
+import { PaymentInfoResponse } from "@/internal/dashboard/types/Booking";
 
 interface DashboardContextProps {
   // V1
@@ -40,6 +41,9 @@ interface DashboardContextProps {
   // Booking seleccionado al abrir el dialogo de detalles
   selectedBooking: Booking | undefined
   setSelectedBooking: React.Dispatch<React.SetStateAction<Booking | undefined>>;
+  // # Hash map para almacenar la informacion de pago de cada slot
+  paymentInfoMap: Map<number, PaymentInfoResponse>
+  setPaymentInfoMap: React.Dispatch<React.SetStateAction<Map<number, PaymentInfoResponse>>>
 }
 
 export const DashboardContext = React.createContext<
@@ -79,6 +83,9 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   // # Booking seleccionado para ver sus detalles
   const [selectedBooking, setSelectedBooking] = useState<Booking>()
 
+  // # HashMap que almacena la informacion recuperada de cada bookings (key: booking id | value: payment info)
+  const [paymentInfoMap, setPaymentInfoMap] = useState<Map<number, PaymentInfoResponse>>(new Map)
+
   return (
     <DashboardContext.Provider
       value={{
@@ -99,7 +106,9 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         availableBarbers,
         setAvailableBarbers,
         selectedBooking,
-        setSelectedBooking
+        setSelectedBooking,
+        paymentInfoMap,
+        setPaymentInfoMap
       }}
     >
       {children}

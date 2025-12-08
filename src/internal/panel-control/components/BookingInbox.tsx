@@ -11,6 +11,7 @@ const BookingInbox = () => {
 
   const { handleApprove, handleReject, error, isErrorOpen, setErrorOpen } = useInboxAction();
 
+  console.log(inboxAppointment)
   return (
     <div className="pt-3">
       <ErrorAlert

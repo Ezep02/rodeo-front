@@ -5,7 +5,7 @@ import {
   getPaymentStatusByType,
 } from "@/utils/getAppointmentStatus";
 import { Button } from "@/components/ui/button";
-import { Loader2, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { DashboardContext } from "@/context/DashboardContext";
 import { usePayment } from "@/internal/dashboard/hooks/useBookings";
@@ -16,46 +16,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCountdown } from "@/internal/dashboard/hooks/useCountdown";
+import { CtaButton } from "../../common/DetailsDialogCta";
 
-const TABS = ["Order History", "Item Details", "Courier", "Receiver"];
-
-const TIMELINE_EVENTS = [
-  {
-    id: 1,
-    title: "Product Shipped",
-    timestamp: "13/09/2023 5:23 pm",
-    details:
-      "Courier Service: UPS, R. Gosling\nEstimated Delivery Date: 15/09/2023",
-    hasLink: true,
-  },
-  {
-    id: 2,
-    title: "Product Packaging",
-    timestamp: "13/09/2023 4:13 pm",
-    details: "Tracking number: 3409-4934-4253\nWarehouse: Apple Spot 13b",
-    hasLink: true,
-  },
-  {
-    id: 3,
-    title: "Order Confirmed",
-    timestamp: "13/09/2023 3:53 pm",
-    details: "",
-  },
-  {
-    id: 4,
-    title: "Order Placed",
-    timestamp: "13/09/2023 3:43 pm",
-    details: "",
-  },
-];
+const TABS = ["Item Details"];
 
 const BookDetails: React.FC = () => {
   const { selectedBooking, setActionOption } = useContext(DashboardContext)!;
 
   const { paymentInfo } = usePayment(selectedBooking?.id);
 
-  const [activeTab, setActiveTab] = useState("Order History");
+  const [activeTab, setActiveTab] = useState("Item Details");
 
   // Calcular el precio final
   const finalPrice = selectedBooking?.services.reduce((accum, currVal) => {
@@ -68,52 +38,6 @@ const BookDetails: React.FC = () => {
   const bookingStatus = selectedBooking?.status
     ? getBookingStatus(selectedBooking?.status)
     : undefined;
-
-
-  // Redireccion para terminar de completar el pago
-  const [redirecting, setRedirecting] = useState(false);
-  const handleRedirect = () => {
-    if (!paymentInfo?.payment_url) return;
-    setRedirecting(true);
-    window.location.href = paymentInfo.payment_url;
-  };
-
-  const { timeLeft, expired } = useCountdown(selectedBooking?.expires_at || "");
-
-  const getCtaButton = (): React.ReactNode => {
-    switch (expired) {
-      case !expired:
-        return (
-          <Button
-            className="rounded-xl w-full mt-4 active:scale-[0.97] transition font-medium shadow-sm disabled:opacity-60"
-            variant="default"
-            onClick={handleRedirect}
-            disabled={redirecting || expired || timeLeft === ""}
-          >
-            {redirecting && <Loader2 className="animate-spin mr-2" />}
-            {timeLeft && "Confirmar pago"}
-
-            {timeLeft ? (
-              <div className="inline-flex items-center rounded-full font-medium">
-                {expired ? "Expirado" : timeLeft}
-              </div>
-            ) : (
-              <div className="inline-flex items-center text-sm text-zinc-500 ml-2">
-                <Loader2 size={16} className="animate-spin mr-1" />
-                Calculando tiempo restante...
-              </div>
-            )}
-          </Button>
-        );
-
-      default:
-        return (
-          <Button className="bg-gray-900 text-white hover:bg-gray-800 rounded-full active:scale-95">
-            Como llegar
-          </Button>
-        );
-    }
-  };
 
   return (
     <>
@@ -169,7 +93,15 @@ const BookDetails: React.FC = () => {
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        {getCtaButton()}
+        <CtaButton
+          is_payed={selectedBooking?.status === "confirmado"}
+          expires_at={
+            selectedBooking?.expires_at
+              ? new Date(selectedBooking.expires_at)
+              : undefined
+          }
+          payment_url={paymentInfo?.payment_url}
+        />
         <Button
           variant="outline"
           className="text-gray-900 border-gray-300 bg-transparent rounded-full active:scale-95"
@@ -222,40 +154,24 @@ const BookDetails: React.FC = () => {
 
         {/* Timeline Content */}
 
-        {activeTab === "Order History" && (
+        {activeTab === "Item " && (
           <div className="px-8 py-6">
             <div className="space-y-6">
-              {TIMELINE_EVENTS.map((event, index) => (
+              {selectedBooking?.services.map((event, index) => (
                 <div key={event.id} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-3 h-3 rounded-full bg-gray-400 relative z-10"></div>
-                    {index !== TIMELINE_EVENTS.length - 1 && (
-                      <div className="w-0.5 h-16 bg-gray-200 mt-2"></div>
-                    )}
                   </div>
 
                   <div className="flex-1 pt-0.5">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-gray-900 font-semibold">
-                        {event.title}
+                        {event.service.name}
                       </h3>
-                      {event.hasLink && (
-                        <a
-                          href="#"
-                          className="text-teal-600 text-sm font-medium hover:text-teal-700"
-                        >
-                          See Details
-                        </a>
-                      )}
                     </div>
                     <p className="text-gray-500 text-sm mb-2">
-                      {event.timestamp}
+                      {event.service.price}
                     </p>
-                    {event.details && (
-                      <p className="text-gray-700 text-sm whitespace-pre-line">
-                        {event.details}
-                      </p>
-                    )}
                   </div>
                 </div>
               ))}
@@ -263,12 +179,6 @@ const BookDetails: React.FC = () => {
           </div>
         )}
       </div>
-      {/* Other Tab Content Placeholder */}
-      {activeTab !== "Order History" && (
-        <div className="px-8 py-6 text-gray-500">
-          {activeTab} content goes here
-        </div>
-      )}
     </>
   );
 };
