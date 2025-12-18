@@ -25,7 +25,8 @@ export type PaymentInfoResponse = {
   booking_id: number;
   amount: number;
   type: "total" | "parcial";
-  method: "mercadopago" | "efectivo" | "rechazado" | "reembolsado";
+  method: "mercadopago" | "efectivo" | "tarjeta" | "transferencia";
+  status: "pendiente" | "aprobado" | "rechazado " | "reembolsado";
   mercado_pago_id: string;
   payment_url: string;
   paid_at: Date;

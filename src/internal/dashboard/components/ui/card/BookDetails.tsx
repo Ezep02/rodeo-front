@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   getBookingStatus,
@@ -18,14 +18,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CtaButton } from "../../common/DetailsDialogCta";
 
-const TABS = ["Item Details"];
-
 const BookDetails: React.FC = () => {
   const { selectedBooking, setActionOption } = useContext(DashboardContext)!;
 
   const { paymentInfo } = usePayment(selectedBooking?.id);
-
-  const [activeTab, setActiveTab] = useState("Item Details");
 
   // Calcular el precio final
   const finalPrice = selectedBooking?.services.reduce((accum, currVal) => {
@@ -35,6 +31,7 @@ const BookDetails: React.FC = () => {
   const paymentStatus = paymentInfo
     ? getPaymentStatusByType(paymentInfo.type)
     : undefined;
+
   const bookingStatus = selectedBooking?.status
     ? getBookingStatus(selectedBooking?.status)
     : undefined;
@@ -49,7 +46,7 @@ const BookDetails: React.FC = () => {
       </div>
 
       {/* Order Details Grid */}
-      <div className="grid grid-cols-2 gap-8 mb-6">
+      <div className="grid grid-cols-2 gap-8">
         <div>
           <p className="text-sm text-gray-600 mb-1">Servicio</p>
           <p className="text-gray-900 font-medium">
@@ -92,7 +89,7 @@ const BookDetails: React.FC = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 py-6">
         <CtaButton
           is_payed={selectedBooking?.status === "confirmado"}
           expires_at={
@@ -132,52 +129,84 @@ const BookDetails: React.FC = () => {
         </DropdownMenu>
       </div>
 
-      <div className="border-t border-gray-200">
-        {/* Tabs */}
-        <div className="px-8 pt-0">
-          <div className="flex gap-6 border-b border-gray-200">
-            {TABS.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === tab
-                    ? "border-teal-600 text-teal-600"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+      {/* Payment information */}
+      <div className="space-y-4">
+        <div className="">
+          <h3 className="font-semibold text-base text-zinc-900 leading-tight">
+            Informacion del pago
+          </h3>
         </div>
 
-        {/* Timeline Content */}
-
-        {activeTab === "Item " && (
-          <div className="px-8 py-6">
-            <div className="space-y-6">
-              {selectedBooking?.services.map((event, index) => (
-                <div key={event.id} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div className="w-3 h-3 rounded-full bg-gray-400 relative z-10"></div>
-                  </div>
-
-                  <div className="flex-1 pt-0.5">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-gray-900 font-semibold">
-                        {event.service.name}
-                      </h3>
-                    </div>
-                    <p className="text-gray-500 text-sm mb-2">
-                      {event.service.price}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="grid grid-cols-2 gap-8">
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Tipo</p>
+            <p className="text-gray-900 font-medium">{paymentStatus?.label}</p>
           </div>
-        )}
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Metodo</p>
+            <p className="text-gray-900 font-medium">{paymentInfo?.method}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Estado</p>
+            <p className="text-gray-900 font-medium">{paymentInfo?.status}</p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Pagado el</p>
+            <p className="text-gray-900 font-medium">
+              {paymentInfo?.paid_at
+                ? `${new Date(paymentInfo.paid_at).toLocaleDateString("es-AR", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hourCycle: "h24",
+                    hour12: false,
+                  })} HS`
+                : "Aun no se registro"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Selected services */}
+      <div className="">
+        <div className="space-y-4">
+          <h3 className="font-semibold text-base text-zinc-900 leading-tight">
+            Servicios seleccionados
+          </h3>
+
+          <ul className="flex flex-col gap-0.5 px-1.5">
+            {selectedBooking?.services.map((product) => (
+              <li
+                key={product.id}
+                className="flex items-center justify-between py-3 border-b border-zinc-200 last:border-b-0"
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-zinc-800">
+                    {product.service.name}
+                  </p>
+                </div>
+
+                <p className="text-sm font-semibold text-zinc-800">
+                  ${product.service.price}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="sticky bottom-0 bg-zinc-200/25 hover:bg-zinc-200/35 rounded-md">
+          <div className="flex justify-between items-center py-3 px-1.5">
+            <span className="font-semibold text-zinc-900 tracking-tight leading-none">
+              Total <span className="text-gray-500">(ARS)</span>
+            </span>
+            <span className="text-base font-semibold text-zinc-900 leading-none">
+              ${finalPrice}
+            </span>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -31,8 +31,8 @@ const ConfirmDialog: React.FC<Props> = ({ action, onConfirm, trigger }) => {
 
       <DialogContent
         className="
-        sm:max-h-[20vh] sm:min-h-[20vh] sm:max-w-sm
-        max-w-[90vw]
+        sm:max-h-[20vh] sm:max-w-sm
+        max-w-[90vw] min-h-[22vh]
         p-6 flex flex-col bg-zinc-50 rounded-4xl
         shadow-2xl overflow-hidden
       "

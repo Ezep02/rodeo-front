@@ -10,6 +10,7 @@ const useBookingInbox = () => {
     const fetchPendingInbox = async () => {
       let res = await allPendingPayment();
       if (res) {
+        // console.info("PENDING", res)
         setInboxAppointments(res);
       }
     };

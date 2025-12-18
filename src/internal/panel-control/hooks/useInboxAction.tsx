@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { markAsPaid, markAsRejected } from "../services/booking";
+import { markAsAccepted, markAsRejected } from "../services/booking";
 import { PanelControlContext } from "../context/PanelControlContext";
 
 const useInboxAction = () => {
@@ -10,7 +10,7 @@ const useInboxAction = () => {
   const handleApprove = async (id: number) => {
     try {
       // Simulamos un error
-      const res = await markAsPaid(id);
+      const res = await markAsAccepted(id);
       if (res) {
         setInboxAppointments((prev) => prev.filter((curr) => curr.id !== id));
       }

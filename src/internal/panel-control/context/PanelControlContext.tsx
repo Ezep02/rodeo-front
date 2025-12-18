@@ -1,12 +1,12 @@
 import React, { ReactNode, useState } from "react";
 
-import { Booking } from "@/models/Appointment";
+import { BookingWithPayment } from "@/models/Appointment";
 
 interface PanelControlContextProps {
 
   // Proximas citas
-  inboxAppointment: Booking[] | [];
-  setInboxAppointments: React.Dispatch<React.SetStateAction<Booking[]>>;
+  inboxAppointment: BookingWithPayment[] | [];
+  setInboxAppointments: React.Dispatch<React.SetStateAction<BookingWithPayment[]>>;
 }
 
 export const PanelControlContext = React.createContext<PanelControlContextProps | undefined>(undefined);
@@ -20,7 +20,7 @@ export const PanelControlContextProvider: React.FC<ChildrenProviderProp> = ({
 }) => {
 
   // # Citas pendientes de aceptacion
-  const [inboxAppointment, setInboxAppointments] = useState<Booking[]>([]);
+  const [inboxAppointment, setInboxAppointments] = useState<BookingWithPayment[]>([]);
 
 
   return (

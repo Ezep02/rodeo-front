@@ -49,3 +49,28 @@ export type Booking = {
   created_at: string;
   updated_at: string;
 };
+
+// Booking pendiente de aceptacion con informacion de pago
+export type BookingWithPayment = {
+  id: number;
+  avatar: string;
+  barber_id: number;
+  client_id: number;
+  created_at: string;
+
+  email: string;
+  end: string;
+  expires_at: string;
+  method: "transferencia" | "mercado_pago";
+  name: string;
+  payment_percentage: 100 | 50;
+  phone_number: string;
+  slot_id: number;
+  start: string;
+  status: AppointmentStatus;
+  surname: string;
+  total_amount: 10000;
+  type: "total" | "parcial";
+  updated_at: string;
+  username: string;
+};

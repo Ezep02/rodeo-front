@@ -27,7 +27,8 @@ const ViewDetails = (props: Props) => {
     setIsOpen((prev) => !prev);
   };
 
-  // Permitir la seleccion de Reprogramar o cancelar
+  // Si hay una accion seleccionada, se muestra el camino para reprogramar o cancelar la cita
+  // Sino solo los detalles
   const onRenderOption = (): React.ReactNode => {
     switch (selectedAction) {
       case "":
