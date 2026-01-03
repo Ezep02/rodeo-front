@@ -1,6 +1,6 @@
 import { AuthenticationInstance } from "@/configs/AxiosConfigs"
 import { PreferenceRequest } from "../types/Preference"
-import { Payment } from "../types/Payment"
+import { Payment } from "../../../types/Payment"
 
 const MP_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/mercado_pago`
 const APPT_BASE_URL = `${import.meta.env.VITE_AUTH_BACKEND_URL}/appointment`

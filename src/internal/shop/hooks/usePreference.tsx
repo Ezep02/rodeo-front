@@ -16,11 +16,14 @@ const usePreference = () => {
   } = useContext(ShopContext)!;
 
   const {
-    selectedSlot
+    selectedSlot,
+    paymentType
   } = useContext(DashboardContext)!
-
+  
   const [isPending, setIsPending] = useState(false);
 
+  let payment_final_ptg = paymentType === "total" ? 100 : 50
+  
   const onCreatePrefAction = async () => {
     setIsPending(true);
     setTransactionErr(null);
@@ -30,15 +33,13 @@ const usePreference = () => {
         throw new Error("Id del servicio no existe");
       }
 
-      // Simulación de error
-      // throw new Error("Algo no fue bien");
       const data: PreferenceRequest = {
-        payment_percentage: 100,
+        payment_percentage: payment_final_ptg,
         services_id: [serviceInfo.id],
         slot_id: selectedSlot.id,
       };
 
-      // Código real para crear preferencia
+      // crear preferencia
       const res = await createPreference(data);
       if (res) {
         window.location.href = res
@@ -67,19 +68,16 @@ const usePreference = () => {
       }
 
       const data: PreferenceRequest = {
-        payment_percentage: 100,
+        payment_percentage: payment_final_ptg,
         services_id: [serviceInfo.id],
         slot_id: selectedSlot.id,
       };
 
-      //throw new Error("No se pudo crear la preferencia");
-      // Código real:
       const res = await createPreferenceWithAlias(data);
       if (res) {
         setPrefWithAliasPayment(res);
       }
 
-      // if (!res) throw new Error("No se pudo crear la preferencia");
     } catch (error: any) {
       const errMsg =
         error?.response?.data?.error ||

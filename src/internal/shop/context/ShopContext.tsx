@@ -1,11 +1,8 @@
-
-import { Slot, SlotWithStatus } from "@/types/Slot";
 import React, { useState } from "react";
 
 import { PaymentOption } from "../types/Preference";
 import { Service } from "@/types/ServiceTypes";
-import { Payment } from "../types/Payment";
-import { BarberInfo } from "@/types/BarberInfo";
+import { Payment } from "../../../types/Payment";
 
 interface ShopContextProps {
   // Metodo de pago
@@ -42,6 +39,7 @@ export const ShopContextProvider: React.FC<ChildrenProviderProp> = ({children}) 
   // Informacion de la transaccion genereada por el cliente (CREACION DE PREFERENCIA CON ALIAS)
   const [prefWithAliasPayment, setPrefWithAliasPayment] = useState<Payment>()
 
+
   return (
     <ShopContext.Provider
       value={{
@@ -52,7 +50,7 @@ export const ShopContextProvider: React.FC<ChildrenProviderProp> = ({children}) 
         transactionErr,
         setTransactionErr,
         prefWithAliasPayment,
-        setPrefWithAliasPayment
+        setPrefWithAliasPayment,
       }}    
     >
       {children}

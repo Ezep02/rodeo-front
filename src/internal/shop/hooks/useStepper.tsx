@@ -18,7 +18,7 @@ const useStepper = () => {
 
   // Navegacion
   const nextStep = () => setActiveStep((prev) => Math.min(prev + 1, stepConfig.length - 1));
-  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0)); // corregido
+  const prevStep = () => setActiveStep((prev) => Math.max(prev - 1, 0));
 
   const onGenerateOrder = async () => {
     startTransition(async () => {
@@ -43,11 +43,10 @@ const useStepper = () => {
   };
 
   const onCompletePayment = async () => {
-    alert("Reserva completada ✅");
     nextStep();
   };
 
-  // --- Configuración de pasos ---
+  // --- Configuracion de pasos ---
   const stepConfig = getStepConfig({ onGenerateOrder, onCompletePayment });
   const currentStep = stepConfig[activeStep];
   const StepComponent = currentStep.component;

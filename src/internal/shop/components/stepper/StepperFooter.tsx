@@ -22,7 +22,7 @@ const StepperFooter = ({
 
   const {stepConfig} = useStepper()
 
-  // Validación para habilitar/deshabilitar "Siguiente"
+  // Validacion para habilitar/deshabilitar el boton de "siguiente"
   const isNextDisabled = (() => {
     switch (currentStep.id) {
       case 1:

@@ -23,7 +23,7 @@ const OpenStepper = () => {
     prevStep,
     currentStep,
   } = useStepper();
-
+  
   return (
     <Dialog open={stepperIsOpen} onOpenChange={toggleDialogStatus}>
       <DialogTrigger asChild>

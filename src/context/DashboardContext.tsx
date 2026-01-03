@@ -8,6 +8,8 @@ import { BarberInfo } from "@/types/BarberInfo";
 import { Booking } from "@/models/Appointment";
 import { selectedOption } from "@/internal/dashboard/types/Stepper";
 import { PaymentInfoResponse } from "@/internal/dashboard/types/Booking";
+import { Coupon } from "@/types/Coupon";
+import { PaymentTypes } from "@/types/Payment";
 
 interface DashboardContextProps {
   // V1
@@ -24,26 +26,32 @@ interface DashboardContextProps {
 
 
   // ACCIONES DEL CALENDARIO DE HORARIO
-  // # Hash map para sincronizar los slots con el calendario
+  //  Hash map para sincronizar los slots con el calendario
   slotByDateMap: Map<string, SlotWithStatus[]>
   setSlotByDateMap: React.Dispatch<React.SetStateAction<Map<string, SlotWithStatus[]>>>
-  // # Fecha determinada por el calendario
+  //  Fecha determinada por el calendario
   currentDate: Date
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>
-  // BARBERO Y HORARIO SELECCIONADO
+  //  BARBERO Y HORARIO SELECCIONADO
   selectedBarber: BarberInfo | undefined
   setSelectedBarber:  React.Dispatch<React.SetStateAction<BarberInfo | undefined>>;
   selectedSlot: Slot | undefined
   setSelectedSlot:  React.Dispatch<React.SetStateAction<Slot | undefined>>;
-  // BARBEROS DISPONIBLES
+  //  BARBEROS DISPONIBLES
   availableBarbers: BarberInfo[];
   setAvailableBarbers: React.Dispatch<React.SetStateAction<BarberInfo[]>>;
-  // Booking seleccionado al abrir el dialogo de detalles
+  //  Booking seleccionado al abrir el dialogo de detalles
   selectedBooking: Booking | undefined
   setSelectedBooking: React.Dispatch<React.SetStateAction<Booking | undefined>>;
-  // # Hash map para almacenar la informacion de pago de cada slot
+  //  Hash map para almacenar la informacion de pago de cada slot
   paymentInfoMap: Map<number, PaymentInfoResponse>
   setPaymentInfoMap: React.Dispatch<React.SetStateAction<Map<number, PaymentInfoResponse>>>
+  //  Cupon aplicado durante la reserva de un turno
+  appliedCoupon: Coupon | null
+  setAppliedCoupon: React.Dispatch<React.SetStateAction<Coupon | null>>;
+  //  Tipo de pago elegido por el cliente
+  paymentType: PaymentTypes
+  setPaymentType: React.Dispatch<React.SetStateAction<PaymentTypes>>;
 }
 
 export const DashboardContext = React.createContext<
@@ -73,18 +81,24 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
   // Fecha donde se encuentra posicionado el calendario 
   const [currentDate, setCurrentDate] = useState(new Date());
     
-  // # SELECCION DE BARBERO Y HORARIO
+  //  SELECCION DE BARBERO Y HORARIO
   const [selectedBarber, setSelectedBarber] = useState<BarberInfo>()
   const [selectedSlot, setSelectedSlot] = useState<Slot>()
   
-  // # BARBEROS DISPONIBLES
+  //  BARBEROS DISPONIBLES
   const [availableBarbers, setAvailableBarbers] = useState<BarberInfo[] | []>([])
 
-  // # Booking seleccionado para ver sus detalles
+  //  Booking seleccionado para ver sus detalles
   const [selectedBooking, setSelectedBooking] = useState<Booking>()
 
-  // # HashMap que almacena la informacion recuperada de cada bookings (key: booking id | value: payment info)
+  //  HashMap que almacena la informacion recuperada de cada bookings (key: booking id | value: payment info)
   const [paymentInfoMap, setPaymentInfoMap] = useState<Map<number, PaymentInfoResponse>>(new Map)
+
+  //  Cupon aplicado por el cliente durante la creacion de una nueva orden
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null)
+  //  Tipo de pago elegido por el cliente
+  const [paymentType, setPaymentType] = useState<PaymentTypes>("total");
+
 
   return (
     <DashboardContext.Provider
@@ -108,7 +122,11 @@ export const DashboardContextProvider: React.FC<ChildrenProviderProp> = ({
         selectedBooking,
         setSelectedBooking,
         paymentInfoMap,
-        setPaymentInfoMap
+        setPaymentInfoMap,
+        appliedCoupon,
+        setAppliedCoupon,
+        paymentType,
+        setPaymentType
       }}
     >
       {children}
