@@ -83,7 +83,7 @@ const BookDetails: React.FC = () => {
         <div>
           <p className="text-sm text-gray-600 mb-1">Dirección</p>
           <p className="text-gray-900 font-medium">
-            4517 Washington Ave. Manchester, Kentuc...
+            --
           </p>
         </div>
       </div>

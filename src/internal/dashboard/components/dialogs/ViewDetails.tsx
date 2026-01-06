@@ -17,12 +17,11 @@ type Props = {
 };
 
 const ViewDetails = (props: Props) => {
-  const { selectedAction, setActionOption} = useContext(DashboardContext)!;
-  
-  
+  const { selectedAction, setActionOption } = useContext(DashboardContext)!;
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const toggleIsOpen = () => {
-    if(selectedAction) return setActionOption("") 
+    if (selectedAction) return setActionOption("");
 
     setIsOpen((prev) => !prev);
   };

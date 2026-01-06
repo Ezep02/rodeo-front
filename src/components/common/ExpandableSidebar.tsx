@@ -93,12 +93,7 @@ const Sidebar = () => {
           )}
         </nav>
 
-        {/* Action button */}
-        <div className="mt-6">
-          <button className="w-full py-2 px-4 text-white font-medium bg-gradient-to-r from-pink-500 to-orange-400 hover:opacity-90 transition rounded-full">
-            Nuevo turno
-          </button>
-        </div>
+      
       </div>
 
       {/* User info & logout */}

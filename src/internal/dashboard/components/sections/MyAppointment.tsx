@@ -84,7 +84,7 @@ const MyAppointment = () => {
   };
 
   return (
-    <section className="flex flex-col gap-5 pt-6 px-4">
+    <section className="flex flex-col gap-5 pt-6 px-4 md:p-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

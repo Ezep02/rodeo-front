@@ -151,8 +151,6 @@ const ViewDetail: React.FC<Props> = ({ item }) => {
           {/* PROMOCIONES */}
           <PromotionList itemInfo={item} />
           <GalleryViewer itemInfo={item} />
-                    
-          
         </div>
 
         <DialogFooter className="sticky bottom-0 flex justify-end gap-2 p-4">

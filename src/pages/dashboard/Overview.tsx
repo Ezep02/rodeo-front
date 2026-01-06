@@ -1,23 +1,15 @@
+import AmenitieSection from "@/internal/dashboard/components/sections/AmenitieSection";
 import HeaderSection from "@/internal/dashboard/components/sections/HeaderSection";
 import MyAppointment from "@/internal/dashboard/components/sections/MyAppointment";
 
 const OverviewPage = () => {
-  
- 
   return (
-    <div className="px-4 md:p-10 flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-full">
       <HeaderSection />
 
+      <AmenitieSection />
 
-      <MyAppointment/>
-    
-
-      {/*
-      <Suspense>
-        <JourneyStatSection />
-      </Suspense>
-
-      <JourneySection/> */}
+      <MyAppointment />
     </div>
   );
 };
